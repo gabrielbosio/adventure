@@ -53,7 +53,6 @@ function quadByAnchor(texture, quad, transform, anchor)
   transform = transform:translate(newX - x, newY - y)
 
   love.graphics.draw(texture, quad, transform)
-  love.graphics.circle("fill", x, y, 2)
 end
 
 
