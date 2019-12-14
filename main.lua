@@ -10,8 +10,8 @@ function love.load()
   local playerY = 300
   player = Player:new(playerX, playerY, playerAnimation)
   timeline = Timeline:new()
-  timeline:addKeyFrame(3, function () player:walk(5) end)
-  timeline:addKeyFrame(5, function () player:walk(-5) end)
+  timeline:addKeyFrame(3, function () player:walk(5, true) end)
+  timeline:addKeyFrame(5, function () player:walk(5) end)
 end
 
 function love.update(dt)

@@ -30,9 +30,13 @@ function Animation:update(dt)
 end
 
 -- Draws the current frame of the animation
-function Animation:draw(x, y)
+function Animation:draw(x, y, isFacingRight)
   local spriteNumber = math.floor(self.currentTime / self.duration * #self.quads) + 1
+  local currentQuad = self.quads[spriteNumber]
   local scaleFactor = 0.5
-  love.graphics.draw(self.spriteSheet, self.quads[spriteNumber], x, y, 0, scaleFactor,
-                     scaleFactor)
+  local directionFactor = isFacingRight and 1 or -1
+  local _, _, quadViewportWidth = currentQuad:getViewport()
+  local offsetX = isFacingRight and 0 or quadViewportWidth / 2
+  love.graphics.draw(self.spriteSheet, currentQuad, x + offsetX, y, 0,
+                     scaleFactor * directionFactor, scaleFactor)
 end
