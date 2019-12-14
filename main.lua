@@ -1,6 +1,7 @@
 require("animation")
 require("player")
 require("timeline")
+require("placement")
 
 function love.load()
   local playerImage = love.graphics.newImage("sprites/player.png")
@@ -19,4 +20,13 @@ end
 
 function love.draw()
   player:draw()
+
+  -- Text placement example
+  local x = 200
+  local anchors = {"north", "center", "south west", "east"}
+  for j, anchor in ipairs(anchors) do
+	  local y = (190*j-200+10*#anchors) / (#anchors-1)
+	  placement.place("Testing " .. anchor .. " anchor", x, y, anchor)
+	  love.graphics.circle("fill", x, y, 2);
+  end
 end
