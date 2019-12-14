@@ -11,14 +11,22 @@ end
 
 
 function ParticleSystem:createDust(x, y)
-  table.insert(self.particles, {x = x, y = y, size = 2, time = 0.15})
+  for i = 1, math.random(5, 8) do
+    local dustParticle = {
+      x = math.random(-10, 10) + x,
+      y = math.random(-10, 10) + y,
+      size = math.random(5, 10) / 100,
+      time = math.random(10, 20) / 100
+    }
+    table.insert(self.particles, dustParticle)
+  end
 end
 
 
 function ParticleSystem:update(dt)
   for i = #self.particles, 1, -1 do
     local particle = self.particles[i]
-    particle.size = particle.size + 1
+    particle.size = particle.size + 0.5
     particle.time = particle.time - dt
 
     if particle.time <= 0 then
