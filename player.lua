@@ -1,16 +1,14 @@
-require("class")
-
-local Player = class.declare()
+module("Player", package.seeall)
 
 
-function Player.new(x, y, animation)
-  local self = setmetatable({}, Player)
+function Player:new(x, y, animation)
+  local object = setmetatable({}, self)
+  self.__index = self
   self.x = x
   self.y = y
   self.animation = animation
 
-  print(self.animation)
-  return self
+  return object
 end
 
 
@@ -22,5 +20,3 @@ end
 function Player:draw()
   self.animation:draw(self.x, self.y)
 end
-
-return Player

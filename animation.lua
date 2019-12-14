@@ -1,10 +1,9 @@
-require("class")
-
-local Animation = class.declare()
+module("Animation", package.seeall)
 
 -- Creates a new animation using a spritesheet. If duration is 1 if not specified.
-function Animation.new(spritesheet, width, height, duration)
-  local self = setmetatable({}, Animation)
+function Animation:new(spritesheet, width, height, duration)
+  local object = setmetatable({}, self)
+  self.__index = self
   self.spriteSheet = spritesheet
   self.quads = {}
  
@@ -18,7 +17,7 @@ function Animation.new(spritesheet, width, height, duration)
   self.duration = duration or 1
   self.currentTime = 0
 
-  return self
+  return object
 end
 
 -- Updates the current time of the animation
@@ -35,6 +34,3 @@ function Animation:draw(x, y)
   local spriteNumber = math.floor(self.currentTime / self.duration * #self.quads) + 1
   love.graphics.draw(self.spriteSheet, self.quads[spriteNumber], x, y)
 end
-
-
-return Animation
