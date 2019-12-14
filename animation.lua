@@ -7,7 +7,7 @@ Animation.__call = function (self) return Animation.new(self) end
 
 -- Creates a new animation using a spritesheet
 function Animation.new(image, width, height, duration)
-	local self = setmetatable({}, Animation)
+  local self = setmetatable({}, Animation)
   self.spriteSheet = image
   self.quads = {}
  
