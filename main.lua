@@ -2,7 +2,7 @@ require("animation")
 require("animationplayer")
 require("player")
 require("timeline")
-require("placement")
+require("place")
 
 function love.load()
   local playerImage = love.graphics.newImage("sprites/player.png")
@@ -39,7 +39,7 @@ function love.draw()
   local anchors = {"north", "center", "south west", "east"}
   for j, anchor in ipairs(anchors) do
 	  local y = (190*j-200+10*#anchors) / (#anchors-1)
-	  placement.place("Testing " .. anchor .. " anchor", x, y, anchor)
+	  place.textByAnchor("Testing " .. anchor .. " anchor", x, y, anchor)
     love.graphics.circle("fill", x, y, 2);
   end
 end

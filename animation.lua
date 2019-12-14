@@ -1,3 +1,4 @@
+require("place")
 module("Animation", package.seeall)
 
 
@@ -62,6 +63,8 @@ function Animation:draw(x, y, isFacingRight)
   local directionFactor = isFacingRight and 1 or -1
   local _, _, quadViewportWidth = currentQuad:getViewport()
   local offsetX = isFacingRight and 0 or quadViewportWidth / 2
-  love.graphics.draw(self.spriteSheet, currentQuad, x + offsetX, y, 0,
-                     scaleFactor * directionFactor, scaleFactor)
+  local transform = love.math.newTransform(x, y)
+  transform:scale(scaleFactor * directionFactor, scaleFactor)
+
+  place.quadByAnchor(self.spriteSheet, self.quads[spriteNumber], transform, "south")
 end
