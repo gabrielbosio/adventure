@@ -61,8 +61,6 @@ function Animation:draw(x, y, isFacingRight)
   local currentQuad = self.quads[spriteNumber]
   local scaleFactor = 0.5
   local directionFactor = isFacingRight and 1 or -1
-  local _, _, quadViewportWidth = currentQuad:getViewport()
-  local offsetX = isFacingRight and 0 or quadViewportWidth / 2
   local transform = love.math.newTransform(x, y)
   transform:scale(scaleFactor * directionFactor, scaleFactor)
 
