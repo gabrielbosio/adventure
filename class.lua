@@ -1,7 +1,11 @@
-local Class = setmetatable({}, {
-  __call = function (class, ...) return class.new (...) end
-})
+module("class", package.seeall)
 
-Class.__index = Class
+function class.declare()  
+  local Class = setmetatable({}, {
+    __call = function (class, ...) return class.new (...) end
+  })
 
-return Class
+  Class.__index = Class
+
+  return Class
+end

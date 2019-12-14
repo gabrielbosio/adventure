@@ -1,8 +1,6 @@
-local Player = setmetatable({}, {
-  __call = function (class, ...) return class.new (...) end
-})
+require("class")
 
-Player.__index = Player
+local Player = class.declare()
 
 
 function Player.new(x, y, animation)
@@ -11,6 +9,7 @@ function Player.new(x, y, animation)
   self.y = y
   self.animation = animation
 
+  print(self.animation)
   return self
 end
 

@@ -1,8 +1,6 @@
-local Animation = setmetatable({}, {
-  __call = function (class, ...) return class.new (...) end
-})
+require("class")
 
-Animation.__index = Animation
+local Animation = class.declare()
 
 -- Creates a new animation using a spritesheet. If duration is 1 if not specified.
 function Animation.new(spritesheet, width, height, duration)
