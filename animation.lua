@@ -1,4 +1,8 @@
-local Animation = require("class")
+local Animation = setmetatable({}, {
+  __call = function (class, ...) return class.new (...) end
+})
+
+Animation.__index = Animation
 
 -- Creates a new animation using a spritesheet. If duration is 1 if not specified.
 function Animation.new(spritesheet, width, height, duration)
@@ -29,9 +33,9 @@ function Animation:update(dt)
 end
 
 -- Draws the current frame of the animation
-function Animation:draw()
+function Animation:draw(x, y)
   local spriteNumber = math.floor(self.currentTime / self.duration * #self.quads) + 1
-  love.graphics.draw(self.spriteSheet, self.quads[spriteNumber])
+  love.graphics.draw(self.spriteSheet, self.quads[spriteNumber], x, y)
 end
 
 
