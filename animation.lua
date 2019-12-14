@@ -4,18 +4,18 @@ module("Animation", package.seeall)
 function Animation:new(spritesheet, width, height, duration)
   local object = setmetatable({}, self)
   self.__index = self
-  self.spriteSheet = spritesheet
-  self.quads = {}
+  object.spriteSheet = spritesheet
+  object.quads = {}
  
   for y = 1, spritesheet:getHeight() - 1, height + 2 do
     for x = 1, spritesheet:getWidth() - 1, width + 2 do
       newQuad = love.graphics.newQuad(x, y, width, height, spritesheet:getDimensions())
-      table.insert(self.quads, newQuad)
+      table.insert(object.quads, newQuad)
     end
   end
 
-  self.duration = duration or 1
-  self.currentTime = 0
+  object.duration = duration or 1
+  object.currentTime = 0
 
   return object
 end

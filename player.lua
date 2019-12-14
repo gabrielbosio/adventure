@@ -4,13 +4,13 @@ module("Player", package.seeall)
 function Player:new(x, y, animation)
   local object = setmetatable({}, self)
   self.__index = self
-  self.x = x
-  self.y = y
-  self.speed = 100
-  self.stepDistance = 20
-  self.isWalking = false
-  self.walkingDistanceLeft = 0
-  self.animation = animation
+  object.x = x
+  object.y = y
+  object.speed = 100
+  object.stepDistance = 20
+  object.isWalking = false
+  object.walkingDistanceLeft = 0
+  object.animation = animation
 
   return object
 end
