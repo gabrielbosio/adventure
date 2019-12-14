@@ -3,7 +3,6 @@ local Animation = setmetatable({}, {
 })
 
 Animation.__index = Animation
-Animation.__call = function (self) return Animation.new(self) end
 
 -- Creates a new animation using a spritesheet
 function Animation.new(image, width, height, duration)
