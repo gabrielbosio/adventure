@@ -1,26 +1,38 @@
 require("animation")
+require("animationplayer")
 require("player")
 require("timeline")
 require("placement")
 
 function love.load()
   local playerImage = love.graphics.newImage("sprites/player.png")
-  local playerAnimation = Animation:new(playerImage, 128, 256)
-  local playerX = 400
-  local playerY = 300
-  player = Player:new(playerX, playerY, playerAnimation)
+  local player1StandingAnimation = Animation:new(playerImage, 192, 256, {1, 2})
+  local player1WalkingAnimation = Animation:new(playerImage, 192, 256, {3, 4, 5, 4})
+  local player2StandingAnimation = Animation:new(playerImage, 192, 256, {1, 2})
+  local player2WalkingAnimation = Animation:new(playerImage, 192, 256, {3, 4, 5, 4})
+  local player1AnimationPlayer = AnimationPlayer:new()
+  local player2AnimationPlayer = AnimationPlayer:new()
+  player1AnimationPlayer:addAnimation("standing", player1StandingAnimation)
+  player1AnimationPlayer:addAnimation("walking", player1WalkingAnimation)
+  player2AnimationPlayer:addAnimation("standing", player2StandingAnimation)
+  player2AnimationPlayer:addAnimation("walking", player2WalkingAnimation)
+  player1 = Player:new(400, 300, player1AnimationPlayer)
+  player2 = Player:new(100, 300, player2AnimationPlayer)
   timeline = Timeline:new()
-  timeline:addKeyFrame(3, function () player:walk(5, true) end)
-  timeline:addKeyFrame(5, function () player:walk(5) end)
+  timeline:addKeyFrame(2, function () player1:walk(5, true) end)
+  timeline:addKeyFrame(3, function () player2:walk(8, true) end)
+  timeline:addKeyFrame(4, function () player1:walk(3) end)
 end
 
 function love.update(dt)
-  player:update(dt)
+  player1:update(dt)
+  player2:update(dt)
   timeline:update(dt)
 end
 
 function love.draw()
-  player:draw()
+  player1:draw()
+  player2:draw()
 
   -- Text placement example
   local x = 200
