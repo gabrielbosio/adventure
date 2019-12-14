@@ -6,15 +6,16 @@ require("keyframe")
 function Timeline:new()
   local object = setmetatable({}, self)
   self.__index = self
-  self.time = 0
-  self.keyFramesLeft = {}
+  object.time = 0
+  object.keyFramesLeft = {}
 
   return object
 end
 
 
 function Timeline:addKeyFrame(time, event)
-  table.insert(self.keyFramesLeft, KeyFrame:new(time, event))
+  local keyFrame = KeyFrame:new(time, event)
+  table.insert(self.keyFramesLeft, keyFrame)
 end
 
 
@@ -25,7 +26,7 @@ function Timeline:update(dt)
 
     if self.time >= keyFrame.time then
       keyFrame.event()
-      self.keyFramesLeft[i] = nil
+      table.remove(self.keyFramesLeft, i)
     end
   end
 

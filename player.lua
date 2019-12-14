@@ -17,6 +17,7 @@ end
 
 
 function Player:walk(numberOfSteps)
+  assert(numberOfSteps > 0, "Player cannot walk " .. numberOfSteps .. " steps.")
   self.isWalking = true
   self.walkingDistanceLeft = numberOfSteps * self.stepDistance
 end
