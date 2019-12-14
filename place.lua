@@ -1,6 +1,13 @@
 module("place", package.seeall)
 
 
+-- Subroutine
+local function check(anchor)
+  assert(moveBy[anchor], 'moveBy received an invalid anchor ("' ..
+    tostring(anchor) .. '")\n\nCheck for typos!')
+end
+
+
 -- Places center of text on x, y unless a different anchor (n, w, s) is given.
 -- Anchors are defined by the moveBy table, see below.
 function textByAnchor(string, x, y, anchor, font)
@@ -47,12 +54,6 @@ function quadByAnchor(texture, quad, transform, anchor)
 
   love.graphics.draw(texture, quad, transform)
   love.graphics.circle("fill", x, y, 2)
-end
-
-
-function check(anchor)
-  assert(moveBy[anchor], 'moveBy received an invalid anchor ("' ..
-    tostring(anchor) .. '")\n\nCheck for typos!')
 end
 
 
