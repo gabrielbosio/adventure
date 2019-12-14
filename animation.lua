@@ -4,15 +4,15 @@ local Animation = setmetatable({}, {
 
 Animation.__index = Animation
 
--- Creates a new animation using a spritesheet
-function Animation.new(image, width, height, duration)
+-- Creates a new animation using a spritesheet. If duration is 1 if not specified.
+function Animation.new(spritesheet, width, height, duration)
   local self = setmetatable({}, Animation)
-  self.spriteSheet = image
+  self.spriteSheet = spritesheet
   self.quads = {}
  
-  for y = 1, image:getHeight() - 1, height + 2 do
-    for x = 1, image:getWidth() - 1, width + 2 do
-      newQuad = love.graphics.newQuad(x, y, width, height, image:getDimensions())
+  for y = 1, spritesheet:getHeight() - 1, height + 2 do
+    for x = 1, spritesheet:getWidth() - 1, width + 2 do
+      newQuad = love.graphics.newQuad(x, y, width, height, spritesheet:getDimensions())
       table.insert(self.quads, newQuad)
     end
   end
