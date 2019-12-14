@@ -5,6 +5,9 @@ require("timeline")
 require("place")
 
 function love.load()
+  world = love.physics.newWorld(0, 980.665)
+  body = love.physics.newBody(world, 400, 0, "dynamic")
+
   player1 = Player:new(400, 300)
   player2 = Player:new(100, 300)
   timeline = Timeline:new()
@@ -17,11 +20,16 @@ function love.update(dt)
   player1:update(dt)
   player2:update(dt)
   timeline:update(dt)
+
+  world:update(dt)
 end
 
 function love.draw()
   player1:draw()
   player2:draw()
+
+  -- Physics test
+  love.graphics.circle("fill", body:getX(), body:getY(), 2)
 
   -- Text placement example
   local x = 200
