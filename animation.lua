@@ -1,5 +1,7 @@
-require("place")
 module("Animation", package.seeall)
+
+require("place")
+require("timeline")
 
 
 local function createQuads(spriteSheet, width, height, frames)
@@ -42,16 +44,26 @@ function Animation:new(spriteSheet, width, height, frames, duration)
   object.duration = duration or 1
   object.currentTime = 0
   object.quads = createQuads(spriteSheet, width, height, frames)
+  object.timeline = Timeline:new()
 
   return object
 end
 
+
+function Animation:addKeyFrames(frames, event)
+  for _, frame in ipairs(frames) do
+    self.timeline:addKeyFrame(frame / #self.frames * self.duration, event)
+  end
+end
+
 -- Updates the current time of the animation
 function Animation:update(dt)
+  self.timeline:update(dt)
   self.currentTime = self.currentTime + dt
   
   if self.currentTime >= self.duration then
     self.currentTime = self.currentTime - self.duration
+    self.timeline:play()
   end
 end
 

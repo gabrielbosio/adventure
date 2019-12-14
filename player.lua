@@ -1,11 +1,21 @@
 module("Player", package.seeall)
 
+require("animation")
+require("animationplayer")
 
-local function createAnimationPlayer()
+
+local function createAnimationPlayer(self, particleSystem)
   local spriteSheet = love.graphics.newImage("sprites/player.png")
   local standingAnimation = Animation:new(spriteSheet, 192, 256, {1, 2, 3, 2})
+
   local walkingAnimation = Animation:new(spriteSheet, 192, 256, {5, 6, 7, 4, 8, 9, 10, 4},
                                          0.5)
+  
+  walkingAnimation:addKeyFrames({3, 7}, function ()
+    local dustX = self.x - 8 * (self.isFacingRight and 1 or -1)
+    particleSystem:createDust(dustX, self.y - 12)
+  end)
+
   local animationPlayer = AnimationPlayer:new()
   animationPlayer:addAnimation("standing", standingAnimation)
   animationPlayer:addAnimation("walking", walkingAnimation)
@@ -14,7 +24,7 @@ local function createAnimationPlayer()
 end
 
 
-function Player:new(x, y)
+function Player:new(x, y, particleSystem)
   local object = setmetatable({}, self)
   self.__index = self
   object.x = x
@@ -24,7 +34,7 @@ function Player:new(x, y)
   object.isWalking = false
   object.isFacingRight = true
   object.walkingDistanceLeft = 0
-  object.animationPlayer = createAnimationPlayer()
+  object.animationPlayer = createAnimationPlayer(object, particleSystem)
 
   return object
 end

@@ -6,27 +6,33 @@ require("keyframe")
 function Timeline:new()
   local object = setmetatable({}, self)
   self.__index = self
-  object.time = 0
-  object.keyFramesLeft = {}
+  object.keyFrames = {}
+  object:play()
 
   return object
 end
 
 
+function Timeline:play()
+  self.time = 0
+  self.keyFramesPlayed = {}
+end
+
+
 function Timeline:addKeyFrame(time, event)
   local keyFrame = KeyFrame:new(time, event)
-  table.insert(self.keyFramesLeft, keyFrame)
+  table.insert(self.keyFrames, keyFrame)
 end
 
 
 function Timeline:update(dt)
 
-  for i = #self.keyFramesLeft, 1, -1 do
-    local keyFrame = self.keyFramesLeft[i]
+  for i = #self.keyFrames, 1, -1 do
+    local keyFrame = self.keyFrames[i]
 
-    if self.time >= keyFrame.time then
+    if self.time >= keyFrame.time and self.keyFramesPlayed[i] == nil then
       keyFrame.event()
-      table.remove(self.keyFramesLeft, i)
+      self.keyFramesPlayed[i] = keyFrame
     end
   end
 
