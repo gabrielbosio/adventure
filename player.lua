@@ -3,8 +3,9 @@ module("Player", package.seeall)
 
 local function createAnimationPlayer()
   local spriteSheet = love.graphics.newImage("sprites/player.png")
-  local standingAnimation = Animation:new(spriteSheet, 192, 256, {1, 2})
-  local walkingAnimation = Animation:new(spriteSheet, 192, 256, {3, 4, 5, 4})
+  local standingAnimation = Animation:new(spriteSheet, 192, 256, {1, 2, 3, 2})
+  local walkingAnimation = Animation:new(spriteSheet, 192, 256, {5, 6, 7, 4, 8, 9, 10, 4},
+                                         0.5)
   local animationPlayer = AnimationPlayer:new()
   animationPlayer:addAnimation("standing", standingAnimation)
   animationPlayer:addAnimation("walking", walkingAnimation)
@@ -18,8 +19,8 @@ function Player:new(x, y)
   self.__index = self
   object.x = x
   object.y = y
-  object.speed = 100
-  object.stepDistance = 20
+  object.speed = 300
+  object.stepDistance = 15
   object.isWalking = false
   object.isFacingRight = true
   object.walkingDistanceLeft = 0

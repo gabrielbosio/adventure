@@ -4,13 +4,19 @@ require("player")
 require("timeline")
 require("place")
 
-function love.load()
-  player1 = Player:new(400, 300)
-  player2 = Player:new(100, 300)
+function createTimeline()
   timeline = Timeline:new()
   timeline:addKeyFrame(2, function () player1:walk(5, true) end)
   timeline:addKeyFrame(3, function () player2:walk(8, true) end)
-  timeline:addKeyFrame(4, function () player1:walk(3) end)
+  timeline:addKeyFrame(4, function () player1:walk(5) end)
+  timeline:addKeyFrame(5, function () player2:walk(8) end)
+  timeline:addKeyFrame(7, function () createTimeline() end)
+end
+
+function love.load()
+  player1 = Player:new(400, 300)
+  player2 = Player:new(100, 300)
+  createTimeline()
 end
 
 function love.update(dt)
