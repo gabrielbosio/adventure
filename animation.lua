@@ -32,5 +32,7 @@ end
 -- Draws the current frame of the animation
 function Animation:draw(x, y)
   local spriteNumber = math.floor(self.currentTime / self.duration * #self.quads) + 1
-  love.graphics.draw(self.spriteSheet, self.quads[spriteNumber], x, y)
+  local scaleFactor = 0.5
+  love.graphics.draw(self.spriteSheet, self.quads[spriteNumber], x, y, 0, scaleFactor,
+                     scaleFactor)
 end

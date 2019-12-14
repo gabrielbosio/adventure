@@ -3,7 +3,7 @@ require("player")
 
 function love.load()
   local playerImage = love.graphics.newImage("sprites/player.png")
-  local playerAnimation = Animation:new(playerImage, 128, 2000)
+  local playerAnimation = Animation:new(playerImage, 128, 256)
   local playerX = 400
   local playerY = 300
   player = Player:new(playerX, playerY, playerAnimation)
