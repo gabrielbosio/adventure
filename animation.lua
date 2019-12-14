@@ -1,6 +1,7 @@
+require("place")
 module("Animation", package.seeall)
 
--- Creates a new animation using a spritesheet. If duration is 1 if not specified.
+-- Creates a new animation using a spritesheet. Duration is 1 if not specified.
 function Animation:new(spritesheet, width, height, duration)
   local object = setmetatable({}, self)
   self.__index = self
@@ -33,6 +34,8 @@ end
 function Animation:draw(x, y)
   local spriteNumber = math.floor(self.currentTime / self.duration * #self.quads) + 1
   local scaleFactor = 0.5
-  love.graphics.draw(self.spriteSheet, self.quads[spriteNumber], x, y, 0, scaleFactor,
-                     scaleFactor)
+  local transform = love.math.newTransform(x, y)
+  transform:scale(scaleFactor)
+
+  place.quadByAnchor(self.spriteSheet, self.quads[spriteNumber], transform, "south")
 end
