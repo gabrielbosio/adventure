@@ -17,7 +17,7 @@ end
 
 
 -- Assigns anchor names to functions 
-moveBy = {
+local moveBy = {
 	center = function (x, y, w, h) return x - w/2, y - h/2 end,
 
 	north = function (x, y, w, h) return x - w/2, y end,
