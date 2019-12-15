@@ -1,3 +1,4 @@
+require("enemy")
 require("particlesystem")
 require("place")
 require("player")
@@ -5,30 +6,29 @@ require("timeline")
 
 function createTimeline()
   timeline = Timeline:new()
-  timeline:addKeyFrame(2, function () player1:walk(5, true) end)
-  timeline:addKeyFrame(3, function () player2:walk(8, true) end)
-  timeline:addKeyFrame(4, function () player1:walk(5) end)
-  timeline:addKeyFrame(5, function () player2:walk(8) end)
+  timeline:addKeyFrame(2, function () player:walk(5, true) end)
+  timeline:addKeyFrame(3, function () enemy:walk(5, true) end)
+  timeline:addKeyFrame(4, function () player:walk(5) end)
   timeline:addKeyFrame(7, function () timeline:play() end)
 end
 
 function love.load()
   particleSystem = ParticleSystem:new()
-  player1 = Player:new(400, 300, particleSystem)
-  player2 = Player:new(100, 300, particleSystem)
+  player = Player:new(400, 300, particleSystem)
+  enemy = Enemy:new(100, 300, particleSystem)
   createTimeline()
 end
 
 function love.update(dt)
-  player1:update(dt)
-  player2:update(dt)
+  player:update(dt)
+  enemy:update(dt)
   particleSystem:update(dt)
   timeline:update(dt)
 end
 
 function love.draw()
-  player1:draw()
-  player2:draw()
+  player:draw()
+  enemy:draw()
   particleSystem:draw()
 
   -- Text placement example
