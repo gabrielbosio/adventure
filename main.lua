@@ -15,7 +15,7 @@ function love.load()
   -- Physics test
   gravity = 5000
   xSpeed = 500
-  jumpImpulseSpeed = 1200
+  jumpImpulseSpeed = 1400
   jumping = false
 
   playerBox = {x = 400, y = 0, vx = 0, vy = 0, width = 50, height = 100}
@@ -26,6 +26,7 @@ function love.load()
       {600, 300, 805, 500},
       {-5, 5, 10, 400},
       {790, -5, 805, 400},
+      {500, 140, 600, 145}
     },
     slopes = {
       {500, 400, 600, 300},
@@ -60,25 +61,29 @@ function love.update(dt)
 
   for i in pairs(terrain.boundaries) do
     local boundaries = terrain.boundaries[i]
+    x1 = math.min(boundaries[1], boundaries[3])
+    y1 = math.min(boundaries[2], boundaries[4])
+    x2 = math.max(boundaries[1], boundaries[3])
+    y2 = math.max(boundaries[2], boundaries[4])
 
-    if playerBox.y - playerBox.height/2 > boundaries[2] and
-        playerBox.y - playerBox.height/2 < boundaries[4] and
-        playerBox.x + playerBox.width/2 > boundaries[1] and
-        playerBox.x < boundaries[1] then
+    if playerBox.y - playerBox.height/2 > y1 and
+        playerBox.y - playerBox.height/2 < y2 and
+        playerBox.x + playerBox.width/2 > x1 and
+        playerBox.x < x1 then
 
-        while playerBox.x + playerBox.width/2 > boundaries[1] do
+        while playerBox.x + playerBox.width/2 > x1 do
           playerBox.x = playerBox.x - 1
         end
 
         playerBox.vx = 0
 
         touchingWall = true
-    elseif playerBox.y - playerBox.height/2 > boundaries[2] and
-        playerBox.y - playerBox.height/2 < boundaries[4] and
-        playerBox.x - playerBox.width/2 < boundaries[3] and
-        playerBox.x > boundaries[3] then
+    elseif playerBox.y - playerBox.height/2 > y1 and
+        playerBox.y - playerBox.height/2 < y2 and
+        playerBox.x - playerBox.width/2 < x2 and
+        playerBox.x > x2 then
 
-        while playerBox.x - playerBox.width/2 < boundaries[3] do
+        while playerBox.x - playerBox.width/2 < x2 do
           playerBox.x = playerBox.x + 1
         end
 
@@ -86,10 +91,10 @@ function love.update(dt)
         touchingWall = true
     end
 
-    if playerBox.x > boundaries[1] and playerBox.x < boundaries[3] and
-        playerBox.y > boundaries[2] then 
+    if playerBox.x > x1 and playerBox.x < x2 and
+        playerBox.y + playerBox.vy*dt > y1 and playerBox.y  < y2 then 
 
-      while playerBox.y > boundaries[2] do
+      while playerBox.y > y1 and playerBox.y < y2 do
         playerBox.y = playerBox.y - 1
       end
 
@@ -130,7 +135,6 @@ function love.draw()
   love.graphics.setColor(0, 0.5, 0)
   for i in pairs(terrain.boundaries) do
     local boundaries = terrain.boundaries[i]
-      love.graphics.rectangle("fill", unpack(boundaries))
       love.graphics.polygon("fill", boundaries[1], boundaries[2], boundaries[3], boundaries[2],
         boundaries[3], boundaries[4], boundaries[1], boundaries[4])
   end
@@ -140,4 +144,5 @@ function love.draw()
     playerBox.width, playerBox.height)
   love.graphics.setColor(1, 1, 0)
   love.graphics.circle("fill", playerBox.x, playerBox.y, 2)
+  love.graphics.print(math.floor(playerBox.x) .. "," .. math.floor(playerBox.y), 0, 0)
 end
