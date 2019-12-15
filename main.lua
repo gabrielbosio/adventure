@@ -5,34 +5,29 @@ require("timeline")
 require("place")
 
 function love.load()
-  meterUnitInPx = 250
-  love.physics.setMeter(meterUnitInPx)
-  world = love.physics.newWorld(0, 9.80665*meterUnitInPx)
-
-  local width, height, _ = love.window.getMode()
-  physicalObjects = {
-    ground = {
-      -- Bodies are "static" by default
-      body = love.physics.newBody(world, width/2, height-120),
-      shape = love.physics.newRectangleShape(width, 100),
-    },
-    ball = {
-      body = love.physics.newBody(world, width/2, 0, "dynamic"),
-      shape = love.physics.newCircleShape(20),
-    }
-  }
-  physicalObjects.ground.fixture = love.physics.newFixture(
-    physicalObjects.ground.body, physicalObjects.ground.shape)
-  physicalObjects.ball.fixture = love.physics.newFixture(
-    physicalObjects.ball.body, physicalObjects.ball.shape)
-  physicalObjects.ball.fixture:setRestitution(0.7)
-
   player1 = Player:new(400, 300)
   player2 = Player:new(100, 300)
   timeline = Timeline:new()
   timeline:addKeyFrame(2, function () player1:walk(5, true) end)
   timeline:addKeyFrame(3, function () player2:walk(8, true) end)
   timeline:addKeyFrame(4, function () player1:walk(3) end)
+
+  -- Physics test
+  gravity = 1000
+
+  playerBox = {x = 400, y = 0, vx = 0, vy = 0, width = 100, height = 50}
+
+  terrain = {
+    floor = {
+      {0, 400, 600, 500},
+      {600, 300, 800, 500},
+      {-5, -5, 5, 400},
+      {800, -5, 805, 400},
+    },
+    slopes = {
+      {500, 400, 600, 300},
+    }
+  }
 end
 
 function love.update(dt)
@@ -40,21 +35,34 @@ function love.update(dt)
   player2:update(dt)
   timeline:update(dt)
 
-  world:update(dt)
+  -- Physics test
+  local touchingFloor = false
+
+  for i in pairs(terrain.floor) do
+    local floor = terrain.floor[i]
+
+    if playerBox.x > floor[1] and playerBox.x < floor[3] and playerBox.y > floor[2] then 
+      while playerBox.y > floor[2] do
+        playerBox.y = playerBox.y - 1
+      end
+      touchingFloor = true
+      break
+    end
+  end
+
+  if touchingFloor then
+    playerBox.vy = 0
+  else
+    playerBox.vy = playerBox.vy + gravity*dt
+  end
+
+  playerBox.y = playerBox.y + playerBox.vy*dt
 end
 
 function love.draw()
   love.graphics.setColor(1, 1, 1)
   player1:draw()
   player2:draw()
-
-  -- Physics test
-  love.graphics.setColor(0, 0.5, 0)
-  love.graphics.polygon("fill", physicalObjects.ground.body:getWorldPoints(
-    physicalObjects.ground.shape:getPoints()))
-  love.graphics.setColor(1, 1, 0)
-  love.graphics.circle("fill", physicalObjects.ball.body:getX(),
-    physicalObjects.ball.body:getY(), physicalObjects.ball.shape:getRadius())
 
   -- Text placement example
   local x = 200
@@ -66,4 +74,17 @@ function love.draw()
     love.graphics.setColor(1, 0, 0)
     love.graphics.circle("fill", x, y, 2);
   end
+
+  -- Physics test
+  love.graphics.setColor(0, 0.5, 0)
+  for i in pairs(terrain.floor) do
+    local floor = terrain.floor[i]
+      love.graphics.rectangle("fill", unpack(floor))
+  end
+
+  love.graphics.setColor(0, 0, 1)
+  love.graphics.rectangle("fill", playerBox.x-playerBox.width/2, playerBox.y-playerBox.height, 
+    playerBox.width, playerBox.height)
+  love.graphics.setColor(1, 1, 0)
+  love.graphics.circle("fill", playerBox.x, playerBox.y, 2)
 end
