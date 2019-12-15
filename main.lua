@@ -15,6 +15,8 @@ function love.load()
   -- Physics test
   gravity = 5000
   xSpeed = 500
+  jumpImpulseSpeed = 1200
+  jumping = false
 
   playerBox = {x = 400, y = 0, vx = 0, vy = 0, width = 50, height = 100}
 
@@ -45,9 +47,16 @@ function love.update(dt)
     playerBox.vx = 0;
   end
 
+  if love.keyboard.isDown("w") and touchingFloor and not jumping then
+    playerBox.vy = -jumpImpulseSpeed
+    jumping = true
+  elseif jumping and not love.keyboard.isDown("w") then
+    jumping = false
+  end
+
   -- Physics test
-  local touchingWall = false
-  local touchingFloor = false
+  touchingWall = false
+  touchingFloor = false
 
   for i in pairs(terrain.boundaries) do
     local boundaries = terrain.boundaries[i]
@@ -131,7 +140,4 @@ function love.draw()
     playerBox.width, playerBox.height)
   love.graphics.setColor(1, 1, 0)
   love.graphics.circle("fill", playerBox.x, playerBox.y, 2)
-  love.graphics.circle("fill", playerBox.x, playerBox.y - playerBox.height/2, 2)
-  --love.graphics.circle("fill", playerBox.x + playerBox.width/2, playerBox.y - playerBox.height/2, 2)
-  --love.graphics.circle("fill", playerBox.x - playerBox.width/2, playerBox.y - playerBox.height/2, 2)
 end
