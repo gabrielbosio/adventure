@@ -22,11 +22,11 @@ function love.load()
 
   terrain = {
     boundaries = {
-      {0, 400, 600, 500},
-      {600, 300, 805, 500},
-      {-5, 5, 10, 400},
-      {790, -5, 805, 400},
-      {500, 140, 600, 145}
+      {0, 470, 600, 500},
+      {600, 350, 805, 370},
+      {10, 5, 20, 480},
+      {780, 10, 790, 400},
+      {480, 140, 520, 145}
     },
     slopes = {
       {500, 400, 600, 300},
@@ -34,30 +34,65 @@ function love.load()
   }
 end
 
+-- Input test - callbacks seem good for prevent bunny hops
+-- not good for horizontal movement though: one need keyboard.isDown anyway
+function love.keypressed(key, isrepeat)
+  --[[
+  if key == "a" then
+    if love.keyboard.isDown("d") then
+      playerBox.vx = 0
+    else
+      playerBox.vx = -xSpeed
+    end
+  end
+
+  if key == "d" then
+    if love.keyboard.isDown("a") then
+      playerBox.vx = 0
+    else
+      playerBox.vx = xSpeed
+    end
+  end
+  ]]
+
+  -- Y Movement Input
+  if key == "w" and playerBox.vy == 0 then
+    playerBox.vy = -jumpImpulseSpeed
+  end
+end
+
+--[[
+function love.keyreleased(key)
+  if key == "a" or key == "d" then
+    playerBox.vx = 0
+
+    if (love.keyboard.isDown("a")) then
+      playerBox.vx = -xSpeed
+    end
+
+    if (love.keyboard.isDown("d")) then
+      playerBox.vx = xSpeed
+    end
+  end
+end
+]]
+
 function love.update(dt)
   player1:update(dt)
   player2:update(dt)
   timeline:update(dt)
 
-  -- Input
-  if love.keyboard.isDown("a") then
-    playerBox.vx = -xSpeed;
-  elseif love.keyboard.isDown("d") then
-    playerBox.vx = xSpeed;
+  -- X Movement Input (far simpler than the callback approach)
+  if love.keyboard.isDown("a") and not love.keyboard.isDown("d") then
+    playerBox.vx = -xSpeed
+  elseif love.keyboard.isDown("d") and not love.keyboard.isDown("a") then
+    playerBox.vx = xSpeed
   else
-    playerBox.vx = 0;
-  end
-
-  if love.keyboard.isDown("w") and touchingFloor and not jumping then
-    playerBox.vy = -jumpImpulseSpeed
-    jumping = true
-  elseif jumping and not love.keyboard.isDown("w") then
-    jumping = false
+    playerBox.vx = 0
   end
 
   -- Physics test
-  touchingWall = false
-  touchingFloor = false
+  playerBox.vy = playerBox.vy + gravity*dt
 
   for i in pairs(terrain.boundaries) do
     local boundaries = terrain.boundaries[i]
@@ -66,49 +101,27 @@ function love.update(dt)
     x2 = math.max(boundaries[1], boundaries[3])
     y2 = math.max(boundaries[2], boundaries[4])
 
-    if playerBox.y - playerBox.height/2 > y1 and
-        playerBox.y - playerBox.height/2 < y2 and
-        playerBox.x + playerBox.width/2 > x1 and
-        playerBox.x < x1 then
-
-        while playerBox.x + playerBox.width/2 > x1 do
-          playerBox.x = playerBox.x - 1
-        end
-
-        playerBox.vx = 0
-
-        touchingWall = true
-    elseif playerBox.y - playerBox.height/2 > y1 and
-        playerBox.y - playerBox.height/2 < y2 and
-        playerBox.x - playerBox.width/2 < x2 and
-        playerBox.x > x2 then
-
-        while playerBox.x - playerBox.width/2 < x2 do
-          playerBox.x = playerBox.x + 1
-        end
-
-        playerBox.vx = 0
-        touchingWall = true
+    if playerBox.x > x1 and playerBox.x < x2
+        and playerBox.y + playerBox.vy*dt > y1
+        and playerBox.y - playerBox.height/2 < y2 then
+      playerBox.vy = 0
+      playerBox.y = y1
     end
 
-    if playerBox.x > x1 and playerBox.x < x2 and
-        playerBox.y + playerBox.vy*dt > y1 and playerBox.y  < y2 then 
-
-      while playerBox.y > y1 and playerBox.y < y2 do
-        playerBox.y = playerBox.y - 1
-      end
-
-      touchingFloor = true
-      break
-
+    if playerBox.x + playerBox.width/2 + playerBox.vx*dt > x1
+        and playerBox.x - playerBox.width/2 < x2
+        and playerBox.y - playerBox.height > y1 and playerBox.y < y2 then
+      playerBox.vx = 0
+      playerBox.x = x1 - playerBox.width/2
     end
 
-  end
+    if playerBox.x - playerBox.width/2 + playerBox.vx*dt < x2
+        and playerBox.x + playerBox.width/2 > x1
+        and playerBox.y - playerBox.height > y1 and playerBox.y < y2 then
+      playerBox.vx = 0
+      playerBox.x = x2 + playerBox.width/2
+    end
 
-  if touchingFloor then
-    playerBox.vy = 0
-  else
-    playerBox.vy = playerBox.vy + gravity*dt
   end
 
   playerBox.x = playerBox.x + playerBox.vx*dt
