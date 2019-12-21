@@ -9,6 +9,7 @@ function createTimeline()
   timeline:addKeyFrame(2, function () player:walk(5, true) end)
   timeline:addKeyFrame(3, function () enemy:walk(5, true) end)
   timeline:addKeyFrame(4, function () player:walk(5) end)
+  timeline:addKeyFrame(4.6, function () enemy:attack() end)
   timeline:addKeyFrame(7, function () timeline:play() end)
 end
 
@@ -31,7 +32,7 @@ function love.draw()
   enemy:draw()
   particleSystem:draw()
 
-  -- Text placement example
+  --Text placement example
   local x = 200
   local anchors = {"north", "center", "south west", "east"}
   for j, anchor in ipairs(anchors) do
