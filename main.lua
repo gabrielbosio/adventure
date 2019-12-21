@@ -10,7 +10,6 @@ function createTimeline()
   timeline:addKeyFrame(3, function () enemy:walk(5, true) end)
   timeline:addKeyFrame(4, function () player:walk(5) end)
   timeline:addKeyFrame(4.6, function () enemy:attack() end)
-  timeline:addKeyFrame(7, function () timeline:play() end)
 end
 
 function love.load()
