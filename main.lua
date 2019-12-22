@@ -16,17 +16,15 @@ function love.load()
   gravity = 5000
   xSpeed = 500
   jumpImpulseSpeed = 1400
-  jumping = false
 
-  playerBox = {x = 400, y = 0, vx = 0, vy = 0, width = 50, height = 100}
+  playerBox = {x = 400, y = 400, vx = 0, vy = 0, width = 50, height = 100}
 
   terrain = {
     boundaries = {
-      {0, 470, 600, 500},
-      {600, 350, 805, 370},
-      {10, 5, 20, 480},
-      {780, 10, 790, 400},
-      {480, 140, 520, 145}
+      {-5, -5, 5, 605},			-- left
+      {-5, -5, 805, 300},		-- top
+      {-5, 530, 805, 605},	-- bottom
+      {795, -5, 805, 605} 	-- right
     },
     slopes = {
       {500, 400, 600, 300},
@@ -37,45 +35,11 @@ end
 -- Input test - callbacks seem good for prevent bunny hops
 -- not good for horizontal movement though: one need keyboard.isDown anyway
 function love.keypressed(key, isrepeat)
-  --[[
-  if key == "a" then
-    if love.keyboard.isDown("d") then
-      playerBox.vx = 0
-    else
-      playerBox.vx = -xSpeed
-    end
-  end
-
-  if key == "d" then
-    if love.keyboard.isDown("a") then
-      playerBox.vx = 0
-    else
-      playerBox.vx = xSpeed
-    end
-  end
-  ]]
-
   -- Y Movement Input
   if key == "w" and playerBox.vy == 0 then
     playerBox.vy = -jumpImpulseSpeed
   end
 end
-
---[[
-function love.keyreleased(key)
-  if key == "a" or key == "d" then
-    playerBox.vx = 0
-
-    if (love.keyboard.isDown("a")) then
-      playerBox.vx = -xSpeed
-    end
-
-    if (love.keyboard.isDown("d")) then
-      playerBox.vx = xSpeed
-    end
-  end
-end
-]]
 
 function love.update(dt)
   player1:update(dt)
@@ -96,11 +60,12 @@ function love.update(dt)
 
   for i in pairs(terrain.boundaries) do
     local boundaries = terrain.boundaries[i]
-    x1 = math.min(boundaries[1], boundaries[3])
-    y1 = math.min(boundaries[2], boundaries[4])
-    x2 = math.max(boundaries[1], boundaries[3])
-    y2 = math.max(boundaries[2], boundaries[4])
+    local x1 = math.min(boundaries[1], boundaries[3])
+    local y1 = math.min(boundaries[2], boundaries[4])
+    local x2 = math.max(boundaries[1], boundaries[3])
+    local y2 = math.max(boundaries[2], boundaries[4])
 
+    -- Bottom
     if playerBox.x > x1 and playerBox.x < x2
         and playerBox.y + playerBox.vy*dt > y1
         and playerBox.y - playerBox.height/2 < y2 then
@@ -108,13 +73,15 @@ function love.update(dt)
       playerBox.y = y1
     end
 
-    if playerBox.x + playerBox.width/2 + playerBox.vx*dt > x1
-        and playerBox.x - playerBox.width/2 < x2
-        and playerBox.y - playerBox.height > y1 and playerBox.y < y2 then
-      playerBox.vx = 0
-      playerBox.x = x1 - playerBox.width/2
+    -- Top
+    if playerBox.x > x1 and playerBox.x < x2 and playerBox.vy < 0
+        and playerBox.y - playerBox.height + playerBox.vy*dt < y2
+        and playerBox.y > y1 then
+      playerBox.vy = -playerBox.vy
+      playerBox.y = y2 + playerBox.height
     end
 
+    -- Left
     if playerBox.x - playerBox.width/2 + playerBox.vx*dt < x2
         and playerBox.x + playerBox.width/2 > x1
         and playerBox.y - playerBox.height > y1 and playerBox.y < y2 then
@@ -122,10 +89,20 @@ function love.update(dt)
       playerBox.x = x2 + playerBox.width/2
     end
 
+    -- Right
+    if playerBox.x + playerBox.width/2 + playerBox.vx*dt > x1
+        and playerBox.x - playerBox.width/2 < x2
+        and playerBox.y - playerBox.height > y1 and playerBox.y < y2 then
+      playerBox.vx = 0
+      playerBox.x = x1 - playerBox.width/2
+    end
+
+
   end
 
-  playerBox.x = playerBox.x + playerBox.vx*dt
-  playerBox.y = playerBox.y + playerBox.vy*dt
+  local winWidth, winHeight = love.window.getMode()
+  playerBox.x = (playerBox.x+playerBox.vx*dt) % winWidth
+  playerBox.y = (playerBox.y+playerBox.vy*dt) % winHeight
 end
 
 function love.draw()
@@ -155,7 +132,17 @@ function love.draw()
   love.graphics.setColor(0, 0, 1)
   love.graphics.rectangle("fill", playerBox.x-playerBox.width/2, playerBox.y-playerBox.height, 
     playerBox.width, playerBox.height)
+
+  -- Cursor position
+  love.graphics.setColor(1, 1, 1)
+  place.textByAnchor(love.mouse.getX() .. ", " .. love.mouse.getY(), 0, 0,
+    "north west")
+
+  -- Player position
   love.graphics.setColor(1, 1, 0)
   love.graphics.circle("fill", playerBox.x, playerBox.y, 2)
-  love.graphics.print(math.floor(playerBox.x) .. "," .. math.floor(playerBox.y), 0, 0)
+  local playerPositionText = math.floor(playerBox.x) .. ", " ..
+    math.floor(playerBox.y)
+  place.textByAnchor(playerPositionText, 0,
+    love.graphics.getFont():getHeight(playerPositionText), "north west")
 end
