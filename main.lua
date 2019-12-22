@@ -6,16 +6,18 @@ require("timeline")
 
 function createTimeline()
   timeline = Timeline:new()
-  timeline:addKeyFrame(2, function () player:walk(5, true) end)
-  timeline:addKeyFrame(3, function () enemy:walk(5, true) end)
-  timeline:addKeyFrame(4, function () player:walk(5) end)
-  timeline:addKeyFrame(4.6, function () enemy:attack() end)
+  timeline:addKeyFrame(2, function () player:walk(5) end)
+  timeline:addKeyFrame(2.5, function () enemy:walk(2, true) end)
+  timeline:addKeyFrame(3.5, function () player:walk(5, true) end)
+  timeline:addKeyFrame(4.3, function () enemy:attack() end)
 end
 
 function love.load()
   particleSystem = ParticleSystem:new()
   player = Player:new(400, 300, particleSystem)
   enemy = Enemy:new(100, 300, particleSystem)
+  player:setEnemies({enemy})
+  --enemy:setEnemies({player})
   createTimeline()
 end
 

@@ -13,6 +13,13 @@ local function createAnimationPlayer(self, particleSystem)
     particleSystem:createDust(dustX, self.y - 12)
   end)
 
+  attackingAnimation:addKeyFrames({6}, function ()
+    self.attackBox = {0, -192, 128, -128}
+  end)
+  attackingAnimation:addKeyFrames({8}, function ()
+    self.attackBox = nil
+  end)
+
   animationPlayer:addAnimation("standing", standingAnimation)
   animationPlayer:addAnimation("walking", walkingAnimation)
   animationPlayer:addAnimation("attacking", attackingAnimation)
@@ -33,6 +40,7 @@ function Enemy:new(x, y, particleSystem)
   object.isFacingRight = true
   object.walkingDistanceLeft = 0
   object.animationPlayer = createAnimationPlayer(object, particleSystem)
+  object.hitBox = {-48, -224, 48, 0}
 
   return object
 end
@@ -49,6 +57,18 @@ end
 function Enemy:attack()
   self.isAttacking = true
   self.attackingTime = 2
+end
+
+
+function Enemy:attackBoxInOrigin()
+  local attackBoxInOrigin = nil
+
+  if self.attackBox ~= nil then
+    attackBoxInOrigin = {self.x + self.attackBox[1], self.y + self.attackBox[2],
+                         self.x + self.attackBox[3], self.y + self.attackBox[4]}
+  end
+
+  return attackBoxInOrigin
 end
 
 

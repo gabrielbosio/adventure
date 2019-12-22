@@ -24,6 +24,19 @@ local function createAnimationPlayer(self, particleSystem)
 end
 
 
+local function isColliding(self, otherAttackBox)
+  if otherAttackBox == nil then
+    return false
+  end
+
+  local hitBoxInOrigin = {self.x + self.hitBox[1], self.y + self.hitBox[2],
+                          self.x + self.hitBox[3], self.y + self.hitBox[4]}
+  
+  return hitBoxInOrigin[1] < otherAttackBox[3] and hitBoxInOrigin[2] < otherAttackBox[4] and
+         hitBoxInOrigin[3] > otherAttackBox[1] and hitBoxInOrigin[4] > otherAttackBox[2]
+end
+
+
 function Player:new(x, y, particleSystem)
   local object = setmetatable({}, self)
   self.__index = self
@@ -35,8 +48,15 @@ function Player:new(x, y, particleSystem)
   object.isFacingRight = true
   object.walkingDistanceLeft = 0
   object.animationPlayer = createAnimationPlayer(object, particleSystem)
+  object.hitBox = {-48, -224, 48, 0}
 
   return object
+end
+
+
+function Player:setEnemies(enemies)
+  assert(type(enemies) == "table", "enemies must be a table")
+  self.enemies = enemies
 end
 
 
@@ -63,6 +83,12 @@ function Player:update(dt)
 
   else
     self.animationPlayer:setAnimation("standing")
+  end
+
+  for _, enemy in ipairs(self.enemies) do
+    if isColliding(self, enemy:attackBoxInOrigin()) then
+      print("Player says: 'OUCH'")
+    end
   end
 end
 
