@@ -17,14 +17,20 @@ function love.load()
   xSpeed = 500
   jumpImpulseSpeed = 1400
 
-  playerBox = {x = 400, y = 400, vx = 0, vy = 0, width = 50, height = 100}
+  playerBox = {x = 46, y = 142, vx = 0, vy = 0, width = 50, height = 100}
 
   terrain = {
     boundaries = {
-      {-5, -5, 5, 605},			-- left
-      {-5, -5, 805, 300},		-- top
+      {-5, -100, 5, 605},			-- left
+      --{-5, -5, 805, 5},		  -- top
       {-5, 530, 805, 605},	-- bottom
-      {795, -5, 805, 605} 	-- right
+      {795, -100, 805, 605}, 	-- right
+      -- Platforms
+      {5, 249, 123, 300},
+      {180, 400, 350, 420},
+      {326, 120, 400, 150},
+      {620, 216, 750, 250},
+      {84, 165, 206, 186},
     },
     slopes = {
       {500, 400, 600, 300},
@@ -66,7 +72,7 @@ function love.update(dt)
     local y2 = math.max(boundaries[2], boundaries[4])
 
     -- Bottom
-    if playerBox.x > x1 and playerBox.x < x2
+    if playerBox.x + playerBox.width/2 > x1 and playerBox.x - playerBox.width/2 < x2
         and playerBox.y + playerBox.vy*dt > y1
         and playerBox.y - playerBox.height/2 < y2 then
       playerBox.vy = 0
@@ -74,17 +80,17 @@ function love.update(dt)
     end
 
     -- Top
-    if playerBox.x > x1 and playerBox.x < x2 and playerBox.vy < 0
+    if playerBox.x + playerBox.width/2 > x1 and playerBox.x - playerBox.width/2 < x2
         and playerBox.y - playerBox.height + playerBox.vy*dt < y2
         and playerBox.y > y1 then
-      playerBox.vy = -playerBox.vy
+      playerBox.vy = 0
       playerBox.y = y2 + playerBox.height
     end
 
     -- Left
     if playerBox.x - playerBox.width/2 + playerBox.vx*dt < x2
         and playerBox.x + playerBox.width/2 > x1
-        and playerBox.y - playerBox.height > y1 and playerBox.y < y2 then
+        and playerBox.y - playerBox.height < y2 and playerBox.y > y1 then
       playerBox.vx = 0
       playerBox.x = x2 + playerBox.width/2
     end
@@ -92,7 +98,7 @@ function love.update(dt)
     -- Right
     if playerBox.x + playerBox.width/2 + playerBox.vx*dt > x1
         and playerBox.x - playerBox.width/2 < x2
-        and playerBox.y - playerBox.height > y1 and playerBox.y < y2 then
+        and playerBox.y - playerBox.height < y2 and playerBox.y > y1 then
       playerBox.vx = 0
       playerBox.x = x1 - playerBox.width/2
     end
@@ -101,8 +107,8 @@ function love.update(dt)
   end
 
   local winWidth, winHeight = love.window.getMode()
-  playerBox.x = (playerBox.x+playerBox.vx*dt) % winWidth
-  playerBox.y = (playerBox.y+playerBox.vy*dt) % winHeight
+  playerBox.x = (playerBox.x+playerBox.vx*dt)
+  playerBox.y = (playerBox.y+playerBox.vy*dt)
 end
 
 function love.draw()
