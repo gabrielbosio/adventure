@@ -130,6 +130,12 @@ function love.update(dt)
           playerBox.vy = 0
           playerBox.y = slopeY
         end
+
+        if playerBox.y > slopeY and playerBox.y - playerBox.height < slopeY
+          then
+          playerBox.vy = 0
+          playerBox.y = slopeY
+        end
     end
   end
 
