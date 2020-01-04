@@ -27,15 +27,22 @@ function love.load()
       {795, -100, 805, 605}, 	-- right
       -- Platforms
       {5, 249, 123, 300},
-      {180, 400, 350, 420},
-      {326, 120, 400, 150},
-      {620, 216, 750, 250},
-      {84, 165, 206, 186},
+      {620, 216, 740, 250},
+      {120, 165, 206, 186},
+      -- slope extension
+      {630, 430, 795, 605}
+    },
+    clouds = {
+      {326, 120, 400},
+      {392, 260, 480},
     },
     slopes = {
-      {500, 400, 600, 300},
+      {500, 530, 630, 430},
+      {220, 530, 5, 425}
     }
   }
+
+  cloudHeightDisplay = 10 
 end
 
 -- Input test - callbacks seem good for prevent bunny hops
@@ -102,8 +109,46 @@ function love.update(dt)
       playerBox.vx = 0
       playerBox.x = x1 - playerBox.width/2
     end
+  end
 
+  -- Slopes
+  for i in pairs(terrain.slopes) do
+    local slopes = terrain.slopes[i]
+    local m = (slopes[4]-slopes[2]) / (slopes[3]-slopes[1])
+    local x1 = math.min(slopes[1], slopes[3])
+    local y1 = math.min(slopes[2], slopes[4])
+    local x2 = math.max(slopes[1], slopes[3])
+    local y2 = math.max(slopes[2], slopes[4])
 
+    if playerBox.x + playerBox.width/2 > x1 and
+      playerBox.x - playerBox.width/2 < x2 then
+        local slopeX = playerBox.x
+        local slopeY = slopes[2] + m*(slopeX-slopes[1])
+
+        if playerBox.y <= slopeY and playerBox.y + playerBox.vy*dt > slopeY
+          then
+          playerBox.vy = 0
+          playerBox.y = slopeY
+        end
+    end
+  end
+
+  -- Clouds
+  for i in pairs(terrain.clouds) do
+    local clouds = terrain.clouds[i]
+    local x1 = math.min(clouds[1], clouds[3])
+    local y1 = clouds[2]
+    local x2 = math.max(clouds[1], clouds[3])
+
+    -- Land
+    if playerBox.x + playerBox.width/2 > x1 and playerBox.x - playerBox.width/2 < x2
+        and playerBox.y + playerBox.vy*dt > y1
+        and playerBox.y - playerBox.height/2 < y1 and playerBox.vy > 0 then
+      playerBox.vy = 0
+      playerBox.y = y1
+    end
+
+    -- Walk over
   end
 
   local winWidth, winHeight = love.window.getMode()
@@ -131,13 +176,27 @@ function love.draw()
   love.graphics.setColor(0, 0.5, 0)
   for i in pairs(terrain.boundaries) do
     local boundaries = terrain.boundaries[i]
-      love.graphics.polygon("fill", boundaries[1], boundaries[2], boundaries[3], boundaries[2],
-        boundaries[3], boundaries[4], boundaries[1], boundaries[4])
+    love.graphics.polygon("fill", boundaries[1], boundaries[2], boundaries[3],
+      boundaries[2], boundaries[3], boundaries[4], boundaries[1], boundaries[4])
+  end
+
+  for i in pairs(terrain.slopes) do
+    local slopes = terrain.slopes[i]
+    love.graphics.polygon("fill", slopes[1], slopes[2], slopes[3], slopes[2],
+      slopes[3], slopes[4])
+  end
+
+  love.graphics.setColor(0.3, 0.6, 1)
+  for i in pairs(terrain.clouds) do
+    local clouds = terrain.clouds[i]
+    love.graphics.polygon("fill", clouds[1], clouds[2], clouds[3], clouds[2],
+      clouds[3], clouds[2] + cloudHeightDisplay, clouds[1],
+      clouds[2] + cloudHeightDisplay)
   end
 
   love.graphics.setColor(0, 0, 1)
-  love.graphics.rectangle("fill", playerBox.x-playerBox.width/2, playerBox.y-playerBox.height, 
-    playerBox.width, playerBox.height)
+  love.graphics.rectangle("fill", playerBox.x-playerBox.width/2,
+    playerBox.y-playerBox.height, playerBox.width, playerBox.height)
 
   -- Cursor position
   love.graphics.setColor(1, 1, 1)
