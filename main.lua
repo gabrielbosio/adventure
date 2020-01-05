@@ -30,7 +30,7 @@ function love.load()
       {620, 216, 740, 250},
       {120, 165, 206, 186},
       -- slope extension
-      {630, 430, 795, 605}
+      --{630, 430, 795, 605}
     },
     clouds = {
       {326, 120, 400},
@@ -38,7 +38,10 @@ function love.load()
     },
     slopes = {
       {500, 530, 630, 430},
-      {220, 530, 5, 425}
+      {140, 530, 90, 505},
+      {230, 380, 280, 450},
+      {460, 430, 400, 500},
+      {795, 90, 720, 0},
     }
   }
 
@@ -113,30 +116,95 @@ function love.update(dt)
 
   -- Slopes
   for i in pairs(terrain.slopes) do
-    local slopes = terrain.slopes[i]
+    local x1, y1, x2, y2 = unpack(terrain.slopes[i])
+
+    -- Right angle side (acts like a wall)
+    if playerBox.y > math.min(y1, y2)
+        and playerBox.y - playerBox.height < math.max(y1, y2) then
+      if x1 > x2 and playerBox.x - playerBox.width/2 < x2
+          and playerBox.x + playerBox.width/2 + playerBox.vx*dt > x2 then
+        playerBox.vx = 0
+        playerBox.x = x2 - playerBox.width/2
+      elseif x1 < x2 and playerBox.x + playerBox.width/2 > x2
+          and playerBox.x - playerBox.width/2 + playerBox.vx*dt < x2 then
+        playerBox.vx = 0
+        playerBox.x = x2 + playerBox.width/2
+      end
+    end
+
+    -- Top and bottom
+    if playerBox.x + playerBox.width/2 > math.min(x1, x2)
+        and playerBox.x - playerBox.width/2 < math.max(x1, x2) then
+      local m = (y2-y1) / (x2-x1)
+
+      if y1 < y2 then
+        --[[
+        if playerBox.vx ~= 0 then
+          local mv = playerBox.vy/playerBox.vx
+          local slopeX = ((y1-m*x1)-(playerBox.y-playerBox.height)
+            +mv*playerBox.x
+            +math.abs(playerBox.vy)/playerBox.vx*playerBox.width/2) / (mv-m)
+          local slopeY = y1 + m*(playerBox.x-x1)
+
+          if playerBox.vx * (playerBox.x+playerBox.vx*dt-slopeX) > 0
+              and playerBox.y + playerBox.vy*dt < slopeY then
+            playerBox.vx = 0
+            playerBox.vy = 0
+            playerBox.x = slopeX
+            playerBox.y = slopeY
+          end
+        end
+        ]]
+
+        -- Floor (flat)
+        if playerBox.y + playerBox.vy*dt > y1
+            and playerBox.y - playerBox.height/2 < y2 then
+          playerBox.vy = 0
+          playerBox.y = y1
+        end
+
+      else
+
+        -- Ceiling (flat) 
+        if playerBox.y > y1
+            and playerBox.y - playerBox.height + playerBox.vy*dt < y1 then
+          playerBox.vy = 0
+          playerBox.y = y1 + playerBox.height
+        end
+
+        -- Floor (leaning)
+        local slopeY = y1 + m*(playerBox.x-x1)
+        if playerBox.y > slopeY and playerBox.y - playerBox.height < y1 then
+          playerBox.vy = 0
+          playerBox.y = slopeY
+        end
+
+      end
+
+    end
+
+    --[[
     local m = (slopes[4]-slopes[2]) / (slopes[3]-slopes[1])
     local x1 = math.min(slopes[1], slopes[3])
     local y1 = math.min(slopes[2], slopes[4])
     local x2 = math.max(slopes[1], slopes[3])
     local y2 = math.max(slopes[2], slopes[4])
 
-    if playerBox.x + playerBox.width/2 > x1 and
-      playerBox.x - playerBox.width/2 < x2 then
+    -- Land
+    if playerBox.x > x1 and
+      playerBox.x < x2 then
         local slopeX = playerBox.x
         local slopeY = slopes[2] + m*(slopeX-slopes[1])
 
-        if playerBox.y <= slopeY and playerBox.y + playerBox.vy*dt > slopeY
-          then
-          playerBox.vy = 0
-          playerBox.y = slopeY
-        end
-
-        if playerBox.y > slopeY and playerBox.y - playerBox.height < slopeY
+        if playerBox.y < slopeY and playerBox.y + playerBox.vy*dt > slopeY
+          or (playerBox.y > slopeY
+              and playerBox.y - playerBox.height < slopeY)
           then
           playerBox.vy = 0
           playerBox.y = slopeY
         end
     end
+    ]]
   end
 
   -- Clouds
@@ -146,15 +214,12 @@ function love.update(dt)
     local y1 = clouds[2]
     local x2 = math.max(clouds[1], clouds[3])
 
-    -- Land
     if playerBox.x + playerBox.width/2 > x1 and playerBox.x - playerBox.width/2 < x2
         and playerBox.y + playerBox.vy*dt > y1
         and playerBox.y - playerBox.height/2 < y1 and playerBox.vy > 0 then
       playerBox.vy = 0
       playerBox.y = y1
     end
-
-    -- Walk over
   end
 
   local winWidth, winHeight = love.window.getMode()
@@ -200,6 +265,7 @@ function love.draw()
       clouds[2] + cloudHeightDisplay)
   end
 
+  -- Player collision box
   love.graphics.setColor(0, 0, 1)
   love.graphics.rectangle("fill", playerBox.x-playerBox.width/2,
     playerBox.y-playerBox.height, playerBox.width, playerBox.height)
