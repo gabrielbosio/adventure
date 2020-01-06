@@ -30,8 +30,8 @@ function love.load()
       {620, 216, 740, 250},
       {120, 165, 206, 186},
       -- slope extension
-      --{5, 505, 80, 530},
-      --{630, 430, 795, 605}
+      {5, 505, 90, 530},
+      {630, 430, 795, 605}
     },
     clouds = {
       {326, 120, 400},
@@ -100,9 +100,13 @@ function love.update(dt)
     end
 
     -- Left
-    if playerBox.x - playerBox.width/2 + playerBox.vx*dt < x2
+    if (playerBox.x - playerBox.width/2 + playerBox.vx*dt < x2
         and playerBox.x + playerBox.width/2 > x1
-        and playerBox.y - playerBox.height < y2 and playerBox.y > y1 then
+        and playerBox.y - playerBox.height < y2 and playerBox.y > y1 
+        and not guyOnSlope) then
+        --[[or (guyOnSlope and playerBox.x + playerBox.vx*dt < x2
+        and playerBox.x > x1
+        and playerBox.y - playerBox.height < y2 and playerBox.y > y1) then]]
       playerBox.vx = 0
       playerBox.x = x2 + playerBox.width/2
     end
@@ -110,13 +114,16 @@ function love.update(dt)
     -- Right
     if playerBox.x + playerBox.width/2 + playerBox.vx*dt > x1
         and playerBox.x - playerBox.width/2 < x2
-        and playerBox.y - playerBox.height < y2 and playerBox.y > y1 then
+        and playerBox.y - playerBox.height < y2 and playerBox.y > y1 
+        and not guyOnSlope then
       playerBox.vx = 0
       playerBox.x = x1 - playerBox.width/2
     end
   end
 
   -- Slopes
+  guyOnSlope = false
+
   for i in pairs(terrain.slopes) do
     local x1, y1, x2, y2 = unpack(terrain.slopes[i])
     local yTop, yBottom = math.min(y1, y2), math.max(y1, y2)
@@ -213,7 +220,6 @@ function love.update(dt)
           else
             playerBox.y = y2
           end
-
         end
 
         if playerBox.y <= y1 and playerBox.y > math.max(y2, slopeY)
@@ -223,6 +229,7 @@ function love.update(dt)
                  and playerBox.x - playerBox.width/2 <= x2)) then
           playerBox.vy = 0
           playerBox.y = slopeY
+          guyOnSlope = true
         end
 
 
