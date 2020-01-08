@@ -3,6 +3,7 @@ require("animationplayer")
 require("player")
 require("timeline")
 require("place")
+require("map")
 
 function love.load()
   player1 = Player:new(400, 300)
@@ -19,33 +20,6 @@ function love.load()
 
   playerBox = {x = 46, y = 142, vx = 0, vy = 0, width = 50, height = 100}
 
-  terrain = {
-    boundaries = {
-      {-5, -100, 5, 605},			-- left
-      --{-5, -5, 805, 5},		  -- top
-      {-5, 530, 805, 605},	-- bottom
-      {795, -100, 805, 605}, 	-- right
-      -- Platforms
-      --{5, 249, 123, 300},
-      {620, 216, 740, 250},
-      {120, 165, 206, 186},
-      -- slope extension
-      {5, 505, 90, 530},
-      {630, 430, 795, 605}
-    },
-    clouds = {
-      {326, 120, 400},
-      {392, 260, 480},
-    },
-    slopes = {
-      --{75, 35, 0, 0},
-      {500, 530, 630, 430},
-      {200, 530, 90, 505},
-      --{230, 380, 280, 450},
-      --{460, 420, 400, 500},
-      --{720, 90, 795, 0},
-    }
-  }
 
   cloudHeightDisplay = 10 
 end
@@ -76,8 +50,8 @@ function love.update(dt)
   -- Physics test
   playerBox.vy = playerBox.vy + gravity*dt
 
-  for i in pairs(terrain.boundaries) do
-    local boundaries = terrain.boundaries[i]
+  for i in pairs(map.terrain.boundaries) do
+    local boundaries = map.terrain.boundaries[i]
     local x1 = math.min(boundaries[1], boundaries[3])
     local y1 = math.min(boundaries[2], boundaries[4])
     local x2 = math.max(boundaries[1], boundaries[3])
@@ -124,8 +98,8 @@ function love.update(dt)
   -- Slopes
   guyOnSlope = false
 
-  for i in pairs(terrain.slopes) do
-    local x1, y1, x2, y2 = unpack(terrain.slopes[i])
+  for i in pairs(map.terrain.slopes) do
+    local x1, y1, x2, y2 = unpack(map.terrain.slopes[i])
     local yTop, yBottom = math.min(y1, y2), math.max(y1, y2)
 
     -- Right angle side (acts like a wall)
@@ -239,8 +213,8 @@ function love.update(dt)
   end  -- for i
 
   -- Clouds
-  for i in pairs(terrain.clouds) do
-    local clouds = terrain.clouds[i]
+  for i in pairs(map.terrain.clouds) do
+    local clouds = map.terrain.clouds[i]
     local x1 = math.min(clouds[1], clouds[3])
     local y1 = clouds[2]
     local x2 = math.max(clouds[1], clouds[3])
@@ -275,26 +249,7 @@ function love.draw()
   end
 
   -- Physics test
-  love.graphics.setColor(0, 0.5, 0)
-  for i in pairs(terrain.boundaries) do
-    local boundaries = terrain.boundaries[i]
-    love.graphics.polygon("fill", boundaries[1], boundaries[2], boundaries[3],
-      boundaries[2], boundaries[3], boundaries[4], boundaries[1], boundaries[4])
-  end
-
-  for i in pairs(terrain.slopes) do
-    local slopes = terrain.slopes[i]
-    love.graphics.polygon("fill", slopes[1], slopes[2], slopes[3], slopes[2],
-      slopes[3], slopes[4])
-  end
-
-  love.graphics.setColor(0.3, 0.6, 1)
-  for i in pairs(terrain.clouds) do
-    local clouds = terrain.clouds[i]
-    love.graphics.polygon("fill", clouds[1], clouds[2], clouds[3], clouds[2],
-      clouds[3], clouds[2] + cloudHeightDisplay, clouds[1],
-      clouds[2] + cloudHeightDisplay)
-  end
+  map.draw()
 
   -- Player collision box
   love.graphics.setColor(0, 0, 1)
