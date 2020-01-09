@@ -43,15 +43,21 @@ levels = {
   }
 }
 
+
 cloudHeightDisplay = 10
 
+function drawBox(rectangle)
+  love.graphics.polygon("fill", rectangle.x1, rectangle.y1, rectangle.x2,
+                        rectangle.y1, rectangle.x2, rectangle.y2,
+                        rectangle.x1, rectangle.y2)
+end
 
 function drawBoxes()
   love.graphics.setColor(0, 0.5, 0)
   for i in pairs(levels["test"].terrain.boundaries) do
     local boundaries = levels["test"].terrain.boundaries[i]
-    love.graphics.polygon("fill", boundaries[1], boundaries[2], boundaries[3],
-      boundaries[2], boundaries[3], boundaries[4], boundaries[1], boundaries[4])
+    drawBox{x1 = boundaries[1], y1 = boundaries[2], x2 = boundaries[3],
+            y2 = boundaries[4]}
   end
 
   for i in pairs(levels["test"].terrain.slopes) do
@@ -63,8 +69,6 @@ function drawBoxes()
   love.graphics.setColor(0.3, 0.6, 1)
   for i in pairs(levels["test"].terrain.clouds) do
     local clouds = levels["test"].terrain.clouds[i]
-    love.graphics.polygon("fill", clouds[1], clouds[2], clouds[3], clouds[2],
-      clouds[3], clouds[2] + cloudHeightDisplay, clouds[1],
-      clouds[2] + cloudHeightDisplay)
+    drawBox{x1 = clouds[1], y1 = clouds[2], x2 = clouds[3], y2 = clouds[2] + cloudHeightDisplay}
   end
 end
