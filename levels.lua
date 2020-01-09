@@ -1,6 +1,6 @@
 module("levels", package.seeall)
 
-levels = {
+level = {
   ["test"] = {
     terrain = {
       boundaries = {
@@ -26,7 +26,7 @@ levels = {
         {200, 530, 90, 505},
       }
     },
-    entities = {
+    entitiesData = {
       player = {46, 142}
     }
   },
@@ -37,7 +37,7 @@ levels = {
         {0, 500, 800, 600}
       }
     },
-    entities = {
+    entitiesData = {
       player = {400, 300}
     }
   }
@@ -56,7 +56,7 @@ function drawRightTriangle(corners)
                         corners.x2, corners.y2)
 end
 
-function drawBoxes()
+function drawTerrainOutline()
   love.graphics.setColor(0, 0.5, 0)
   for i in pairs(levels["test"].terrain.boundaries) do
     local boundaries = levels["test"].terrain.boundaries[i]

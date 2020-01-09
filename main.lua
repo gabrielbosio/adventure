@@ -7,5 +7,5 @@ function love.update(dt)
 end
 
 function love.draw()
-  levels.drawBoxes()
+  levels.drawTerrainOutline()
 end
