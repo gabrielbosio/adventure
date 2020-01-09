@@ -1,0 +1,45 @@
+# ECS
+
+## Entities
+* Megasapi (Player, Position, Velocity, Acceleration, Weight, Solid, CollisionBox, AnimationClip, Input, Living)
+* Henchman (Enemy, Position, Velocity, Acceleration, Weight, Solid, CollisionBox, AnimationClip, Input, Living)
+* Pomodoro (Position, AnimationClip, ExperienceEffect, Glow)
+* Meds (Position, AnimationClip, Healing, Glow)
+* Elevator (Position, Portal, AnimationClip)
+* Pizza (Position, Velocity, Solid, CollisionBox, Projectile)
+
+## Components
+* Position (x, y)
+* Velocity (x, y)
+* Acceleration (x, y)
+* Weight
+* Solid (collidingTerrain)
+* CollisionBox (w, h)
+* MovementMemory (vx, vy, ax, ay)
+* AnimationClip (animations, currentAnimation, playing)
+* Player (experience, stunned)
+* Enemy (stunned)
+* Input (right, left, ...)
+* Living (health, stamina, deathType)
+* Portal (x, y)
+* Goal (stageID)
+* Healing (amount)
+* ExperienceEffect (amount)
+* Glow (color)
+* Projectile (isGood)
+
+## Systems
+* AnimationRenderer (AnimationClip, Position)
+* Animator (AnimationClip)
+* PlayerController (Living, AnimationClip, Player, Input)
+* Pause (MovementMemory, AnimationClip, Velocity)
+* Gravity (Acceleration, Velocity, Weight)
+* TerrainCollision (CollisionBox, Solid, Velocity, Position)
+* ProjectileCollision (AnimationClip, Input, Projectile)
+* HealthSupply (Position, Player, Living, Healing)
+* ExperienceSupply (Position, Player, ExperienceEffect)
+* PortalHandler (Velocity, Player, Position, Portal)
+* Movement (Acceleration, Position, Velocity, Input)
+* EnemyController (Enemy, Input, Position, Player, AnimationClip, Living)
+* ProjectileHitCheck (Position, Enemy, Player, Solid, Projectile)
+* CharacterHitCheck (Living, Position, AnimationClip, Enemy, Player)
