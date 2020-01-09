@@ -1,10 +1,10 @@
 require("animation")
 require("animationplayer")
 require("collision")
+require("levels")
 require("player")
 require("timeline")
 require("place")
-require("map")
 
 function love.load()
   player1 = Player:new(400, 300)
@@ -55,7 +55,7 @@ function love.update(dt)
     playerBox.vx = 0
   end
 
-  collision.terrainCollision(components, map.terrain, dt)
+  collision.terrainCollision(components, levels.level["test"].terrain, dt)
 end
 
 function love.draw()
@@ -76,7 +76,7 @@ function love.draw()
   end
 
   -- Physics test
-  map.draw()
+  levels.drawTerrainOutline()
 
   -- Player collision box
   love.graphics.setColor(0, 0, 1)
@@ -95,5 +95,4 @@ function love.draw()
     math.floor(playerBox.y)
   place.textByAnchor(playerPositionText, 0,
     love.graphics.getFont():getHeight(playerPositionText), "north west")
-
 end
