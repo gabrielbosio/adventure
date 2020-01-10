@@ -26,8 +26,6 @@ function love.load()
       megasapi = {x = 0, y = 0}
     }
   }
-
-  cloudHeightDisplay = 10 
 end
 
 -- Input test - callbacks seem good for prevent bunny hops
