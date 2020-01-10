@@ -170,10 +170,10 @@ function terrainCollision(components, terrain, dt)
           end
 
           if position.y + collisionBox.y <= y1 and position.y + collisionBox.y > math.max(y2, slopeY)
-              and ((x1 > x2 and position.y + collisionBox.x - collisionBox.width/2 <= x1
-              and position.y + collisionBox.x + collisionBox.width/2 >= x2)
-              or (x1 < x2 and position.y + collisionBox.x + collisionBox.width/2 >= x1
-              and position.y + collisionBox.x - collisionBox.width/2 <= x2)) then
+              and ((x1 > x2 and position.x + collisionBox.x - collisionBox.width/2 <= x1
+              and position.x + collisionBox.x + collisionBox.width/2 >= x2)
+              or (x1 < x2 and position.x + collisionBox.x + collisionBox.width/2 >= x1
+              and position.x + collisionBox.x - collisionBox.width/2 <= x2)) then
             collisionBox.vy = 0
             position.y = slopeY
             collisionBox.onSlope = true
