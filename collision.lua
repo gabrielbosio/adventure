@@ -6,6 +6,7 @@ function terrainCollision(components, terrain, dt)
   
   for entity, solidComponent in pairs(components.solids) do
     local collisionBox = components.collisionBoxes[entity]
+    local position = components.positions[entity]
     collisionBox.vy = collisionBox.vy + gravity*dt
 
     for i in pairs(terrain.boundaries) do
@@ -16,40 +17,44 @@ function terrainCollision(components, terrain, dt)
       local y2 = math.max(boundaries[2], boundaries[4])
 
       -- Bottom
-      if collisionBox.x + collisionBox.width/2 > x1 and collisionBox.x - collisionBox.width/2 < x2
-          and collisionBox.y + collisionBox.vy*dt > y1
-          and collisionBox.y - collisionBox.height/2 < y2 then
+      if position.x + collisionBox.x + collisionBox.width/2 > x1
+          and position.x + collisionBox.x - collisionBox.width/2 < x2
+          and position.y + collisionBox.y + collisionBox.vy*dt > y1
+          and position.y + collisionBox.y - collisionBox.height/2 < y2 then
         collisionBox.vy = 0
-        collisionBox.y = y1
+        position.y = y1
       end
 
       -- Top
-      if collisionBox.x + collisionBox.width/2 > x1 and collisionBox.x - collisionBox.width/2 < x2
-          and collisionBox.y - collisionBox.height + collisionBox.vy*dt < y2
-          and collisionBox.y > y1 then
+      if position.x + collisionBox.x + collisionBox.width/2 > x1
+          and position.x + collisionBox.x - collisionBox.width/2 < x2
+          and position.y + collisionBox.y - collisionBox.height + collisionBox.vy*dt < y2
+          and position.y + collisionBox.y > y1 then
         collisionBox.vy = 0
-        collisionBox.y = y2 + collisionBox.height
+        position.y = y2 + collisionBox.height
       end
 
       -- Left
-      if (collisionBox.x - collisionBox.width/2 + collisionBox.vx*dt < x2
-          and collisionBox.x + collisionBox.width/2 > x1
-          and collisionBox.y - collisionBox.height < y2 and collisionBox.y > y1 
+      if (position.x + collisionBox.x - collisionBox.width/2 + collisionBox.vx*dt < x2
+          and position.x + collisionBox.x + collisionBox.width/2 > x1
+          and position.y + collisionBox.y - collisionBox.height < y2
+          and position.y  + collisionBox.y > y1
           and not collisionBox.onSlope) then
           --[[or (collisionBox.onSlope and collisionBox.x + collisionBox.vx*dt < x2
           and collisionBox.x > x1
           and collisionBox.y - collisionBox.height < y2 and collisionBox.y > y1) then]]
         collisionBox.vx = 0
-        collisionBox.x = x2 + collisionBox.width/2
+        position.x = x2 + collisionBox.width/2
       end
 
       -- Right
-      if collisionBox.x + collisionBox.width/2 + collisionBox.vx*dt > x1
-          and collisionBox.x - collisionBox.width/2 < x2
-          and collisionBox.y - collisionBox.height < y2 and collisionBox.y > y1 
+      if position.x + collisionBox.x + collisionBox.width/2 + collisionBox.vx*dt > x1
+          and position.x + collisionBox.x - collisionBox.width/2 < x2
+          and position.y + collisionBox.y - collisionBox.height < y2
+          and position.y + collisionBox.y > y1 
           and not collisionBox.onSlope then
         collisionBox.vx = 0
-        collisionBox.x = x1 - collisionBox.width/2
+        position.x = x1 - collisionBox.width/2
       end
     end
 
@@ -61,106 +66,116 @@ function terrainCollision(components, terrain, dt)
       local yTop, yBottom = math.min(y1, y2), math.max(y1, y2)
 
       -- Right angle side (acts like a wall)
-      if collisionBox.y > yTop and collisionBox.y - collisionBox.height < yBottom then
-        if x1 > x2 and collisionBox.x + collisionBox.width/2 <= x2
-            and collisionBox.x + collisionBox.width/2 + collisionBox.vx*dt > x2 then
+      if position.y + collisionBox.y > yTop
+          and position.y + collisionBox.y - collisionBox.height < yBottom then
+        
+        if x1 > x2 and position.x + collisionBox.x + collisionBox.width/2 <= x2
+            and position.x + collisionBox.x + collisionBox.width/2 + collisionBox.vx*dt > x2 then
           collisionBox.vx = 0
-          collisionBox.x = x2 - collisionBox.width/2
-        elseif x1 < x2 and collisionBox.x - collisionBox.width/2 >= x2
-            and collisionBox.x - collisionBox.width/2 + collisionBox.vx*dt < x2 then
+          position.x = x2 - collisionBox.width/2
+        
+        elseif x1 < x2 and position.x + collisionBox.x - collisionBox.width/2 >= x2
+            and position.x + collisionBox.x - collisionBox.width/2 + collisionBox.vx*dt < x2 then
           collisionBox.vx = 0
-          collisionBox.x = x2 + collisionBox.width/2
+          position.x = x2 + collisionBox.width/2
         end
       end
 
       -- Sharp corner (acts like a wall)
-      if x1 > x2 and collisionBox.x + collisionBox.width/2 > x1
-          and collisionBox.x - collisionBox.width/2 + collisionBox.vx*dt < x1 then
-        if (y1 > y2 and collisionBox.y > y1
-            and collisionBox.y - collisionBox.height < y1) or (y1 < y2
-            and collisionBox.y > y1 and collisionBox.y - collisionBox.height < y1) then
+      if x1 > x2 and position.x + collisionBox.x + collisionBox.width/2 > x1
+          and position.x + collisionBox.x - collisionBox.width/2 + collisionBox.vx*dt < x1 then
+        
+        if (y1 > y2 and position.y + collisionBox.y > y1
+            and position.y + collisionBox.y - collisionBox.height < y1) or (y1 < y2
+            and position.y + collisionBox.y > y1
+            and position.y + collisionBox.y - collisionBox.height < y1) then
           collisionBox.vx = 0
-          collisionBox.x = x1 + collisionBox.width/2
+          position.x = x1 + collisionBox.width/2
         end
-      elseif x1 < x2 and collisionBox.x - collisionBox.width/2 < x1
-          and collisionBox.x + collisionBox.width/2 + collisionBox.vx*dt > x1 then
-        if (y1 > y2 and collisionBox.y > y1
-            and collisionBox.y - collisionBox.height < y1) or (y1 < y2
-            and collisionBox.y > y1 and collisionBox.y - collisionBox.height < y1) then
+
+      elseif x1 < x2 and position.x + collisionBox.x - collisionBox.width/2 < x1
+          and position.x + collisionBox.x + collisionBox.width/2 + collisionBox.vx*dt > x1 then
+        
+        if (y1 > y2 and position.y + collisionBox.y > y1
+            and position.y + collisionBox.y - collisionBox.height < y1) or (y1 < y2
+            and position.y + collisionBox.y > y1
+            and position.y + collisionBox.y - collisionBox.height < y1) then
           collisionBox.vx = 0
-          collisionBox.x = x1 - collisionBox.width/2
+          position.x = x1 - collisionBox.width/2
         end
       end
 
       -- Top and bottom
-      if collisionBox.x + collisionBox.width/2 > math.min(x1, x2)
-          and collisionBox.x - collisionBox.width/2 < math.max(x1, x2) then
+      if position.x + collisionBox.x + collisionBox.width/2 > math.min(x1, x2)
+          and position.x + collisionBox.x - collisionBox.width/2 < math.max(x1, x2) then
         local m = (y2-y1) / (x2-x1)
 
         if y1 < y2 then
           -- Ceiling (leaning)
-          if collisionBox.y - collisionBox.height >= y1
-              and collisionBox.y - collisionBox.height <= y2 then
-            slopeX = x1 + (collisionBox.y-collisionBox.height-y1)/m
+          if position.y + collisionBox.y - collisionBox.height >= y1
+              and position.y + collisionBox.y - collisionBox.height <= y2 then
+            slopeX = x1 + (position.y + collisionBox.y - collisionBox.height - y1)/m
 
-            if x1 > x2 and collisionBox.x - collisionBox.width/2 >= slopeX
-                and collisionBox.x - collisionBox.width/2 + collisionBox.vx*dt < slopeX
+            if x1 > x2 and position.x + collisionBox.x - collisionBox.width/2 >= slopeX
+                and position.x + collisionBox.x - collisionBox.width/2 + collisionBox.vx*dt < slopeX
                 then
               collisionBox.vx = 0
-              collisionBox.x = slopeX + collisionBox.width/2
-            elseif x1 < x2 and collisionBox.x + collisionBox.width/2 <= slopeX
-                and collisionBox.x + collisionBox.width/2 + collisionBox.vx*dt > slopeX
+              position.x = slopeX + collisionBox.width/2
+            elseif x1 < x2 and position.x + collisionBox.x + collisionBox.width/2 <= slopeX
+                and position.x + collisionBox.x + collisionBox.width/2 + collisionBox.vx*dt > slopeX
                 then
               collisionBox.vx = 0
-              collisionBox.x = slopeX - collisionBox.width/2
+              position.x = slopeX - collisionBox.width/2
             end
           end
 
           local slopeY = y1 + m*(collisionBox.x-x1)
 
-          if collisionBox.y - collisionBox.height >= slopeY
-              and collisionBox.y - collisionBox.height + collisionBox.vy*dt < slopeY
+          if position.y + collisionBox.y - collisionBox.height >= slopeY
+              and position.y + collisionBox.y - collisionBox.height + collisionBox.vy*dt < slopeY
               then
             collisionBox.vy = 0
-            collisionBox.y = slopeY + collisionBox.height
+            position.y = slopeY + collisionBox.height
           end
 
           -- Floor (flat)
-          if collisionBox.y + collisionBox.vy*dt > y1 and collisionBox.y <= y1 then
+          if position.y + collisionBox.y + collisionBox.vy*dt > y1
+              and position.y + collisionBox.y <= y1 then
             collisionBox.vy = 0
-            collisionBox.y = y1
+            position.y = y1
           end
 
         else  -- (y1 >= y2)
 
           -- Ceiling (flat) 
-          if collisionBox.vy < 0 and collisionBox.y - collisionBox.height >= y1
-              and collisionBox.y - collisionBox.height + collisionBox.vy*dt < y1 then
+          if collisionBox.vy < 0 and position.y + collisionBox.y - collisionBox.height >= y1
+              and position.y + collisionBox.y - collisionBox.height + collisionBox.vy*dt < y1 then
             collisionBox.vy = 0
-            collisionBox.y = y1 + collisionBox.height
+            position.y = y1 + collisionBox.height
           end
 
           -- Floor (leaning)
-          local slopeY = y1 + m*(collisionBox.x-x1)
-          if collisionBox.y <= math.max(y2, slopeY)
-              and collisionBox.y + collisionBox.vy*dt > math.max(y2, slopeY) then
+          local slopeY = y1 + m*(position.x + collisionBox.x - x1)
+
+          if position.y + collisionBox.y <= math.max(y2, slopeY)
+              and position.y + collisionBox.y + collisionBox.vy*dt > math.max(y2, slopeY) then
             collisionBox.vy = 0
 
             -- Prevent floating character at slope corner
-            if (collisionBox.x-x1)*(collisionBox.x-x2) < 0 then
-              collisionBox.y = slopeY
+            if (position.x + collisionBox.x - x1)*(position.x + collisionBox.x - x2) < 0 then
+              position.y = slopeY
             else
-              collisionBox.y = y2
+              position.y = y2
             end
           end
 
-          if collisionBox.y <= y1 and collisionBox.y > math.max(y2, slopeY)
-              and ((x1 > x2 and collisionBox.x - collisionBox.width/2 <= x1
-                    and collisionBox.x + collisionBox.width/2 >= x2)
-                    or (x1 < x2 and collisionBox.x + collisionBox.width/2 >= x1
-                    and collisionBox.x - collisionBox.width/2 <= x2)) then
+          if position.y + collisionBox.y <= y1 and position.y + collisionBox.y > math.max(y2, slopeY)
+              and ((x1 > x2 and position.y + collisionBox.x - collisionBox.width/2 <= x1
+              and position.y + collisionBox.x + collisionBox.width/2 >= x2)
+              or (x1 < x2 and position.y + collisionBox.x + collisionBox.width/2 >= x1
+              and position.y + collisionBox.x - collisionBox.width/2 <= x2)) then
             collisionBox.vy = 0
-            collisionBox.y = slopeY
+            position.y = slopeY
             collisionBox.onSlope = true
           end
 
@@ -177,16 +192,18 @@ function terrainCollision(components, terrain, dt)
       local y1 = clouds[2]
       local x2 = math.max(clouds[1], clouds[3])
 
-      if collisionBox.x + collisionBox.width/2 > x1 and collisionBox.x - collisionBox.width/2 < x2
-          and collisionBox.y + collisionBox.vy*dt > y1 and collisionBox.y <= y1
+      if position.x + collisionBox.x + collisionBox.width/2 > x1
+          and position.x + collisionBox.x - collisionBox.width/2 < x2
+          and position.y + collisionBox.y + collisionBox.vy*dt > y1
+          and position.y + collisionBox.y <= y1
           and collisionBox.vy > 0 then
         collisionBox.vy = 0
-        collisionBox.y = y1
+        position.y = y1
       end
     end
 
     local winWidth, winHeight = love.window.getMode()
-    collisionBox.x = (collisionBox.x+collisionBox.vx*dt)
-    collisionBox.y = (collisionBox.y+collisionBox.vy*dt)
+    position.x = (position.x+collisionBox.vx*dt)
+    position.y = (position.y+collisionBox.vy*dt)
   end
 end

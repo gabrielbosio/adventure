@@ -9,10 +9,13 @@ function love.load()
 
   components = {
     collisionBoxes = {
-      megasapi = {x = 46, y = 142, vx = 0, vy = 0, width = 50, height = 100, onSlope = false}
+      megasapi = {x = 0, y = 0, vx = 0, vy = 0, width = 50, height = 100, onSlope = false}
     },
     solids = {
       megasapi = {}
+    },
+    positions = {
+      megasapi = {x = 46, y = 142}
     }
   }
 
@@ -45,6 +48,7 @@ function love.update(dt)
 end
 
 function love.draw()
+  local playerPosition = components.positions.megasapi
   local playerBox = components.collisionBoxes.megasapi
   love.graphics.setColor(1, 1, 1)
 
@@ -53,8 +57,8 @@ function love.draw()
 
   -- Player collision box
   love.graphics.setColor(0, 0, 1)
-  love.graphics.rectangle("fill", playerBox.x-playerBox.width/2,
-    playerBox.y-playerBox.height, playerBox.width, playerBox.height)
+  love.graphics.rectangle("fill", playerPosition.x-playerBox.width/2,
+    playerPosition.y-playerBox.height, playerBox.width, playerBox.height)
 
   -- Cursor position
   love.graphics.setColor(1, 1, 1)
@@ -63,9 +67,9 @@ function love.draw()
 
   -- Player position
   love.graphics.setColor(1, 1, 0)
-  love.graphics.circle("fill", playerBox.x, playerBox.y, 2)
-  local playerPositionText = math.floor(playerBox.x) .. ", " ..
-    math.floor(playerBox.y)
+  love.graphics.circle("fill", playerPosition.x, playerPosition.y, 2)
+  local playerPositionText = math.floor(playerPosition.x) .. ", " ..
+    math.floor(playerPosition.y)
   place.textByAnchor(playerPositionText, 0,
     love.graphics.getFont():getHeight(playerPositionText), "north west")
 end
