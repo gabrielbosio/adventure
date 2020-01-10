@@ -14,10 +14,10 @@ function love.load()
       megasapi = components.collisionBox(50, 100)
     },
     solids = {
-      megasapi = {}
+      megasapi = true
     },
     weights = {
-      megasapi = {}
+      megasapi = true
     },
     positions = {
       megasapi = {x = 46, y = 142}
