@@ -9,7 +9,7 @@ function love.load()
 
   components = {
     collisionBoxes = {
-      megasapi = {x = 0, y = 0, vx = 0, vy = 0, width = 50, height = 100, onSlope = false}
+      megasapi = {x = 0, y = 0, vx = 0, vy = 0, width = 50, height = 100, onSlope = false, slopeX = 0}
     },
     solids = {
       megasapi = {}
