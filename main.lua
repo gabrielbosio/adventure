@@ -1,4 +1,5 @@
 require("collision")
+require("components")
 require("levels")
 require("place")
 
@@ -9,7 +10,7 @@ function love.load()
 
   components = {
     collisionBoxes = {
-      megasapi = {x = 0, y = 0, vx = 0, vy = 0, width = 50, height = 100, onSlope = false, slopeX = 0}
+      megasapi = components.collisionBox(0, 0, 50, 100)
     },
     solids = {
       megasapi = {}
