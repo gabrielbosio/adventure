@@ -11,7 +11,7 @@ function love.load()
 
   components = {
     collisionBoxes = {
-      megasapi = components.collisionBox(0, 0, 50, 100)
+      megasapi = components.collisionBox(50, 100)
     },
     solids = {
       megasapi = {}

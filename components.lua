@@ -1,10 +1,10 @@
 module("components", package.seeall)
 
 
-function collisionBox(x, y, width, height)
+function collisionBox(width, height)
   local component = {
-    x = x,
-    y = y,
+    x = 0,
+    y = 0,
     width = width,
     height = height,
     onSlope = false,
