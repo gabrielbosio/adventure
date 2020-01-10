@@ -7,8 +7,6 @@ function collisionBox(x, y, width, height)
     y = y,
     width = width,
     height = height,
-    vx = 0,
-    vy = 0,
     onSlope = false,
     slopeX = 0
   }

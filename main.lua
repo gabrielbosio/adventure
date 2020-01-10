@@ -1,6 +1,7 @@
 require("collision")
 require("components")
 require("levels")
+require("mruv")
 require("place")
 
 function love.load()
@@ -15,8 +16,14 @@ function love.load()
     solids = {
       megasapi = {}
     },
+    weights = {
+      megasapi = {}
+    },
     positions = {
       megasapi = {x = 46, y = 142}
+    },
+    velocities = {
+      megasapi = {x = 0, y = 0}
     }
   }
 
@@ -27,25 +34,30 @@ end
 -- not good for horizontal movement though: one need keyboard.isDown anyway
 function love.keypressed(key, isrepeat)
   local playerBox = components.collisionBoxes.megasapi
+  local playerVelocity = components.velocities.megasapi
   -- Y Movement Input
-  if key == "w" and playerBox.vy == 0 then
-    playerBox.vy = -jumpImpulseSpeed
+  if key == "w" and playerVelocity.y == 0 then
+    playerVelocity.y = -jumpImpulseSpeed
   end
 end
 
 function love.update(dt)
   local playerBox = components.collisionBoxes.megasapi
+  local playerVelocity = components.velocities.megasapi
 
   -- X Movement Input (far simpler than the callback approach)
+  -- Extract this into movement and playerController using input and velocity as components
   if love.keyboard.isDown("a") and not love.keyboard.isDown("d") then
-    playerBox.vx = -xSpeed
+    playerVelocity.x = -xSpeed
   elseif love.keyboard.isDown("d") and not love.keyboard.isDown("a") then
-    playerBox.vx = xSpeed
+    playerVelocity.x = xSpeed
   else
-    playerBox.vx = 0
+    playerVelocity.x = 0
   end
 
+  mruv.gravity(components, dt)
   collision.terrainCollision(components, levels.level["test"].terrain, dt)
+  mruv.movement(components, dt)
 end
 
 function love.draw()
