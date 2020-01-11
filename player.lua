@@ -1,10 +1,21 @@
 module("Player", package.seeall)
 
+require("animation")
+require("animationplayer")
 
-local function createAnimationPlayer()
+
+local function createAnimationPlayer(self, particleSystem)
   local spriteSheet = love.graphics.newImage("sprites/player.png")
-  local standingAnimation = Animation:new(spriteSheet, 192, 256, {1, 2})
-  local walkingAnimation = Animation:new(spriteSheet, 192, 256, {3, 4, 5, 4})
+  local standingAnimation = Animation:new(spriteSheet, 192, 256, {1, 2, 3, 2})
+
+  local walkingAnimation = Animation:new(spriteSheet, 192, 256, {5, 6, 7, 4, 8, 9, 10, 4},
+                                         0.5)
+  
+  walkingAnimation:addKeyFrames({3, 7}, function ()
+    local dustX = self.x - 8 * (self.isFacingRight and 1 or -1)
+    particleSystem:createDust(dustX, self.y - 12)
+  end)
+
   local animationPlayer = AnimationPlayer:new()
   animationPlayer:addAnimation("standing", standingAnimation)
   animationPlayer:addAnimation("walking", walkingAnimation)
@@ -13,19 +24,39 @@ local function createAnimationPlayer()
 end
 
 
-function Player:new(x, y)
+local function isColliding(self, otherAttackBox)
+  if otherAttackBox == nil then
+    return false
+  end
+
+  local hitBoxInOrigin = {self.x + self.hitBox[1], self.y + self.hitBox[2],
+                          self.x + self.hitBox[3], self.y + self.hitBox[4]}
+  
+  return hitBoxInOrigin[1] < otherAttackBox[3] and hitBoxInOrigin[2] < otherAttackBox[4] and
+         hitBoxInOrigin[3] > otherAttackBox[1] and hitBoxInOrigin[4] > otherAttackBox[2]
+end
+
+
+function Player:new(x, y, particleSystem)
   local object = setmetatable({}, self)
   self.__index = self
   object.x = x
   object.y = y
-  object.speed = 100
-  object.stepDistance = 20
+  object.speed = 300
+  object.stepDistance = 15
   object.isWalking = false
   object.isFacingRight = true
   object.walkingDistanceLeft = 0
-  object.animationPlayer = createAnimationPlayer()
+  object.animationPlayer = createAnimationPlayer(object, particleSystem)
+  object.hitBox = {-48, -224, 48, 0}
 
   return object
+end
+
+
+function Player:setEnemies(enemies)
+  assert(type(enemies) == "table", "enemies must be a table")
+  self.enemies = enemies
 end
 
 
@@ -52,6 +83,12 @@ function Player:update(dt)
 
   else
     self.animationPlayer:setAnimation("standing")
+  end
+
+  for _, enemy in ipairs(self.enemies) do
+    if isColliding(self, enemy:attackBoxInOrigin()) then
+      print("Player says: 'OUCH'")
+    end
   end
 end
 

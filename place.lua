@@ -3,7 +3,7 @@ module("place", package.seeall)
 
 -- Subroutine
 local function check(anchor)
-  assert(moveBy[anchor], 'moveBy received an invalid anchor ("' ..
+  assert(moveBy[anchor] ~= nil, 'moveBy received an invalid anchor ("' ..
     tostring(anchor) .. '")\n\nCheck for typos!')
 end
 
