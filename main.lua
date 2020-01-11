@@ -1,3 +1,4 @@
+require("animation")
 require("collision")
 require("components")
 require("levels")
@@ -6,10 +7,8 @@ require("control")
 require("place")
 
 function love.load()
-  -- Movement constants. For now, they are used by the player only.
-  -- They could be used by the enemies too.
-  -- The enemies could also define their own constants in some module.
   dofile("animations.lua")
+  spriteSheet = love.graphics.newImage("sprites/megasapi.png")
 
   componentsTable = {
     players = {  -- or maybe "player", there is just one...
@@ -31,7 +30,7 @@ function love.load()
       megasapi = {x = 0, y = 0, xSpeed = 500, jumpImpulseSpeed = 1400}
     },
     animationClips = {
-      megasapi = components.animationClip(animations.megasapi, "standing")
+      megasapi = components.animationClip(animations.megasapi, "standing", spriteSheet)
     }
   }
 end
@@ -43,6 +42,7 @@ function love.update(dt)
   mruv.gravity(componentsTable, dt)
   collision.terrainCollision(componentsTable, levels.level["test"].terrain, dt)
   mruv.movement(componentsTable, dt, xSpeed, jumpImpulseSpeed)
+  animation.animator(componentsTable)
 end
 
 function love.draw()
@@ -70,4 +70,5 @@ function love.draw()
     math.floor(playerPosition.y)
   place.textByAnchor(playerPositionText, 0,
     love.graphics.getFont():getHeight(playerPositionText), "north west")
+  animation.animationRenderer(componentsTable, spriteSheet)
 end

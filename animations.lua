@@ -1,10 +1,8 @@
--- Animation = {gridOffset, spriteSize, frames, duration, loop}
+-- Animation = {frames, loop}
+-- Frame = {sprite, origin, duration}
 
 animations = {
   megasapi = {
-    standing = {{}, {}, {1, 2}, 0.2},
-    walking = {{}, {}, {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11}, 0.04},
-    startingJump = {{0, 0}, {}, {1}, 0.04, false},
-    jumping = {{}, {}, {1}, 0.04, false}
+    standing = {{{1, {-70.15, -277.6}, 0.2}, {2, {-68.8, -258.8}, 0.2}}, true}
   }
 }
