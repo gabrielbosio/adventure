@@ -8,7 +8,7 @@ require("place")
 
 function love.load()
   -- Level data loading
-  currentLevel = levels.first
+  currentLevel = levels.level[levels.first]
   local goalData = currentLevel.entitiesData.goal
 
   componentsTable = {
@@ -43,7 +43,7 @@ function love.update(dt)
 
   mruv.gravity(componentsTable, dt)
   collision.terrainCollision(componentsTable, currentLevel.terrain, dt)
-  mruv.movement(componentsTable, dt, xSpeed, jumpImpulseSpeed)
+  mruv.movement(componentsTable, dt)
 end
 
 function love.draw()

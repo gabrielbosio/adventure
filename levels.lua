@@ -45,7 +45,7 @@ level = {
   }
 }
 
-first = level["test"]  -- the game loads this level at start
+first = "test"  -- the game loads this level at start
 
 
 -- Outline drawing

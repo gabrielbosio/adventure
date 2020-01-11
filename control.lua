@@ -23,12 +23,13 @@ function playerController(componentsTable)
       end
 
       -- Y Movement Input
-
-      if love.keyboard.isDown("w") and velocity.y == 0 and not holdingJumpKey then
+      if love.keyboard.isDown("k") and velocity.y == 0 and not holdingJumpKey then
         velocity.y = -velocity.jumpImpulseSpeed
         holdingJumpKey = true
-      elseif not love.keyboard.isDown("w") and holdingJumpKey then
+      elseif not love.keyboard.isDown("k") and holdingJumpKey then
         holdingJumpKey = false
       end
+
+
   end  -- for entity, player
 end
