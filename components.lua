@@ -61,6 +61,7 @@ function animationClip(animations, nameOfCurrentAnimation, spriteSheet)
     animations = animationsTable,
     nameOfCurrentAnimation = nameOfCurrentAnimation,
     currentFrameNumber = 1,
+    facingRight = true,
     playing = true
   }
 end
