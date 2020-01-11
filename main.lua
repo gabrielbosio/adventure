@@ -9,15 +9,11 @@ function love.load()
   -- Movement constants. For now, they are used by the player only.
   -- They could be used by the enemies too.
   -- The enemies could also define their own constants in some module.
-  xSpeed = 500
-  jumpImpulseSpeed = 1400
+  
 
   componentsTable = {
     players = {  -- or maybe "player", there is just one...
       megasapi = {experience = 0, stunned = false}
-    },
-    inputs = {
-      megasapi = {left = false, right = false, jump = false}
     },
     collisionBoxes = {
       megasapi = components.collisionBox(50, 100)
