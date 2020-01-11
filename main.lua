@@ -9,7 +9,7 @@ function love.load()
   -- Movement constants. For now, they are used by the player only.
   -- They could be used by the enemies too.
   -- The enemies could also define their own constants in some module.
-  
+  dofile("animations.lua")
 
   componentsTable = {
     players = {  -- or maybe "player", there is just one...
@@ -29,6 +29,9 @@ function love.load()
     },
     velocities = {
       megasapi = {x = 0, y = 0, xSpeed = 500, jumpImpulseSpeed = 1400}
+    },
+    animationClips = {
+      megasapi = components.animationClip(animations.megasapi, "standing")
     }
   }
 end
