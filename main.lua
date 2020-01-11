@@ -3,7 +3,6 @@ require("components")
 require("levels")
 require("mruv")
 require("control")
-require("place")
 require("outline")
 
 
