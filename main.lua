@@ -11,7 +11,7 @@ function love.load()
   -- Level data loading
   currentLevel = levels.level[levels.first]
   control.currentLevel = currentLevel  -- there must be something better
-  local goalData = currentLevel.entitiesData.goal
+  local goalData = currentLevel.entitiesData.goals
 
   dofile("animations.lua")
 
@@ -29,19 +29,22 @@ function love.load()
       megasapi = true
     },
     positions = {
-      megasapi = {x = 46, y = 142},
-      goal = {x = goalData[1], y = goalData[2]}
+      megasapi = {x = 46, y = 142}
     },
     velocities = {
       megasapi = {x = 0, y = 0, xSpeed = 500, jumpImpulseSpeed = 1400}
     },
-    goals = {
-      goal = goalData[3]
-    },
+    goals = {},
     animationClips = {
       megasapi = components.animationClip(animations.megasapi, "standing")
     }
   }
+
+  for goalIndex, goalData in pairs(goalData) do
+    local id = "goal" .. tostring(goalIndex)
+    componentsTable.positions[id] = {x = goalData[1], y = goalData[2]}
+    componentsTable.goals[id] = goalData[3]
+  end
 end
 
 
@@ -59,7 +62,7 @@ function love.draw()
   local playerBox = componentsTable.collisionBoxes.megasapi
 
   outline.drawTerrainOutline(currentLevel)
-  outline.drawGoal(componentsTable.positions.goal)
+  outline.drawGoals(componentsTable.goals, componentsTable.positions)
   outline.drawPlayerCollisionBox(playerPosition, playerBox)
   outline.drawPlayerPosition(playerPosition, true)
   outline.displayMouseCoordinates()

@@ -29,7 +29,10 @@ level = {
     },
     entitiesData = {
       player = {46, 142},
-      goal = {740, 430, "another level"}
+      goals = {
+        {740, 430, "another level"},
+        {740, 20, "secret level"},
+      }
     }
   },
 
@@ -42,7 +45,18 @@ level = {
     entitiesData = {
       player = {400, 450}
     }
-  }
+  },
+
+  ["secret level"] = {
+    terrain = {
+      boundaries = {
+        {300, 200, 500, 300}
+      }
+    },
+    entitiesData = {
+      player = {400, 100}
+    }
+  },
 }
 
 first = "test"  -- the game loads this level at start
