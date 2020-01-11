@@ -7,16 +7,14 @@ currentLevel = {}  -- modified by playerController system
 
 
 function playerController(componentsTable)
-  components.assertComponentsDependency(componentsTable.players, componentsTable.velocities,
-                                        "player", "velocity")
-  components.assertComponentsDependency(componentsTable.players, componentsTable.positions,
-                                        "player", "position")
+  -- players depend on velocities and positions
+  components.assertComponentsDependency("players", "velocities", "positions")
 
   -- This for loop could be avoided if there is only one entity with a "player"
   -- component.
   for entity, player in pairs(componentsTable.players or {}) do
     local velocity = componentsTable.velocities[entity]
-    components.assertComponentExistence(velocity, "player", "velocity", entity)
+    components.assertComponentsExistence(entity, "player", {velocity, "velocity"})
 
     -- X Movement Input
     if love.keyboard.isDown("a") and not love.keyboard.isDown("d") then
@@ -35,18 +33,18 @@ function playerController(componentsTable)
       holdingJumpKey = false
     end
 
+    -- This could be moved to the collision module or something similar
     -- Goal control
     local position = componentsTable.positions[entity]
-    components.assertComponentExistence(position, "player", "position", entity)
     local collisionBox = componentsTable.collisionBoxes[entity]
-    components.assertComponentExistence(collisionBox, "player", "collisionBox", entity)
+    components.assertComponentsExistence(entity, "player", {position, "position"}, {collisionBox, "collisionBox"})
 
     for goalEntity, nextLevelID in pairs(componentsTable.goals or {}) do
       local goalPosition = componentsTable.positions[goalEntity]
 
       local GOAL_SIZE = 110  -- store this variable somewhere else
+      -- (variable repeated in outline.lua)
 
-      -- This could be moved to the collision module or something similar
       if position.x + collisionBox.width/2 >= goalPosition.x - GOAL_SIZE/2
           and position.x - collisionBox.width/2 <= goalPosition.x + GOAL_SIZE/2
           and position.y >= goalPosition.y - GOAL_SIZE
@@ -78,6 +76,29 @@ function playerController(componentsTable)
         break
       end
     end
+    
+    -- This could be moved to the collision module or something similar
+    if componentsTable.living ~= nil and componentsTable.living[entity] ~= nil
+        then
+      local health = componentsTable.living[entity].health
+
+      for healingEntity, healingAmount in pairs(componentsTable.healing or {}) do
+        local healingPosition = componentsTable.positions[healingEntity]
+        local healingAmount = componentsTable.healing[healingEntity]
+
+        local HEALING_SIZE = 10  -- store this variable somewhere else
+      -- (variable repeated in outline.lua)
+
+        if position.x + collisionBox.width/2 >= healingPosition.x - HEALING_SIZE/2
+            and position.x - collisionBox.width/2 <= healingPosition.x + HEALING_SIZE/2
+            and position.y >= healingPosition.y - HEALING_SIZE
+            and position.y - collisionBox.height <= healingPosition.y then
+          componentsTable.living[entity].health = health + healingAmount
+          componentsTable.positions[healingEntity] = nil
+          componentsTable.healing[healingEntity] = nil
+        end
+      end
+    end  -- Too much repeated code
 
   end  -- for entity, player
 end
