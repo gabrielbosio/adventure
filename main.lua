@@ -2,14 +2,23 @@ require("collision")
 require("components")
 require("levels")
 require("mruv")
+require("control")
 require("place")
 
 function love.load()
-  -- Physics test
+  -- Movement constants. For now, they are used by the player only.
+  -- They could be used by the enemies too.
+  -- The enemies could also define their own constants in some module.
   xSpeed = 500
   jumpImpulseSpeed = 1400
 
   componentsTable = {
+    players = {  -- or maybe "player", there is just one...
+      megasapi = {experience = 0, stunned = false}
+    },
+    inputs = {
+      megasapi = {left = false, right = false, jump = false}
+    },
     collisionBoxes = {
       megasapi = components.collisionBox(50, 100)
     },
@@ -30,29 +39,11 @@ end
 
 
 function love.update(dt)
-  local playerVelocity = componentsTable.velocities.megasapi
-
-  -- X Movement Input (far simpler than the callback approach)
-  -- Extract this into movement and playerController using input and velocity as componentsTable
-  if love.keyboard.isDown("a") and not love.keyboard.isDown("d") then
-    playerVelocity.x = -xSpeed
-  elseif love.keyboard.isDown("d") and not love.keyboard.isDown("a") then
-    playerVelocity.x = xSpeed
-  else
-    playerVelocity.x = 0
-  end
-
-  -- Y Movement Input
-  if love.keyboard.isDown("w") and playerVelocity.y == 0 and not jumping then
-    playerVelocity.y = -jumpImpulseSpeed
-    jumping = true
-  elseif not love.keyboard.isDown("w") and jumping then
-    jumping = false
-  end
+  control.playerController(componentsTable)
 
   mruv.gravity(componentsTable, dt)
   collision.terrainCollision(componentsTable, levels.level["test"].terrain, dt)
-  mruv.movement(componentsTable, dt)
+  mruv.movement(componentsTable, dt, xSpeed, jumpImpulseSpeed)
 end
 
 function love.draw()
