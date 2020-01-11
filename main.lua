@@ -28,7 +28,7 @@ function love.load()
       megasapi = {x = 46, y = 142}
     },
     velocities = {
-      megasapi = {x = 0, y = 0}
+      megasapi = {x = 0, y = 0, xSpeed = 500, jumpImpulseSpeed = 1400}
     }
   }
 end

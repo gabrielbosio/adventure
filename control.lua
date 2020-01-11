@@ -10,16 +10,14 @@ function playerController(componentsTable)
   -- This for loop could be avoided if there is only one entity with a "player"
   -- component.
   for entity, player in pairs(componentsTable.players or {}) do
-      local xSpeed = 500
-      local jumpImpulseSpeed = 1400
       local velocity = componentsTable.velocities[entity]
       components.assertComponentExistence(velocity, "player", "velocity", entity)
 
       -- X Movement Input
       if love.keyboard.isDown("a") and not love.keyboard.isDown("d") then
-        velocity.x = -xSpeed
+        velocity.x = -velocity.xSpeed
       elseif not love.keyboard.isDown("a") and love.keyboard.isDown("d") then
-        velocity.x = xSpeed
+        velocity.x = velocity.xSpeed
       else
         velocity.x = 0
       end
@@ -27,7 +25,7 @@ function playerController(componentsTable)
       -- Y Movement Input
 
       if love.keyboard.isDown("w") and velocity.y == 0 and not holdingJumpKey then
-        velocity.y = -jumpImpulseSpeed
+        velocity.y = -velocity.jumpImpulseSpeed
         holdingJumpKey = true
       elseif not love.keyboard.isDown("w") and holdingJumpKey then
         holdingJumpKey = false
