@@ -28,19 +28,8 @@ function love.load()
   }
 end
 
--- Input test - callbacks seem good for prevent bunny hops
--- not good for horizontal movement though: one need keyboard.isDown anyway
-function love.keypressed(key, isrepeat)
-  local playerBox = components.collisionBoxes.megasapi
-  local playerVelocity = components.velocities.megasapi
-  -- Y Movement Input
-  if key == "w" and playerVelocity.y == 0 then
-    playerVelocity.y = -jumpImpulseSpeed
-  end
-end
 
 function love.update(dt)
-  local playerBox = components.collisionBoxes.megasapi
   local playerVelocity = components.velocities.megasapi
 
   -- X Movement Input (far simpler than the callback approach)
@@ -51,6 +40,14 @@ function love.update(dt)
     playerVelocity.x = xSpeed
   else
     playerVelocity.x = 0
+  end
+
+  -- Y Movement Input
+  if love.keyboard.isDown("w") and playerVelocity.y == 0 and not jumping then
+    playerVelocity.y = -jumpImpulseSpeed
+    jumping = true
+  elseif not love.keyboard.isDown("w") and jumping then
+    jumping = false
   end
 
   mruv.gravity(components, dt)
