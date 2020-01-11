@@ -35,6 +35,7 @@ function playerController(componentsTable)
       holdingJumpKey = false
     end
 
+    -- This could be moved to the collision module or something similar
     -- Goal control
     local position = componentsTable.positions[entity]
     components.assertComponentExistence(position, "player", "position", entity)
@@ -45,8 +46,8 @@ function playerController(componentsTable)
       local goalPosition = componentsTable.positions[goalEntity]
 
       local GOAL_SIZE = 110  -- store this variable somewhere else
+      -- (variable repeated in outline.lua)
 
-      -- This could be moved to the collision module or something similar
       if position.x + collisionBox.width/2 >= goalPosition.x - GOAL_SIZE/2
           and position.x - collisionBox.width/2 <= goalPosition.x + GOAL_SIZE/2
           and position.y >= goalPosition.y - GOAL_SIZE
@@ -78,6 +79,29 @@ function playerController(componentsTable)
         break
       end
     end
+    
+    -- This could be moved to the collision module or something similar
+    if componentsTable.living ~= nil and componentsTable.living[entity] ~= nil
+        then
+      local health = componentsTable.living[entity].health
+
+      for healingEntity, healingAmount in pairs(componentsTable.healing or {}) do
+        local healingPosition = componentsTable.positions[healingEntity]
+        local healingAmount = componentsTable.healing[healingEntity]
+
+        local HEALING_SIZE = 10  -- store this variable somewhere else
+      -- (variable repeated in outline.lua)
+
+        if position.x + collisionBox.width/2 >= healingPosition.x - HEALING_SIZE/2
+            and position.x - collisionBox.width/2 <= healingPosition.x + HEALING_SIZE/2
+            and position.y >= healingPosition.y - HEALING_SIZE
+            and position.y - collisionBox.height <= healingPosition.y then
+          componentsTable.living[entity].health = health + healingAmount
+          componentsTable.positions[healingEntity] = nil
+          componentsTable.healing[healingEntity] = nil
+        end
+      end
+    end  -- Too much repeated code
 
   end  -- for entity, player
 end

@@ -5,6 +5,8 @@ level = {
   ["test"] = {
     terrain = {
       boundaries = {
+        -- {x1, y1, x2, y2}
+
         -- Main (level delimiters)
         {-5, -100, 5, 605},			-- left
         {-5, 530, 805, 605},	-- bottom
@@ -28,10 +30,14 @@ level = {
       }
     },
     entitiesData = {
-      player = {46, 142},
-      goals = {
+      player = {46, 250},  -- {x, y}
+      goals = {  -- {x, y, newLevelID}
         {740, 430, "another level"},
-        {740, 20, "secret level"},
+        {740, 20, "secret"},
+      },
+      medkits = {  -- {x, y}
+        {45, 50},
+        {280, 260},
       }
     }
   },
@@ -47,14 +53,17 @@ level = {
     }
   },
 
-  ["secret level"] = {
+  ["secret"] = {
     terrain = {
       boundaries = {
         {300, 200, 500, 300}
       }
     },
     entitiesData = {
-      player = {400, 100}
+      player = {400, 100},
+      goals = {
+        {555, 200, "test"}
+      }
     }
   },
 }

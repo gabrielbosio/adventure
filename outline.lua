@@ -8,10 +8,25 @@ function drawGoals(goals, positions)
   r, g, b = love.graphics.getColor()
 
   local size = 110
-  love.graphics.setColor(1, 0.5, 0.5)
+  love.graphics.setColor(0.5, 1, 0.5)
 
   for goal in pairs(goals) do
     local position = positions[goal]
+    love.graphics.rectangle("fill", position.x-size/2, position.y-size, size,
+                            size)
+  end
+
+  love.graphics.setColor(r, g, b)
+end
+
+function drawMedkits(medkits, positions)
+  r, g, b = love.graphics.getColor()
+
+  local size = 10
+  love.graphics.setColor(1, 0, 0)
+
+  for medkit in pairs(medkits) do
+    local position = positions[medkit]
     love.graphics.rectangle("fill", position.x-size/2, position.y-size, size,
                             size)
   end
@@ -52,6 +67,16 @@ function displayMouseCoordinates()
   love.graphics.setColor(r, g, b)
 end
 
+function displayPlayerHealth(value)
+  r, g, b = love.graphics.getColor()
+
+  love.graphics.setColor(1, 0, 0)
+  place.textByAnchor(tostring(value), 0,
+                     2*love.graphics.getFont():getHeight(text), "north west")
+
+  love.graphics.setColor(r, g, b)
+end
+
 
 local function drawBox(corners)
   love.graphics.polygon("fill", corners.x1, corners.y1, corners.x2, corners.y1,
@@ -67,7 +92,7 @@ function drawTerrainOutline(currentLevel)
   r, g, b = love.graphics.getColor()
 
   local cloudHeightDisplay = 10
-  love.graphics.setColor(0, 0.5, 0)
+  love.graphics.setColor(0, 0.3, 0)
   for i in pairs(currentLevel.terrain.boundaries) do
     local boundaries = currentLevel.terrain.boundaries[i]
     drawBox{x1 = boundaries[1], y1 = boundaries[2], x2 = boundaries[3],

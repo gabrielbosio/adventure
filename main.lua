@@ -10,7 +10,6 @@ function love.load()
   -- Level data loading
   currentLevel = levels.level[levels.first]
   control.currentLevel = currentLevel  -- there must be something better
-  local goalData = currentLevel.entitiesData.goals
 
   dofile("animations.lua")
 
@@ -28,7 +27,10 @@ function love.load()
       megasapi = true
     },
     positions = {
-      megasapi = {x = 46, y = 142}
+      megasapi = {
+        x = currentLevel.entitiesData.player[1],
+        y = currentLevel.entitiesData.player[2]
+      }
     },
     velocities = {
       megasapi = {x = 0, y = 0, xSpeed = 500, jumpImpulseSpeed = 1400}
@@ -36,13 +38,25 @@ function love.load()
     goals = {},
     animationClips = {
       megasapi = components.animationClip(animations.megasapi, "standing")
-    }
+    },
+    living = {
+      megasapi = {health = 10, stamina = 100, deathType = nil}
+    },
+    healing = {}
   }
 
+  local goalData = currentLevel.entitiesData.goals
   for goalIndex, goalData in pairs(goalData) do
     local id = "goal" .. tostring(goalIndex)
     componentsTable.positions[id] = {x = goalData[1], y = goalData[2]}
     componentsTable.goals[id] = goalData[3]
+  end
+
+  local medkitsData = currentLevel.entitiesData.medkits
+  for medkitIndex, medkitData in pairs(medkitsData) do
+    local id = "medkit" .. tostring(medkitIndex)
+    componentsTable.positions[id] = {x = medkitData[1], y = medkitData[2]}
+    componentsTable.healing[id] = 1  -- some healing amount
   end
 end
 
@@ -62,7 +76,9 @@ function love.draw()
 
   outline.drawTerrainOutline(currentLevel)
   outline.drawGoals(componentsTable.goals, componentsTable.positions)
+  outline.drawMedkits(componentsTable.healing, componentsTable.positions)
   outline.drawPlayerCollisionBox(playerPosition, playerBox)
   outline.drawPlayerPosition(playerPosition, true)
   outline.displayMouseCoordinates()
+  outline.displayPlayerHealth(componentsTable.living.megasapi.health)
 end
