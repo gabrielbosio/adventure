@@ -29,7 +29,7 @@ level = {
     },
     entitiesData = {
       player = {46, 142},
-      goal = {712, 430, "another level"}
+      goal = {740, 430, "another level"}
     }
   },
 
@@ -40,7 +40,7 @@ level = {
       }
     },
     entitiesData = {
-      player = {400, 300}
+      player = {400, 450}
     }
   }
 }

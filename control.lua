@@ -38,6 +38,8 @@ function playerController(componentsTable)
     -- Goal control
     local position = componentsTable.positions[entity]
     components.assertComponentExistence(position, "player", "position", entity)
+    local collisionBox = componentsTable.collisionBoxes[entity]
+    components.assertComponentExistence(collisionBox, "player", "collisionBox", entity)
 
     for goalEntity, nextLevelID in pairs(componentsTable.goals or {}) do
       local goalPosition = componentsTable.positions[goalEntity]
@@ -45,15 +47,18 @@ function playerController(componentsTable)
       local GOAL_SIZE = 110  -- store this variable somewhere else
 
 
-      if position.x >= goalPosition.x - GOAL_SIZE/2
-          and position.x <= goalPosition.x + GOAL_SIZE/2
+      -- This could be moved to the collision module or something similar
+      if position.x + collisionBox.width/2 >= goalPosition.x - GOAL_SIZE/2
+          and position.x - collisionBox.width/2 <= goalPosition.x + GOAL_SIZE/2
           and position.y >= goalPosition.y - GOAL_SIZE
-          and position.y <= goalPosition.y then
+          and position.y - collisionBox.height <= goalPosition.y then
         currentLevel = levels.level[nextLevelID]  -- changes module variable
 
-        -- Player position loading 
+        -- Player position loading and movement restore
         position.x = currentLevel.entitiesData.player[1]
         position.y = currentLevel.entitiesData.player[2]
+        velocity.x = 0
+        velocity.y = 0
       end
     end
 
