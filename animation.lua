@@ -15,10 +15,15 @@ function animationRenderer(componentsTable, spriteSheet)
     components.assertComponentExistence(position, "animationClip", "position", entity)
     
     print(animationClip.nameOfCurrentAnimation)
+    local scale = 0.5
     local currentAnimation = animationClip.animations[animationClip.nameOfCurrentAnimation]
     local currentFrame = currentAnimation.frames[animationClip.currentFrameNumber]
-    local x = position.x + currentFrame.origin.x
-    local y = position.y + currentFrame.origin.y
-    love.graphics.draw(spriteSheet, currentFrame.quad, x, y)
+    local __, __, width, height = currentFrame.quad:getViewport()
+    local transform = love.math.newTransform(position.x, position.y)
+
+    transform:translate(currentFrame.origin.x + width/2*scale,
+                        currentFrame.origin.y + height*scale)
+    transform:scale(scale, scale)
+    love.graphics.draw(spriteSheet, currentFrame.quad, transform)
   end
 end
