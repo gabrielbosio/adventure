@@ -4,13 +4,17 @@ require("place")
 module("outline", package.seeall)
 
 
-function drawGoal(position)
+function drawGoals(goals, positions)
   r, g, b = love.graphics.getColor()
 
   local size = 110
   love.graphics.setColor(1, 0.5, 0.5)
-  love.graphics.rectangle("fill", position.x-size/2, position.y-size, size,
-                          size)
+
+  for goal in pairs(goals) do
+    local position = positions[goal]
+    love.graphics.rectangle("fill", position.x-size/2, position.y-size, size,
+                            size)
+  end
 
   love.graphics.setColor(r, g, b)
 end

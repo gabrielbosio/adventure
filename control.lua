@@ -46,7 +46,6 @@ function playerController(componentsTable)
 
       local GOAL_SIZE = 110  -- store this variable somewhere else
 
-
       -- This could be moved to the collision module or something similar
       if position.x + collisionBox.width/2 >= goalPosition.x - GOAL_SIZE/2
           and position.x - collisionBox.width/2 <= goalPosition.x + GOAL_SIZE/2
@@ -59,6 +58,24 @@ function playerController(componentsTable)
         position.y = currentLevel.entitiesData.player[2]
         velocity.x = 0
         velocity.y = 0
+
+        -- Reload goals
+        for _id in pairs(componentsTable.goals) do
+          componentsTable.positions[_id] = nil
+          componentsTable.goals[_id] = nil
+        end
+
+        local currentGoals = currentLevel.entitiesData.goals
+
+        if currentGoals ~= nil then
+          for goalIndex, goalData in pairs(currentLevel.entitiesData.goals) do
+            local id = "goal" .. tostring(goalIndex)
+            componentsTable.positions[id] = {x = goalData[1], y = goalData[2]}
+            componentsTable.goals[id] = goalData[3]
+          end
+        end
+
+        break
       end
     end
 

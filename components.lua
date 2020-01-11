@@ -53,8 +53,8 @@ function assertComponentsDependency(existingComponents, componentsToAssert,
 end
 
 
-function assertComponentExistence(componentToAssert, existingComponentName, nameToAssert,
-                                  entity)
+function assertComponentExistence(componentToAssert, existingComponentName,
+                                  nameToAssert, entity)
   assert(componentToAssert ~= nil,
           "Entity " .. entity .. " has " .. existingComponentName ..
           " component but has not " .. nameToAssert .. " component")
