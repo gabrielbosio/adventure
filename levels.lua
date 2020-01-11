@@ -62,23 +62,23 @@ function drawRightTriangle(corners)
 end
 
 -- We could move this to a "debug" module
-function drawTerrainOutline()
+function drawTerrainOutline(currentLevel)
   love.graphics.setColor(0, 0.5, 0)
-  for i in pairs(levels.level["test"].terrain.boundaries) do
-    local boundaries = levels.level["test"].terrain.boundaries[i]
+  for i in pairs(currentLevel.terrain.boundaries) do
+    local boundaries = currentLevel.terrain.boundaries[i]
     drawBox{x1 = boundaries[1], y1 = boundaries[2], x2 = boundaries[3],
             y2 = boundaries[4]}
   end
 
-  for i in pairs(levels.level["test"].terrain.slopes) do
-    local slopes = levels.level["test"].terrain.slopes[i]
+  for i in pairs(currentLevel.terrain.slopes or {}) do
+    local slopes = currentLevel.terrain.slopes[i]
     drawRightTriangle{x1 = slopes[1], y1 = slopes[2], x2 = slopes[3],
                       y2 = slopes[4]}
   end
 
   love.graphics.setColor(0.3, 0.6, 1)
-  for i in pairs(levels.level["test"].terrain.clouds) do
-    local clouds = levels.level["test"].terrain.clouds[i]
+  for i in pairs(currentLevel.terrain.clouds or {}) do
+    local clouds = currentLevel.terrain.clouds[i]
     drawBox{x1 = clouds[1], y1 = clouds[2], x2 = clouds[3],
             y2 = clouds[2] + cloudHeightDisplay}
   end

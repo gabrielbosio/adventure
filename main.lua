@@ -9,6 +9,7 @@ require("place")
 function love.load()
   -- Level data loading
   currentLevel = levels.level[levels.first]
+  control.currentLevel = currentLevel  -- there must be something better
   local goalData = currentLevel.entitiesData.goal
 
   componentsTable = {
@@ -39,7 +40,8 @@ end
 
 
 function love.update(dt)
-  control.playerController(componentsTable)
+  control.playerController(componentsTable, currentLevel)
+  currentLevel = control.currentLevel  -- there must be something better
 
   mruv.gravity(componentsTable, dt)
   collision.terrainCollision(componentsTable, currentLevel.terrain, dt)
@@ -51,10 +53,10 @@ function love.draw()
   local playerBox = componentsTable.collisionBoxes.megasapi
   local goal = componentsTable.positions.goal
   love.graphics.setColor(1, 1, 1)
-  levels.drawTerrainOutline()
+  levels.drawTerrainOutline(currentLevel)
 
   -- We could move this to a "debug" module
-  -- Goal outline 
+  -- Goal outline
   local goalOutlineSize = 110
   love.graphics.setColor(1, 0.5, 0.5)
   love.graphics.rectangle("fill", goal.x - goalOutlineSize/2,
