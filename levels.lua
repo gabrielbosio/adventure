@@ -1,5 +1,6 @@
 module("levels", package.seeall)
 
+
 level = {
   ["test"] = {
     terrain = {
@@ -27,7 +28,8 @@ level = {
       }
     },
     entitiesData = {
-      player = {46, 142}
+      player = {46, 142},
+      goal = {712, 430, "another level"}
     }
   },
 
@@ -43,7 +45,10 @@ level = {
   }
 }
 
+first = level["test"]  -- the game loads this level at start
 
+
+-- Outline drawing
 cloudHeightDisplay = 10
 
 function drawBox(corners)
@@ -56,6 +61,7 @@ function drawRightTriangle(corners)
                         corners.x2, corners.y2)
 end
 
+-- We could move this to a "debug" module
 function drawTerrainOutline()
   love.graphics.setColor(0, 0.5, 0)
   for i in pairs(levels.level["test"].terrain.boundaries) do
