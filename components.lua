@@ -58,9 +58,11 @@ function assertComponentsDependency(componentsTable, dependentComponentName,
 end
 
 
-function assertComponentExistence(componentToAssert, existingComponentName,
-                                  nameToAssert, entity)
-  assert(componentToAssert ~= nil,
-          "Entity " .. entity .. " has " .. existingComponentName ..
-          " component but has not " .. nameToAssert .. " component")
+function assertComponentsExistence(entity, existingComponentName, ...)
+  for i, pairToAssert in ipairs{...} do
+    componentToAssert, nameToAssert = pairToAssert[1], pairToAssert[2]
+    assert(componentToAssert ~= nil,
+            "Entity " .. entity .. " has " .. existingComponentName ..
+            " component but has not " .. nameToAssert .. " component")
+  end
 end

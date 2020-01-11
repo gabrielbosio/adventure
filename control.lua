@@ -14,7 +14,7 @@ function playerController(componentsTable)
   -- component.
   for entity, player in pairs(componentsTable.players or {}) do
     local velocity = componentsTable.velocities[entity]
-    components.assertComponentExistence(velocity, "player", "velocity", entity)
+    components.assertComponentsExistence(entity, "player", {velocity, "velocity"})
 
     -- X Movement Input
     if love.keyboard.isDown("a") and not love.keyboard.isDown("d") then
@@ -36,9 +36,8 @@ function playerController(componentsTable)
     -- This could be moved to the collision module or something similar
     -- Goal control
     local position = componentsTable.positions[entity]
-    components.assertComponentExistence(position, "player", "position", entity)
     local collisionBox = componentsTable.collisionBoxes[entity]
-    components.assertComponentExistence(collisionBox, "player", "collisionBox", entity)
+    components.assertComponentsExistence(entity, "player", {position, "position"}, {collisionBox, "collisionBox"})
 
     for goalEntity, nextLevelID in pairs(componentsTable.goals or {}) do
       local goalPosition = componentsTable.positions[goalEntity]

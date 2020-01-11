@@ -241,9 +241,10 @@ function terrainCollision(componentsTable, terrain, dt)
     local collisionBox = componentsTable.collisionBoxes[entity]
     local position = componentsTable.positions[entity]
     local velocity = componentsTable.velocities[entity]
-    components.assertComponentExistence(collisionBox, "solid", "collisionBox", entity)
-    components.assertComponentExistence(position, "solid", "position", entity)
-    components.assertComponentExistence(velocity, "solid", "velocity", entity)
+    components.assertComponentsExistence(entity, "solid",
+                                         {collisionBox, "collisionBox"},
+                                         {position, "position"},
+                                         {velocity, "velocity"})
 
     checkBoundariesCollision(collisionBox, position, velocity, terrain, dt)
     checkSlopesCollision(collisionBox, position, velocity, terrain, dt)

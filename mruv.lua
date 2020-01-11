@@ -9,7 +9,8 @@ function gravity(componentsTable, dt)
 
   for entity, weight in pairs(componentsTable.weights or {}) do
     local velocity = componentsTable.velocities[entity]
-    components.assertComponentExistence(velocity, "weight", "velocity", entity)
+    components.assertComponentsExistence(entity, "weight",
+                                         {velocity, "velocity"})
     
     velocity.y = velocity.y + gravity*dt
   end
@@ -24,7 +25,8 @@ function movement(componentsTable, dt)
   for entity, velocity in pairs(componentsTable.velocities or {}) do
     local position = componentsTable.positions[entity]
     local winWidth, winHeight = love.window.getMode()
-    components.assertComponentExistence(position, "velocity", "position", entity)
+    components.assertComponentsExistence(entity, "velocity",
+                                         {position, "position"})
 
     position.x = (position.x + velocity.x*dt)
     position.y = (position.y + velocity.y*dt)
