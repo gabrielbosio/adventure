@@ -1,8 +1,10 @@
 require("components")
 module("control", package.seeall)
 
+
 local holdingJumpKey
-currentLevel = {}  -- GLOBAL VARIABLE WATCH OUT
+currentLevel = {}  -- modified by playerController system 
+
 
 function playerController(componentsTable)
   components.assertComponentsDependency(componentsTable.players, componentsTable.velocities,
@@ -40,14 +42,18 @@ function playerController(componentsTable)
     for goalEntity, nextLevelID in pairs(componentsTable.goals or {}) do
       local goalPosition = componentsTable.positions[goalEntity]
 
-      local GOAL_SIZE = 110  -- Replace with some variable
+      local GOAL_SIZE = 110  -- store this variable somewhere else
 
 
       if position.x >= goalPosition.x - GOAL_SIZE/2
           and position.x <= goalPosition.x + GOAL_SIZE/2
           and position.y >= goalPosition.y - GOAL_SIZE
           and position.y <= goalPosition.y then
-        currentLevel = levels.level[nextLevelID]  -- GLOBAL VARIABLE WATCH OUT
+        currentLevel = levels.level[nextLevelID]  -- changes module variable
+
+        -- Player position loading 
+        position.x = currentLevel.entitiesData.player[1]
+        position.y = currentLevel.entitiesData.player[2]
       end
     end
 
