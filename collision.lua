@@ -1,3 +1,4 @@
+require("components")
 module("collision", package.seeall)
 
 
@@ -230,11 +231,23 @@ local function checkCloudsCollision(collisionBox, position, velocity, terrain, d
 end
 
 
-function terrainCollision(components, terrain, dt)  
-  for entity, solidComponent in pairs(components.solids) do
-    local collisionBox = components.collisionBoxes[entity]
-    local position = components.positions[entity]
-    local velocity = components.velocities[entity]
+function terrainCollision(componentsTable, terrain, dt)
+  components.assertComponentsDependency(componentsTable.solids, componentsTable.collisionBoxes,
+                                        "solid", "collisionBox")
+
+  components.assertComponentsDependency(componentsTable.solids, componentsTable.positions,
+                                        "solid", "position")
+
+  components.assertComponentsDependency(componentsTable.solids, componentsTable.velocities,
+                                        "solid", "velocity")
+  
+  for entity, solidComponent in pairs(componentsTable.solids or {}) do
+    local collisionBox = componentsTable.collisionBoxes[entity]
+    local position = componentsTable.positions[entity]
+    local velocity = componentsTable.velocities[entity]
+    components.assertComponentExistence(collisionBox, "solid", "collisionBox", entity)
+    components.assertComponentExistence(position, "solid", "position", entity)
+    components.assertComponentExistence(velocity, "solid", "velocity", entity)
 
     checkBoundariesCollision(collisionBox, position, velocity, terrain, dt)
     checkSlopesCollision(collisionBox, position, velocity, terrain, dt)

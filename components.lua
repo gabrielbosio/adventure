@@ -33,3 +33,20 @@ function collisionBox(width, height)
 
   return component
 end
+
+
+function assertComponentsDependency(existingComponents, componentsToAssert,
+                                    existingComponentName, nameToAssert)
+  if existingComponents ~= nil and componentsToAssert == nil then
+    error("There are " .. existingComponentName .. " components but no " ..
+          nameToAssert .. " components")
+  end
+end
+
+
+function assertComponentExistence(componentToAssert, existingComponentName, nameToAssert,
+                                  entity)
+  assert(componentToAssert ~= nil,
+          "Entity " .. entity .. " has " .. existingComponentName ..
+          " component but has not " .. nameToAssert .. " component")
+end

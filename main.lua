@@ -9,7 +9,7 @@ function love.load()
   xSpeed = 500
   jumpImpulseSpeed = 1400
 
-  components = {
+  componentsTable = {
     collisionBoxes = {
       megasapi = components.collisionBox(50, 100)
     },
@@ -30,10 +30,10 @@ end
 
 
 function love.update(dt)
-  local playerVelocity = components.velocities.megasapi
+  local playerVelocity = componentsTable.velocities.megasapi
 
   -- X Movement Input (far simpler than the callback approach)
-  -- Extract this into movement and playerController using input and velocity as components
+  -- Extract this into movement and playerController using input and velocity as componentsTable
   if love.keyboard.isDown("a") and not love.keyboard.isDown("d") then
     playerVelocity.x = -xSpeed
   elseif love.keyboard.isDown("d") and not love.keyboard.isDown("a") then
@@ -50,14 +50,14 @@ function love.update(dt)
     jumping = false
   end
 
-  mruv.gravity(components, dt)
-  collision.terrainCollision(components, levels.level["test"].terrain, dt)
-  mruv.movement(components, dt)
+  mruv.gravity(componentsTable, dt)
+  collision.terrainCollision(componentsTable, levels.level["test"].terrain, dt)
+  mruv.movement(componentsTable, dt)
 end
 
 function love.draw()
-  local playerPosition = components.positions.megasapi
-  local playerBox = components.collisionBoxes.megasapi
+  local playerPosition = componentsTable.positions.megasapi
+  local playerBox = componentsTable.collisionBoxes.megasapi
   love.graphics.setColor(1, 1, 1)
 
   -- Physics test
