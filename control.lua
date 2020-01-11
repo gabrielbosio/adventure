@@ -98,7 +98,25 @@ function playerController(componentsTable)
           componentsTable.healing[healingEntity] = nil
         end
       end
-    end  -- Too much repeated code
+    end  -- there is some repeated code
+
+    -- This could be moved to the collision module or something similar
+      for experienceItem, experienceAmount in pairs(componentsTable.experienceEffect or {}) do
+        local itemPosition = componentsTable.positions[experienceItem]
+        local expAmount = componentsTable.experienceEffect[experienceItem]
+
+        local EXP_SIZE = 10  -- store this variable somewhere else
+      -- (variable repeated in outline.lua)
+
+        if position.x + collisionBox.width/2 >= itemPosition.x - EXP_SIZE/2
+            and position.x - collisionBox.width/2 <= itemPosition.x + EXP_SIZE/2
+            and position.y >= itemPosition.y - EXP_SIZE
+            and position.y - collisionBox.height <= itemPosition.y then
+        player.experience = player.experience + experienceAmount
+        componentsTable.positions[experienceItem] = nil
+        componentsTable.experienceEffect[experienceItem] = nil
+      end
+    end  -- there is some repeated code
 
   end  -- for entity, player
 end

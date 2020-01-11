@@ -34,6 +34,21 @@ function drawMedkits(medkits, positions)
   love.graphics.setColor(r, g, b)
 end
 
+function drawPomodori(pomodori, positions)
+  r, g, b = love.graphics.getColor()
+
+  local size = 10
+  love.graphics.setColor(0.5, 0.5, 0.5)
+
+  for pomodoro in pairs(pomodori) do
+    local position = positions[pomodoro]
+    love.graphics.rectangle("fill", position.x-size/2, position.y-size, size,
+                            size)
+  end
+
+  love.graphics.setColor(r, g, b)
+end
+
 function drawPlayerCollisionBox(position, box)
   r, g, b = love.graphics.getColor()
 
@@ -77,6 +92,15 @@ function displayPlayerHealth(value)
   love.graphics.setColor(r, g, b)
 end
 
+function displayPlayerExperience(value)
+  r, g, b = love.graphics.getColor()
+
+  love.graphics.setColor(0.5, 0.5, 0.5)
+  place.textByAnchor(tostring(value), 0,
+                     3*love.graphics.getFont():getHeight(text), "north west")
+
+  love.graphics.setColor(r, g, b)
+end
 
 local function drawBox(corners)
   love.graphics.polygon("fill", corners.x1, corners.y1, corners.x2, corners.y1,
@@ -114,3 +138,6 @@ function drawTerrainOutline(currentLevel)
 
   love.graphics.setColor(r, g, b)
 end
+--
+-- Code above couldn't be more repeated
+-- We need refactoring

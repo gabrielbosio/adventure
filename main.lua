@@ -42,22 +42,30 @@ function love.load()
     living = {
       megasapi = {health = 10, stamina = 100, deathType = nil}
     },
-    healing = {}
+    healing = {},
+    experienceEffect = {}
   }
 
-  local goalData = currentLevel.entitiesData.goals
-  for goalIndex, goalData in pairs(goalData) do
+  for goalIndex, goalData in pairs(currentLevel.entitiesData.goals) do
     local id = "goal" .. tostring(goalIndex)
     componentsTable.positions[id] = {x = goalData[1], y = goalData[2]}
     componentsTable.goals[id] = goalData[3]
   end
 
-  local medkitsData = currentLevel.entitiesData.medkits
-  for medkitIndex, medkitData in pairs(medkitsData) do
+  for medkitIndex, medkitData in pairs(currentLevel.entitiesData.medkits) do
     local id = "medkit" .. tostring(medkitIndex)
     componentsTable.positions[id] = {x = medkitData[1], y = medkitData[2]}
     componentsTable.healing[id] = 1  -- some healing amount
   end
+
+  for pomodoroIndex, pomodoroData in pairs(currentLevel.entitiesData.pomodori)
+      do
+    local id = "pomodoro" .. tostring(pomodoroIndex)
+    componentsTable.positions[id] = {x = pomodoroData[1], y = pomodoroData[2]}
+    componentsTable.experienceEffect[id] = 1  -- some experience amount
+  end
+
+  -- Repeated code, do it better
 end
 
 
@@ -74,11 +82,16 @@ function love.draw()
   local playerPosition = componentsTable.positions.megasapi
   local playerBox = componentsTable.collisionBoxes.megasapi
 
+  -- Maybe just one outline.draw would be better
+  -- Another possibility is divide in two: Shapes and Text
   outline.drawTerrainOutline(currentLevel)
   outline.drawGoals(componentsTable.goals, componentsTable.positions)
   outline.drawMedkits(componentsTable.healing, componentsTable.positions)
+  outline.drawPomodori(componentsTable.experienceEffect,
+                       componentsTable.positions)
   outline.drawPlayerCollisionBox(playerPosition, playerBox)
   outline.drawPlayerPosition(playerPosition, true)
   outline.displayMouseCoordinates()
   outline.displayPlayerHealth(componentsTable.living.megasapi.health)
+  outline.displayPlayerExperience(componentsTable.players.megasapi.experience)
 end
