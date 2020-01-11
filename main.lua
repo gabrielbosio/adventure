@@ -42,7 +42,7 @@ function love.update(dt)
   mruv.gravity(componentsTable, dt)
   collision.terrainCollision(componentsTable, levels.level["test"].terrain, dt)
   mruv.movement(componentsTable, dt, xSpeed, jumpImpulseSpeed)
-  animation.animator(componentsTable)
+  animation.animator(componentsTable, dt)
 end
 
 function love.draw()

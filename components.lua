@@ -1,7 +1,7 @@
 module("components", package.seeall)
 dofile("sprites.lua")
 
-
+-- Collision Box
 function collisionBox(width, height)
   local component = {
     x = 0,
@@ -35,14 +35,14 @@ function collisionBox(width, height)
   return component
 end
 
-
-function animationClip(animations, nameOfCurrentAnimation, spriteSheet)
+-- Animation Clip
+local function createAnimationsTable(animations, spriteSheet)
   local animationsTable = {}
 
   for animationName, animation in pairs(animations) do
     animationsTable[animationName] = {
       frames = {},
-      loop = animation[2]
+      looping = animation[2]
     }
     local newAnimation = animationsTable[animationName]
 
@@ -55,18 +55,46 @@ function animationClip(animations, nameOfCurrentAnimation, spriteSheet)
         duration = frame[3]
       }
     end
+
+    function newAnimation:duration()
+      local result = 0
+      for _, frame in ipairs(self.frames) do
+        result = result + frame.duration
+      end
+      return result
+    end
   end
 
-  return {
-    animations = animationsTable,
+  return animationsTable
+end
+
+
+function animationClip(animations, nameOfCurrentAnimation, spriteSheet)
+  local newComponent = {
+    animations = createAnimationsTable(animations, spriteSheet),
     nameOfCurrentAnimation = nameOfCurrentAnimation,
+    currentTime = 0,
     currentFrameNumber = 1,
     facingRight = true,
     playing = true
   }
+
+  function newComponent:currentFrameNumber()
+    local timeSpent = 0
+    local currentAnimation = self.animations[self.nameOfCurrentAnimation]
+    for frameNumber, frame in ipairs(currentAnimation.frames) do
+      timeSpent = timeSpent + frame.duration
+      if timeSpent > self.currentTime then
+        return frameNumber
+      end
+    end
+    return #currentAnimation.frames
+  end
+
+  return newComponent
 end
 
-
+-- Asserts
 function assertComponentsDependency(existingComponents, componentsToAssert,
                                     existingComponentName, nameToAssert)
   if existingComponents ~= nil and componentsToAssert == nil then
