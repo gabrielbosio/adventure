@@ -4,6 +4,7 @@ require("levels")
 require("mruv")
 require("control")
 require("place")
+require("outline")
 
 
 function love.load()
@@ -51,36 +52,10 @@ end
 function love.draw()
   local playerPosition = componentsTable.positions.megasapi
   local playerBox = componentsTable.collisionBoxes.megasapi
-  local goal = componentsTable.positions.goal
-  love.graphics.setColor(1, 1, 1)
-  levels.drawTerrainOutline(currentLevel)
 
-  -- We could move this to a "debug" module
-  -- Goal outline
-  local goalOutlineSize = 110
-  love.graphics.setColor(1, 0.5, 0.5)
-  love.graphics.rectangle("fill", goal.x - goalOutlineSize/2,
-                          goal.y - goalOutlineSize, goalOutlineSize,
-                          goalOutlineSize)
-
-  -- We could move this to a "debug" module
-  -- Player collision box
-  love.graphics.setColor(0, 0, 1)
-  love.graphics.rectangle("fill", playerPosition.x-playerBox.width/2,
-    playerPosition.y-playerBox.height, playerBox.width, playerBox.height)
-
-  -- We could move this to a "debug" module
-  -- Cursor position
-  love.graphics.setColor(1, 1, 1)
-  place.textByAnchor(love.mouse.getX() .. ", " .. love.mouse.getY(), 0, 0,
-    "north west")
-
-  -- We could move this to a "debug" module
-  -- Player position
-  love.graphics.setColor(1, 1, 0)
-  love.graphics.circle("fill", playerPosition.x, playerPosition.y, 2)
-  local playerPositionText = math.floor(playerPosition.x) .. ", " ..
-    math.floor(playerPosition.y)
-  place.textByAnchor(playerPositionText, 0,
-    love.graphics.getFont():getHeight(playerPositionText), "north west")
+  outline.drawTerrainOutline(currentLevel)
+  outline.drawGoal(componentsTable.positions.goal)
+  outline.drawPlayerCollisionBox(playerPosition, playerBox)
+  outline.drawPlayerPosition(playerPosition, true)
+  outline.displayMouseCoordinates()
 end
