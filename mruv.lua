@@ -5,8 +5,7 @@ module("mruv", package.seeall)
 function gravity(componentsTable, dt)
   local gravity = 5000
 
-  components.assertComponentsDependency(componentsTable.weights, componentsTable.velocities,
-                                        "weight", "velocity")
+  components.assertComponentsDependency(componentsTable, "weight", "velocity")
 
   for entity, weight in pairs(componentsTable.weights or {}) do
     local velocity = componentsTable.velocities[entity]

@@ -44,11 +44,16 @@ function animationClip(animations, currentAnimation)
 end
 
 
-function assertComponentsDependency(existingComponents, componentsToAssert,
-                                    existingComponentName, nameToAssert)
-  if existingComponents ~= nil and componentsToAssert == nil then
-    error("There are " .. existingComponentName .. " components but no " ..
-          nameToAssert .. " components")
+function assertComponentsDependency(componentsTable, dependentComponentName,
+                                    ...)
+  if componentsTable[dependentComponentName] ~= nil then
+    for i, nameToAssert in ipairs{...} do
+      if componentsTable[nameToAssert] == nil then
+        error([[Unsatisfied dependency:
+          there is at least one]] .. dependentComponentName ..
+          " component but no" .. nameToAssert .. " component was found.")
+      end
+    end
   end
 end
 

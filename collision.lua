@@ -232,15 +232,11 @@ end
 
 
 function terrainCollision(componentsTable, terrain, dt)
-  components.assertComponentsDependency(componentsTable.solids, componentsTable.collisionBoxes,
-                                        "solid", "collisionBox")
+  -- solid depends on collisionBox, position and velocity
+  components.assertComponentsDependency(componentsTable, "solids",
+                                        "collisionBoxes", "positions",
+                                        "velocities")
 
-  components.assertComponentsDependency(componentsTable.solids, componentsTable.positions,
-                                        "solid", "position")
-
-  components.assertComponentsDependency(componentsTable.solids, componentsTable.velocities,
-                                        "solid", "velocity")
-  
   for entity, solidComponent in pairs(componentsTable.solids or {}) do
     local collisionBox = componentsTable.collisionBoxes[entity]
     local position = componentsTable.positions[entity]

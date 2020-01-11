@@ -7,10 +7,8 @@ currentLevel = {}  -- modified by playerController system
 
 
 function playerController(componentsTable)
-  components.assertComponentsDependency(componentsTable.players, componentsTable.velocities,
-                                        "player", "velocity")
-  components.assertComponentsDependency(componentsTable.players, componentsTable.positions,
-                                        "player", "position")
+  -- players depend on velocities and positions
+  components.assertComponentsDependency("players", "velocities", "positions")
 
   -- This for loop could be avoided if there is only one entity with a "player"
   -- component.
