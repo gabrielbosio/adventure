@@ -13,6 +13,8 @@ function love.load()
   control.currentLevel = currentLevel  -- there must be something better
   local goalData = currentLevel.entitiesData.goal
 
+  dofile("animations.lua")
+
   componentsTable = {
     players = {  -- or maybe "player", there is just one...
       megasapi = {experience = 0, stunned = false}
@@ -35,6 +37,9 @@ function love.load()
     },
     goals = {
       goal = goalData[3]
+    },
+    animationClips = {
+      megasapi = components.animationClip(animations.megasapi, "standing")
     }
   }
 end

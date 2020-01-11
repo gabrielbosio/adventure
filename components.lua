@@ -35,6 +35,15 @@ function collisionBox(width, height)
 end
 
 
+function animationClip(animations, currentAnimation)
+  return {
+    animations = animations,
+    currentAnimation = currentAnimation,
+    playing = true
+  }
+end
+
+
 function assertComponentsDependency(existingComponents, componentsToAssert,
                                     existingComponentName, nameToAssert)
   if existingComponents ~= nil and componentsToAssert == nil then
