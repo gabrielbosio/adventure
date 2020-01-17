@@ -233,21 +233,22 @@ end
 
 function terrainCollision(componentsTable, terrain, dt)
   -- solid depends on collisionBox, position and velocity
-  components.assertComponentsDependency(componentsTable, "solids",
-                                        "collisionBoxes", "positions",
-                                        "velocities")
+  components.assertDependency(componentsTable, "solids", "collisionBoxes",
+                              "positions", "velocities")
 
   for entity, solidComponent in pairs(componentsTable.solids or {}) do
     local collisionBox = componentsTable.collisionBoxes[entity]
     local position = componentsTable.positions[entity]
     local velocity = componentsTable.velocities[entity]
-    components.assertComponentsExistence(entity, "solid",
-                                         {collisionBox, "collisionBox"},
-                                         {position, "position"},
-                                         {velocity, "velocity"})
+    components.assertExistence(entity, "solid", {collisionBox, "collisionBox"},
+                               {position, "position"}, {velocity, "velocity"})
 
     checkBoundariesCollision(collisionBox, position, velocity, terrain, dt)
     checkSlopesCollision(collisionBox, position, velocity, terrain, dt)
     checkCloudsCollision(collisionBox, position, velocity, terrain, dt)
   end
+end
+
+
+function playerTouchingEntity(playerPosition, playerCollisionBox)
 end

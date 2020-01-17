@@ -53,8 +53,7 @@ function drawPlayerCollisionBox(position, box)
   r, g, b = love.graphics.getColor()
 
   love.graphics.setColor(0, 0, 1)
-  love.graphics.rectangle("fill", position.x-box.width/2,
-                          position.y-box.height, box.width, box.height)
+  love.graphics.rectangle("fill",position.x + box:left(), position.y + box:top(), box.width, box.height)
 
   love.graphics.setColor(r, g, b)
 end

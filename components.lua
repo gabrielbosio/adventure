@@ -1,14 +1,12 @@
 module("components", package.seeall)
 
 
-function collisionBox(width, height)
+local function Box(width, height)
   local component = {
     x = 0,
     y = 0,
     width = width,
-    height = height,
-    onSlope = false,
-    slopeX = 0
+    height = height
   }
 
   function component:left()
@@ -35,6 +33,23 @@ function collisionBox(width, height)
 end
 
 
+function itemBox(width, height)
+  local component = Box(width, height)
+
+  return component
+end
+
+
+function collisionBox(width, height)
+  local component = Box(width, height)
+
+  component.onSlope = false
+  component.slopeX = 0
+
+  return component
+end
+
+
 function animationClip(animations, currentAnimation)
   return {
     animations = animations,
@@ -44,21 +59,21 @@ function animationClip(animations, currentAnimation)
 end
 
 
-function assertComponentsDependency(componentsTable, dependentComponentName,
+function assertDependency(componentsTable, dependentComponentName,
                                     ...)
   if componentsTable[dependentComponentName] ~= nil then
     for i, nameToAssert in ipairs{...} do
       if componentsTable[nameToAssert] == nil then
-        error([[Unsatisfied dependency:
-          there is at least one]] .. dependentComponentName ..
-          " component but no" .. nameToAssert .. " component was found.")
+        error([[Unsatisfied dependency in componentsTable.
+          There is at least one component inside "]] .. dependentComponentName
+          ..  '" but no component inside "' .. nameToAssert .. '".')
       end
     end
   end
 end
 
 
-function assertComponentsExistence(entity, existingComponentName, ...)
+function assertExistence(entity, existingComponentName, ...)
   for i, pairToAssert in ipairs{...} do
     componentToAssert, nameToAssert = pairToAssert[1], pairToAssert[2]
     assert(componentToAssert ~= nil,

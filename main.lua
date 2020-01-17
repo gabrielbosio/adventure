@@ -3,6 +3,7 @@ require("components")
 require("levels")
 require("mruv")
 require("control")
+require("items")
 require("outline")
 
 
@@ -43,29 +44,18 @@ function love.load()
       megasapi = {health = 10, stamina = 100, deathType = nil}
     },
     healing = {},
-    experienceEffect = {}
+    experienceEffect = {},
+    itemBoxes = {}
   }
 
+  components.assertDependency(componentsTable, "goals", "positions")
   for goalIndex, goalData in pairs(currentLevel.entitiesData.goals) do
     local id = "goal" .. tostring(goalIndex)
     componentsTable.positions[id] = {x = goalData[1], y = goalData[2]}
     componentsTable.goals[id] = goalData[3]
   end
 
-  for medkitIndex, medkitData in pairs(currentLevel.entitiesData.medkits) do
-    local id = "medkit" .. tostring(medkitIndex)
-    componentsTable.positions[id] = {x = medkitData[1], y = medkitData[2]}
-    componentsTable.healing[id] = 1  -- some healing amount
-  end
-
-  for pomodoroIndex, pomodoroData in pairs(currentLevel.entitiesData.pomodori)
-      do
-    local id = "pomodoro" .. tostring(pomodoroIndex)
-    componentsTable.positions[id] = {x = pomodoroData[1], y = pomodoroData[2]}
-    componentsTable.experienceEffect[id] = 1  -- some experience amount
-  end
-
-  -- Repeated code, do it better
+  items.load(componentsTable, currentLevel, "medkits", "pomodori")
 end
 
 
@@ -81,6 +71,7 @@ end
 function love.draw()
   local playerPosition = componentsTable.positions.megasapi
   local playerBox = componentsTable.collisionBoxes.megasapi
+
 
   -- Maybe just one outline.draw would be better
   -- Another possibility is divide in two: Shapes and Text

@@ -8,13 +8,13 @@ currentLevel = {}  -- modified by playerController system
 
 function playerController(componentsTable)
   -- players depend on velocities and positions
-  components.assertComponentsDependency("players", "velocities", "positions")
+  components.assertDependency(componentsTable, "players", "velocities", "positions")
 
   -- This for loop could be avoided if there is only one entity with a "player"
   -- component.
   for entity, player in pairs(componentsTable.players or {}) do
     local velocity = componentsTable.velocities[entity]
-    components.assertComponentsExistence(entity, "player", {velocity, "velocity"})
+    components.assertExistence(entity, "player", {velocity, "velocity"})
 
     -- X Movement Input
     if love.keyboard.isDown("a") and not love.keyboard.isDown("d") then
@@ -37,7 +37,8 @@ function playerController(componentsTable)
     -- Goal control
     local position = componentsTable.positions[entity]
     local collisionBox = componentsTable.collisionBoxes[entity]
-    components.assertComponentsExistence(entity, "player", {position, "position"}, {collisionBox, "collisionBox"})
+    components.assertExistence(entity, "player", {position, "position"},
+                                {collisionBox, "collisionBox"})
 
     for goalEntity, nextLevelID in pairs(componentsTable.goals or {}) do
       local goalPosition = componentsTable.positions[goalEntity]
@@ -58,6 +59,7 @@ function playerController(componentsTable)
         velocity.y = 0
 
         -- Reload goals
+        -- This should actually load ANY entity in the new level
         for _id in pairs(componentsTable.goals) do
           componentsTable.positions[_id] = nil
           componentsTable.goals[_id] = nil
@@ -77,14 +79,13 @@ function playerController(componentsTable)
       end
     end
     
-    -- This could be moved to the collision module or something similar
+    -- This could be moved to the items module
     if componentsTable.living ~= nil and componentsTable.living[entity] ~= nil
         then
       local health = componentsTable.living[entity].health
 
       for healingEntity, healingAmount in pairs(componentsTable.healing or {}) do
         local healingPosition = componentsTable.positions[healingEntity]
-        local healingAmount = componentsTable.healing[healingEntity]
 
         local HEALING_SIZE = 10  -- store this variable somewhere else
       -- (variable repeated in outline.lua)
@@ -100,7 +101,7 @@ function playerController(componentsTable)
       end
     end  -- there is some repeated code
 
-    -- This could be moved to the collision module or something similar
+    -- This could be moved to the items module
       for experienceItem, experienceAmount in pairs(componentsTable.experienceEffect or {}) do
         local itemPosition = componentsTable.positions[experienceItem]
         local expAmount = componentsTable.experienceEffect[experienceItem]
