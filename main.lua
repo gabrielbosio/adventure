@@ -10,7 +10,7 @@ require("outline")
 function love.load()
   -- Level data loading
   currentLevel = levels.level[levels.first]
-  control.currentLevel = currentLevel  -- there must be something better
+  control.currentLevel = currentLevel
 
   dofile("animations.lua")
 
@@ -61,7 +61,7 @@ end
 
 function love.update(dt)
   control.playerController(componentsTable, currentLevel)
-  currentLevel = control.currentLevel  -- there must be something better
+  currentLevel = control.currentLevel
 
   mruv.gravity(componentsTable, dt)
   collision.terrainCollision(componentsTable, currentLevel.terrain, dt)
@@ -73,16 +73,9 @@ function love.draw()
   local playerBox = componentsTable.collisionBoxes.megasapi
 
 
-  -- Maybe just one outline.draw would be better
-  -- Another possibility is divide in two: Shapes and Text
-  outline.drawTerrainOutline(currentLevel)
-  outline.drawGoals(componentsTable.goals, componentsTable.positions)
-  outline.drawMedkits(componentsTable.healing, componentsTable.positions)
-  outline.drawPomodori(componentsTable.experienceEffect,
-                       componentsTable.positions)
-  outline.drawPlayerCollisionBox(playerPosition, playerBox)
-  outline.drawPlayerPosition(playerPosition, true)
-  outline.displayMouseCoordinates()
-  outline.displayPlayerHealth(componentsTable.living.megasapi.health)
-  outline.displayPlayerExperience(componentsTable.players.megasapi.experience)
+  -- Shapes
+  outline.draw(componentsTable, currentLevel.terrain)
+
+  -- Text
+  outline.debug(componentsTable)
 end
