@@ -1,4 +1,5 @@
 require("components")
+require("items")
 module("control", package.seeall)
 
 
@@ -58,8 +59,10 @@ function playerController(componentsTable)
         velocity.x = 0
         velocity.y = 0
 
-        -- Reload goals
+        -- Reload goals and items
         -- This should actually load ANY entity in the new level
+        items.load(componentsTable, currentLevel, "medkits", "pomodori")
+
         for _id in pairs(componentsTable.goals) do
           componentsTable.positions[_id] = nil
           componentsTable.goals[_id] = nil

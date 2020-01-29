@@ -69,10 +69,6 @@ function love.update(dt)
 end
 
 function love.draw()
-  local playerPosition = componentsTable.positions.megasapi
-  local playerBox = componentsTable.collisionBoxes.megasapi
-
-
   -- Shapes
   outline.draw(componentsTable, currentLevel.terrain)
 

@@ -11,9 +11,10 @@ function load(componentsTable, currentLevel, ...)
   }
 
   for i, itemGroupName in ipairs{...} do
+    componentsTable[componentGroup[itemGroupName]] = {}
     local group = componentsTable[componentGroup[itemGroupName]]
 
-    for itemIndex, itemData in pairs(currentLevel.entitiesData[itemGroupName]) do
+    for itemIndex, itemData in pairs(currentLevel.entitiesData[itemGroupName] or {}) do
       local id = itemGroupName .. tostring(itemIndex)
       componentsTable.positions[id] = {x = itemData[1], y = itemData[2]}
       -- if type(componentGroup[itemGroupName]) ~= "table"  -- several effects
@@ -22,6 +23,7 @@ function load(componentsTable, currentLevel, ...)
   end
 end
 
+--[[
 function healthSupply(componentsTable)
   -- healing depends on living, player and position
   components.assertDependency(componentsTable, "healing", "living",
@@ -43,3 +45,4 @@ function healthSupply(componentsTable)
     end
   end
 end
+]]
