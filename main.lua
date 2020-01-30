@@ -60,6 +60,9 @@ end
 
 
 function love.update(dt)
+  items.healthSupply(componentsTable)
+  items.experienceSupply(componentsTable)
+
   control.playerController(componentsTable, currentLevel)
   currentLevel = control.currentLevel
 

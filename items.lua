@@ -23,7 +23,7 @@ function load(componentsTable, currentLevel, ...)
   end
 end
 
---[[
+
 function healthSupply(componentsTable)
   -- healing depends on living, player and position
   components.assertDependency(componentsTable, "healing", "living",
@@ -36,13 +36,55 @@ function healthSupply(componentsTable)
     components.assertExistence(entity, "player", {position, "position"},
                                {collisionBox, "collisionBox"},
                                {livingEntities, "living"})
-    local health = componentsTable.living[entity].health
-    components.assertExistence(entity, "player", {health, "health"})
-    
+    local parameter = componentsTable.living[entity].health
+    components.assertExistence(entity, "player", {parameter, "health"})
+
     for itemEntity, amount in pairs(componentsTable.healing or {}) do
       local itemPosition = componentsTable.positions[itemEntity]
+
+      local ITEM_SIZE = 10  -- maybe access it from outline.lua?
+
+      if position.x + collisionBox.width/2 >= itemPosition.x - ITEM_SIZE/2
+          and position.x - collisionBox.width/2 <= itemPosition.x + ITEM_SIZE/2
+          and position.y >= itemPosition.y - ITEM_SIZE
+          and position.y - collisionBox.height <= itemPosition.y then
+        livingEntities.health = parameter + amount
+        positions = nil
+        componentsTable.healing[itemEntity] = nil
+      end
 
     end
   end
 end
-]]
+
+
+
+function experienceSupply(componentsTable)
+  -- experienceEffect depends on player and position
+  components.assertDependency(componentsTable, "experienceEffect", "players",
+                              "positions")
+
+  for entity, player in pairs(componentsTable.players) do
+    local position = componentsTable.positions[entity]
+    local collisionBox = componentsTable.collisionBoxes[entity]
+    components.assertExistence(entity, "player", {position, "position"},
+                               {collisionBox, "collisionBox"})
+    local parameter = player.experience
+
+    for itemEntity, amount in pairs(componentsTable.experienceEffect or {}) do
+      local itemPosition = componentsTable.positions[itemEntity]
+
+      local ITEM_SIZE = 10  -- maybe access it from outline.lua?
+
+      if position.x + collisionBox.width/2 >= itemPosition.x - ITEM_SIZE/2
+          and position.x - collisionBox.width/2 <= itemPosition.x + ITEM_SIZE/2
+          and position.y >= itemPosition.y - ITEM_SIZE
+          and position.y - collisionBox.height <= itemPosition.y then
+        player.experience = parameter + amount
+        positions = nil
+        componentsTable.experienceEffect[itemEntity] = nil
+      end
+
+    end
+  end
+end

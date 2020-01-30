@@ -81,46 +81,6 @@ function playerController(componentsTable)
         break
       end
     end
-    
-    -- This could be moved to the items module
-    if componentsTable.living ~= nil and componentsTable.living[entity] ~= nil
-        then
-      local health = componentsTable.living[entity].health
-
-      for healingEntity, healingAmount in pairs(componentsTable.healing or {}) do
-        local healingPosition = componentsTable.positions[healingEntity]
-
-        local HEALING_SIZE = 10  -- store this variable somewhere else
-      -- (variable repeated in outline.lua)
-
-        if position.x + collisionBox.width/2 >= healingPosition.x - HEALING_SIZE/2
-            and position.x - collisionBox.width/2 <= healingPosition.x + HEALING_SIZE/2
-            and position.y >= healingPosition.y - HEALING_SIZE
-            and position.y - collisionBox.height <= healingPosition.y then
-          componentsTable.living[entity].health = health + healingAmount
-          componentsTable.positions[healingEntity] = nil
-          componentsTable.healing[healingEntity] = nil
-        end
-      end
-    end  -- there is some repeated code
-
-    -- This could be moved to the items module
-      for experienceItem, experienceAmount in pairs(componentsTable.experienceEffect or {}) do
-        local itemPosition = componentsTable.positions[experienceItem]
-        local expAmount = componentsTable.experienceEffect[experienceItem]
-
-        local EXP_SIZE = 10  -- store this variable somewhere else
-      -- (variable repeated in outline.lua)
-
-        if position.x + collisionBox.width/2 >= itemPosition.x - EXP_SIZE/2
-            and position.x - collisionBox.width/2 <= itemPosition.x + EXP_SIZE/2
-            and position.y >= itemPosition.y - EXP_SIZE
-            and position.y - collisionBox.height <= itemPosition.y then
-        player.experience = player.experience + experienceAmount
-        componentsTable.positions[experienceItem] = nil
-        componentsTable.experienceEffect[experienceItem] = nil
-      end
-    end  -- there is some repeated code
 
   end  -- for entity, player
 end
