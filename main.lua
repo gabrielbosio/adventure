@@ -1,17 +1,19 @@
+require("animation")
 require("collision")
 require("components")
 require("levels")
 require("mruv")
 require("control")
+require("items")
 require("outline")
 
 
 function love.load()
   -- Level data loading
   currentLevel = levels.level[levels.first]
-  control.currentLevel = currentLevel  -- there must be something better
-
+  control.currentLevel = currentLevel
   dofile("animations.lua")
+  spriteSheet = love.graphics.newImage("sprites/megasapi.png")
 
   componentsTable = {
     players = {  -- or maybe "player", there is just one...
@@ -37,48 +39,44 @@ function love.load()
     },
     goals = {},
     animationClips = {
-      megasapi = components.animationClip(animations.megasapi, "standing")
+      megasapi = components.animationClip(animations.megasapi, "standing", spriteSheet)
     },
     living = {
       megasapi = {health = 10, stamina = 100, deathType = nil}
     },
-    healing = {}
+    healing = {},
+    experienceEffect = {},
+    itemBoxes = {}
   }
 
-  local goalData = currentLevel.entitiesData.goals
-  for goalIndex, goalData in pairs(goalData) do
+  components.assertDependency(componentsTable, "goals", "positions")
+  for goalIndex, goalData in pairs(currentLevel.entitiesData.goals) do
     local id = "goal" .. tostring(goalIndex)
     componentsTable.positions[id] = {x = goalData[1], y = goalData[2]}
     componentsTable.goals[id] = goalData[3]
   end
 
-  local medkitsData = currentLevel.entitiesData.medkits
-  for medkitIndex, medkitData in pairs(medkitsData) do
-    local id = "medkit" .. tostring(medkitIndex)
-    componentsTable.positions[id] = {x = medkitData[1], y = medkitData[2]}
-    componentsTable.healing[id] = 1  -- some healing amount
-  end
+  items.load(componentsTable, currentLevel, "medkits", "pomodori")
 end
 
 
 function love.update(dt)
+  items.healthSupply(componentsTable)
+  items.experienceSupply(componentsTable)
+
   control.playerController(componentsTable, currentLevel)
-  currentLevel = control.currentLevel  -- there must be something better
+  currentLevel = control.currentLevel
 
   mruv.gravity(componentsTable, dt)
   collision.terrainCollision(componentsTable, currentLevel.terrain, dt)
   mruv.movement(componentsTable, dt)
+  animation.animator(componentsTable, dt)
 end
 
 function love.draw()
-  local playerPosition = componentsTable.positions.megasapi
-  local playerBox = componentsTable.collisionBoxes.megasapi
-
-  outline.drawTerrainOutline(currentLevel)
-  outline.drawGoals(componentsTable.goals, componentsTable.positions)
-  outline.drawMedkits(componentsTable.healing, componentsTable.positions)
-  outline.drawPlayerCollisionBox(playerPosition, playerBox)
-  outline.drawPlayerPosition(playerPosition, true)
-  outline.displayMouseCoordinates()
-  outline.displayPlayerHealth(componentsTable.living.megasapi.health)
+  -- Shapes
+  outline.draw(componentsTable, currentLevel.terrain)
+  animation.animationRenderer(componentsTable, spriteSheet)
+  -- Text
+  outline.debug(componentsTable)
 end

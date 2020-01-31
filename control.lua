@@ -1,4 +1,5 @@
 require("components")
+require("items")
 module("control", package.seeall)
 
 
@@ -8,28 +9,46 @@ currentLevel = {}  -- modified by playerController system
 
 function playerController(componentsTable)
   -- players depend on velocities and positions
-  components.assertComponentsDependency("players", "velocities", "positions")
+  components.assertDependency(componentsTable, "players", "velocities", "positions")
 
   -- This for loop could be avoided if there is only one entity with a "player"
   -- component.
   for entity, player in pairs(componentsTable.players or {}) do
     local velocity = componentsTable.velocities[entity]
-    components.assertComponentsExistence(entity, "player", {velocity, "velocity"})
+    local animationClip = componentsTable.animationClips[entity]
+    components.assertExistence(entity, "player", {velocity, "velocity"})    
 
     -- X Movement Input
     if love.keyboard.isDown("a") and not love.keyboard.isDown("d") then
       velocity.x = -velocity.xSpeed
+      animationClip.facingRight = false
+      
+      if velocity.y == 0 then
+        animationClip:setAnimation("walking")
+      end
     elseif not love.keyboard.isDown("a") and love.keyboard.isDown("d") then
       velocity.x = velocity.xSpeed
-    else
+      animationClip.facingRight = true
+
+      if velocity.y == 0 then
+        animationClip:setAnimation("walking")
+      end
+    elseif velocity.y == 0 then
       velocity.x = 0
+      animationClip:setAnimation("standing")
+    end
+
+    if velocity.y ~= 0 then
+      animationClip:setAnimation("jumping")
     end
 
     -- Y Movement Input
-    if love.keyboard.isDown("k") and velocity.y == 0 and not holdingJumpKey then
+
+    if love.keyboard.isDown("w") and velocity.y == 0 and not holdingJumpKey then
       velocity.y = -velocity.jumpImpulseSpeed
+      animationClip:setAnimation("jumping")
       holdingJumpKey = true
-    elseif not love.keyboard.isDown("k") and holdingJumpKey then
+    elseif not love.keyboard.isDown("w") and holdingJumpKey then
       holdingJumpKey = false
     end
 
@@ -37,7 +56,8 @@ function playerController(componentsTable)
     -- Goal control
     local position = componentsTable.positions[entity]
     local collisionBox = componentsTable.collisionBoxes[entity]
-    components.assertComponentsExistence(entity, "player", {position, "position"}, {collisionBox, "collisionBox"})
+    components.assertExistence(entity, "player", {position, "position"},
+                                {collisionBox, "collisionBox"})
 
     for goalEntity, nextLevelID in pairs(componentsTable.goals or {}) do
       local goalPosition = componentsTable.positions[goalEntity]
@@ -57,7 +77,10 @@ function playerController(componentsTable)
         velocity.x = 0
         velocity.y = 0
 
-        -- Reload goals
+        -- Reload goals and items
+        -- This should actually load ANY entity in the new level
+        items.load(componentsTable, currentLevel, "medkits", "pomodori")
+
         for _id in pairs(componentsTable.goals) do
           componentsTable.positions[_id] = nil
           componentsTable.goals[_id] = nil
@@ -76,29 +99,5 @@ function playerController(componentsTable)
         break
       end
     end
-    
-    -- This could be moved to the collision module or something similar
-    if componentsTable.living ~= nil and componentsTable.living[entity] ~= nil
-        then
-      local health = componentsTable.living[entity].health
-
-      for healingEntity, healingAmount in pairs(componentsTable.healing or {}) do
-        local healingPosition = componentsTable.positions[healingEntity]
-        local healingAmount = componentsTable.healing[healingEntity]
-
-        local HEALING_SIZE = 10  -- store this variable somewhere else
-      -- (variable repeated in outline.lua)
-
-        if position.x + collisionBox.width/2 >= healingPosition.x - HEALING_SIZE/2
-            and position.x - collisionBox.width/2 <= healingPosition.x + HEALING_SIZE/2
-            and position.y >= healingPosition.y - HEALING_SIZE
-            and position.y - collisionBox.height <= healingPosition.y then
-          componentsTable.living[entity].health = health + healingAmount
-          componentsTable.positions[healingEntity] = nil
-          componentsTable.healing[healingEntity] = nil
-        end
-      end
-    end  -- Too much repeated code
-
   end  -- for entity, player
 end
