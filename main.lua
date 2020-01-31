@@ -4,9 +4,14 @@ require("components")
 require("levels")
 require("mruv")
 require("control")
-require("place")
+require("items")
+require("outline")
+
 
 function love.load()
+  -- Level data loading
+  currentLevel = levels.level[levels.first]
+  control.currentLevel = currentLevel
   dofile("animations.lua")
   spriteSheet = love.graphics.newImage("sprites/megasapi.png")
 
@@ -24,51 +29,54 @@ function love.load()
       megasapi = true
     },
     positions = {
-      megasapi = {x = 46, y = 142}
+      megasapi = {
+        x = currentLevel.entitiesData.player[1],
+        y = currentLevel.entitiesData.player[2]
+      }
     },
     velocities = {
       megasapi = {x = 0, y = 0, xSpeed = 500, jumpImpulseSpeed = 1400}
     },
+    goals = {},
     animationClips = {
       megasapi = components.animationClip(animations.megasapi, "standing", spriteSheet)
-    }
+    },
+    living = {
+      megasapi = {health = 10, stamina = 100, deathType = nil}
+    },
+    healing = {},
+    experienceEffect = {},
+    itemBoxes = {}
   }
+
+  components.assertDependency(componentsTable, "goals", "positions")
+  for goalIndex, goalData in pairs(currentLevel.entitiesData.goals) do
+    local id = "goal" .. tostring(goalIndex)
+    componentsTable.positions[id] = {x = goalData[1], y = goalData[2]}
+    componentsTable.goals[id] = goalData[3]
+  end
+
+  items.load(componentsTable, currentLevel, "medkits", "pomodori")
 end
 
 
 function love.update(dt)
-  control.playerController(componentsTable)
+  items.healthSupply(componentsTable)
+  items.experienceSupply(componentsTable)
+
+  control.playerController(componentsTable, currentLevel)
+  currentLevel = control.currentLevel
 
   mruv.gravity(componentsTable, dt)
-  collision.terrainCollision(componentsTable, levels.level["test"].terrain, dt)
-  mruv.movement(componentsTable, dt, xSpeed, jumpImpulseSpeed)
+  collision.terrainCollision(componentsTable, currentLevel.terrain, dt)
+  mruv.movement(componentsTable, dt)
   animation.animator(componentsTable, dt)
 end
 
 function love.draw()
-  local playerPosition = componentsTable.positions.megasapi
-  local playerBox = componentsTable.collisionBoxes.megasapi
-  love.graphics.setColor(1, 1, 1)
-
-  -- Physics test
-  levels.drawTerrainOutline()
-
-  -- Player collision box
-  love.graphics.setColor(0, 0, 1)
-  love.graphics.rectangle("fill", playerPosition.x-playerBox.width/2,
-    playerPosition.y-playerBox.height, playerBox.width, playerBox.height)
-
-  -- Cursor position
-  love.graphics.setColor(1, 1, 1)
-  place.textByAnchor(love.mouse.getX() .. ", " .. love.mouse.getY(), 0, 0,
-    "north west")
-
-  -- Player position
-  love.graphics.setColor(1, 1, 0)
-  love.graphics.circle("fill", playerPosition.x, playerPosition.y, 2)
-  local playerPositionText = math.floor(playerPosition.x) .. ", " ..
-    math.floor(playerPosition.y)
-  place.textByAnchor(playerPositionText, 0,
-    love.graphics.getFont():getHeight(playerPositionText), "north west")
+  -- Shapes
+  outline.draw(componentsTable, currentLevel.terrain)
   animation.animationRenderer(componentsTable, spriteSheet)
+  -- Text
+  outline.debug(componentsTable)
 end

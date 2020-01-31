@@ -1,15 +1,12 @@
 module("components", package.seeall)
 dofile("sprites.lua")
 
--- Collision Box
-function collisionBox(width, height)
+local function Box(width, height)
   local component = {
     x = 0,
     y = 0,
     width = width,
-    height = height,
-    onSlope = false,
-    slopeX = 0
+    height = height
   }
 
   function component:left()
@@ -102,19 +99,41 @@ function animationClip(animations, nameOfCurrentAnimation, spriteSheet)
   return newComponent
 end
 
--- Asserts
-function assertComponentsDependency(existingComponents, componentsToAssert,
-                                    existingComponentName, nameToAssert)
-  if existingComponents ~= nil and componentsToAssert == nil then
-    error("There are " .. existingComponentName .. " components but no " ..
-          nameToAssert .. " components")
+function itemBox(width, height)
+  local component = Box(width, height)
+
+  return component
+end
+
+
+function collisionBox(width, height)
+  local component = Box(width, height)
+
+  component.onSlope = false
+  component.slopeX = 0
+
+  return component
+end
+
+
+function assertDependency(componentsTable, dependentComponentName, ...)
+  if componentsTable[dependentComponentName] ~= nil then
+    for i, nameToAssert in ipairs{...} do
+      if componentsTable[nameToAssert] == nil then
+        error([[Unsatisfied dependency in componentsTable.
+          There is at least one component inside "]] .. dependentComponentName
+          ..  '" but no component inside "' .. nameToAssert .. '".')
+      end
+    end
   end
 end
 
 
-function assertComponentExistence(componentToAssert, existingComponentName, nameToAssert,
-                                  entity)
-  assert(componentToAssert ~= nil,
-          "Entity " .. entity .. " has " .. existingComponentName ..
-          " component but has not " .. nameToAssert .. " component")
+function assertExistence(entity, existingComponentName, ...)
+  for i, pairToAssert in ipairs{...} do
+    componentToAssert, nameToAssert = pairToAssert[1], pairToAssert[2]
+    assert(componentToAssert ~= nil,
+            "Entity " .. entity .. " has " .. existingComponentName ..
+            " component but has not " .. nameToAssert .. " component")
+  end
 end

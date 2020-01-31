@@ -1,9 +1,12 @@
 module("levels", package.seeall)
 
+
 level = {
   ["test"] = {
     terrain = {
       boundaries = {
+        -- {x1, y1, x2, y2}
+
         -- Main (level delimiters)
         {-5, -100, 5, 605},			-- left
         {-5, 530, 805, 605},	-- bottom
@@ -27,7 +30,24 @@ level = {
       }
     },
     entitiesData = {
-      player = {46, 142}
+      player = {46, 250},  -- {x, y}
+      goals = {  -- {x, y, newLevelID}
+        {740, 430, "another level"},
+        {740, 20, "secret"},
+      },
+      medkits = {  -- {x, y}
+        {45, 50},
+        {280, 260},
+      },
+      pomodori = {
+        {230, 500},
+        {270, 500},
+        {310, 500},
+        {350, 500},
+        {390, 500},
+        {430, 500},
+        {470, 500},
+      }
     }
   },
 
@@ -38,42 +58,23 @@ level = {
       }
     },
     entitiesData = {
-      player = {400, 300}
+      player = {400, 450}
     }
-  }
+  },
+
+  ["secret"] = {
+    terrain = {
+      boundaries = {
+        {300, 200, 500, 300}
+      }
+    },
+    entitiesData = {
+      player = {400, 100},
+      goals = {
+        {555, 200, "test"}
+      }
+    }
+  },
 }
 
-
-cloudHeightDisplay = 10
-
-function drawBox(corners)
-  love.graphics.polygon("fill", corners.x1, corners.y1, corners.x2, corners.y1,
-                        corners.x2, corners.y2, corners.x1, corners.y2)
-end
-
-function drawRightTriangle(corners)
-  love.graphics.polygon("fill", corners.x1, corners.y1, corners.x2, corners.y1,
-                        corners.x2, corners.y2)
-end
-
-function drawTerrainOutline()
-  love.graphics.setColor(0, 0.5, 0)
-  for i in pairs(levels.level["test"].terrain.boundaries) do
-    local boundaries = levels.level["test"].terrain.boundaries[i]
-    drawBox{x1 = boundaries[1], y1 = boundaries[2], x2 = boundaries[3],
-            y2 = boundaries[4]}
-  end
-
-  for i in pairs(levels.level["test"].terrain.slopes) do
-    local slopes = levels.level["test"].terrain.slopes[i]
-    drawRightTriangle{x1 = slopes[1], y1 = slopes[2], x2 = slopes[3],
-                      y2 = slopes[4]}
-  end
-
-  love.graphics.setColor(0.3, 0.6, 1)
-  for i in pairs(levels.level["test"].terrain.clouds) do
-    local clouds = levels.level["test"].terrain.clouds[i]
-    drawBox{x1 = clouds[1], y1 = clouds[2], x2 = clouds[3],
-            y2 = clouds[2] + cloudHeightDisplay}
-  end
-end
+first = "test"  -- the game loads this level at start

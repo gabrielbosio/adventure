@@ -188,7 +188,7 @@ end
 local function checkSlopesCollision(collisionBox, position, velocity, terrain, dt)
   collisionBox.onSlope = false
 
-  for i in pairs(terrain.slopes) do
+  for i in pairs(terrain.slopes or {}) do
     local x1, y1, x2, y2 = unpack(terrain.slopes[i])
     local yTop, yBottom = math.min(y1, y2), math.max(y1, y2)
 
@@ -213,7 +213,7 @@ end
 
 
 local function checkCloudsCollision(collisionBox, position, velocity, terrain, dt)
-  for i in pairs(terrain.clouds) do
+  for i in pairs(terrain.clouds or {}) do
     local clouds = terrain.clouds[i]
     local x1 = math.min(clouds[1], clouds[3])
     local y1 = clouds[2]
@@ -232,25 +232,23 @@ end
 
 
 function terrainCollision(componentsTable, terrain, dt)
-  components.assertComponentsDependency(componentsTable.solids, componentsTable.collisionBoxes,
-                                        "solid", "collisionBox")
+  -- solid depends on collisionBox, position and velocity
+  components.assertDependency(componentsTable, "solids", "collisionBoxes",
+                              "positions", "velocities")
 
-  components.assertComponentsDependency(componentsTable.solids, componentsTable.positions,
-                                        "solid", "position")
-
-  components.assertComponentsDependency(componentsTable.solids, componentsTable.velocities,
-                                        "solid", "velocity")
-  
   for entity, solidComponent in pairs(componentsTable.solids or {}) do
     local collisionBox = componentsTable.collisionBoxes[entity]
     local position = componentsTable.positions[entity]
     local velocity = componentsTable.velocities[entity]
-    components.assertComponentExistence(collisionBox, "solid", "collisionBox", entity)
-    components.assertComponentExistence(position, "solid", "position", entity)
-    components.assertComponentExistence(velocity, "solid", "velocity", entity)
+    components.assertExistence(entity, "solid", {collisionBox, "collisionBox"},
+                               {position, "position"}, {velocity, "velocity"})
 
     checkBoundariesCollision(collisionBox, position, velocity, terrain, dt)
     checkSlopesCollision(collisionBox, position, velocity, terrain, dt)
     checkCloudsCollision(collisionBox, position, velocity, terrain, dt)
   end
+end
+
+
+function playerTouchingEntity(playerPosition, playerCollisionBox)
 end

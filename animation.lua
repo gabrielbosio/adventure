@@ -22,13 +22,11 @@ end
 
 
 function animationRenderer(componentsTable, spriteSheet)
-  components.assertComponentsDependency(componentsTable.animationClips,
-                                        componentsTable.positions, "animationClip",
-                                        "position")
+  components.assertDependency(componentsTable, "animationClips", "positions")
 
   for entity, animationClip in pairs(componentsTable.animationClips or {}) do
     local position = componentsTable.positions[entity]
-    components.assertComponentExistence(position, "animationClip", "position", entity)
+    components.assertExistence(entity, "animationClip", {position, "position"})
     
     local scale = 0.5
     local currentAnimation = animationClip.animations[animationClip.nameOfCurrentAnimation]
