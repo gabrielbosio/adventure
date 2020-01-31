@@ -47,12 +47,12 @@ local function createAnimationsTable(animations, spriteSheet)
     local newAnimation = animationsTable[animationName]
 
     for _, frame in ipairs(animation[1]) do
-      local x, y, width, height = unpack(sprites[frame[1]])
+      local x, y, width, height, originX, originY = unpack(sprites[frame[1]])
 
       newAnimation.frames[#newAnimation.frames + 1] = {
         quad = love.graphics.newQuad(x, y, width, height, spriteSheet:getDimensions()),
-        origin = {x = frame[2][1], y = frame[2][2]},
-        duration = frame[3]
+        origin = {x = originX, y = originY},
+        duration = frame[2]
       }
     end
 
