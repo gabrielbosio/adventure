@@ -22,20 +22,31 @@ function playerController(componentsTable)
     if love.keyboard.isDown("a") and not love.keyboard.isDown("d") then
       velocity.x = -velocity.xSpeed
       animationClip.facingRight = false
-      animationClip:setAnimation("walking")
+      
+      if velocity.y == 0 then
+        animationClip:setAnimation("walking")
+      end
     elseif not love.keyboard.isDown("a") and love.keyboard.isDown("d") then
       velocity.x = velocity.xSpeed
       animationClip.facingRight = true
-      animationClip:setAnimation("walking")
-    else
+
+      if velocity.y == 0 then
+        animationClip:setAnimation("walking")
+      end
+    elseif velocity.y == 0 then
       velocity.x = 0
       animationClip:setAnimation("standing")
+    end
+
+    if velocity.y ~= 0 then
+      animationClip:setAnimation("jumping")
     end
 
     -- Y Movement Input
 
     if love.keyboard.isDown("w") and velocity.y == 0 and not holdingJumpKey then
       velocity.y = -velocity.jumpImpulseSpeed
+      animationClip:setAnimation("jumping")
       holdingJumpKey = true
     elseif not love.keyboard.isDown("w") and holdingJumpKey then
       holdingJumpKey = false
