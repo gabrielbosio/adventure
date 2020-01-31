@@ -74,7 +74,6 @@ function animationClip(animations, nameOfCurrentAnimation, spriteSheet)
     animations = createAnimationsTable(animations, spriteSheet),
     nameOfCurrentAnimation = nameOfCurrentAnimation,
     currentTime = 0,
-    currentFrameNumber = 1,
     facingRight = true,
     playing = true
   }
@@ -89,6 +88,15 @@ function animationClip(animations, nameOfCurrentAnimation, spriteSheet)
       end
     end
     return #currentAnimation.frames
+  end
+
+  function newComponent:setAnimation(animationName)
+    if self.animations[animationName] ~= nil and
+        self.nameOfCurrentAnimation ~= animationName then
+      self.nameOfCurrentAnimation = animationName
+      self.currentTime = 0
+      self.playing = true
+    end
   end
 
   return newComponent

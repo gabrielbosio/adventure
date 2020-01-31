@@ -22,11 +22,14 @@ function playerController(componentsTable)
     if love.keyboard.isDown("a") and not love.keyboard.isDown("d") then
       velocity.x = -velocity.xSpeed
       animationClip.facingRight = false
+      animationClip:setAnimation("walking")
     elseif not love.keyboard.isDown("a") and love.keyboard.isDown("d") then
       velocity.x = velocity.xSpeed
       animationClip.facingRight = true
+      animationClip:setAnimation("walking")
     else
       velocity.x = 0
+      animationClip:setAnimation("standing")
     end
 
     -- Y Movement Input
