@@ -51,7 +51,7 @@ local function createAnimationsTable(animations, spriteSheet)
 
       newAnimation.frames[#newAnimation.frames + 1] = {
         quad = love.graphics.newQuad(x, y, width, height, spriteSheet:getDimensions()),
-        origin = {x = originX, y = originY},
+        origin = {x = -originX, y = -originY},
         duration = frame[2]
       }
     end
