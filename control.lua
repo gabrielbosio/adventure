@@ -48,12 +48,10 @@ function playerController(componentsTable)
       -- Y Movement Input
 
       if love.keyboard.isDown("k") and velocity.y == 0 and not holdingJumpKey then
-        local jumpSpeedX = velocity.x
         componentsTable.inputs[entity] = nil
         velocity.x = 0
         animationClip:setAnimation("startingJump", function ()
           componentsTable.inputs[entity] = input
-          velocity.x = jumpSpeedX
           velocity.y = -velocity.jumpImpulseSpeed
           animationClip:setAnimation("jumping")
         end)
