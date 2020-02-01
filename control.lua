@@ -44,7 +44,7 @@ function playerController(componentsTable)
 
     -- Y Movement Input
 
-    if love.keyboard.isDown("w") and velocity.y == 0 and not holdingJumpKey then
+    if love.keyboard.isDown("k") and velocity.y == 0 and not holdingJumpKey then
       velocity.y = -velocity.jumpImpulseSpeed
       animationClip:setAnimation("jumping")
       holdingJumpKey = true

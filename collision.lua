@@ -190,24 +190,43 @@ local function checkSlopesCollision(collisionBox, position, velocity, terrain, d
 
   for i in pairs(terrain.slopes or {}) do
     local x1, y1, x2, y2 = unpack(terrain.slopes[i])
+    local xLeft, xRight = math.min(x1, x2), math.max(x1, x2)
     local yTop, yBottom = math.min(y1, y2), math.max(y1, y2)
 
     checkRightAngleSideSlopeCollision(collisionBox, position, velocity, x1, x2, yTop, yBottom, dt)
     checkSharpCornerSlopeCollision(collisionBox, position, velocity, x1, y1, x2, y2, dt)
 
     -- Top and bottom
-    if position.x + collisionBox:right() > math.min(x1, x2)
-        and position.x + collisionBox:left() < math.max(x1, x2) then
+    if position.x + collisionBox:right() > xLeft
+        and position.x + collisionBox:left() < xRight then
       local m = (y2-y1) / (x2-x1)
 
       if y1 < y2 then
         checkCeilingOfTopSlopeCollision(collisionBox, position, velocity, m, x1, y1, x2, y2, dt)
         checkFloorOfTopSlopeCollision(collisionBox, position, velocity, y1, dt)
+
       else
         checkCeilingOfBottomSlopeCollision(collisionBox, position, velocity, y1, dt)
         checkFloorOfBottomSlopeCollision(collisionBox, position, velocity, m, x1, y1, x2, y2, dt)
+
+        -- Extensions (slope-boundary joints)
+        for j in pairs(terrain.boundaries) do
+          local boundaries = terrain.boundaries[j]
+          local xb1 = math.min(boundaries[1], boundaries[3])
+          local yb1 = math.min(boundaries[2], boundaries[4])
+          local xb2 = math.max(boundaries[1], boundaries[3])
+          local yb2 = math.max(boundaries[2], boundaries[4])
+
+          if position.x >= xb1 and position.x <= xb2
+              and position.x + velocity.x*dt > xLeft then
+            local slopeY = y1 + m*(position.x-x1)
+            position.y = slopeY
+            velocity.y = 0
+          end
+        end
       end
     end
+
   end 
 end
 
