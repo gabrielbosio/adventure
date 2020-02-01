@@ -87,12 +87,16 @@ function animationClip(animations, nameOfCurrentAnimation, spriteSheet)
     return #currentAnimation.frames
   end
 
-  function newComponent:setAnimation(animationName)
-    if self.animations[animationName] ~= nil and
-        self.nameOfCurrentAnimation ~= animationName then
+  function newComponent:setAnimation(animationName, onComplete)
+    if self.animations[animationName] ~= nil
+        and self.nameOfCurrentAnimation ~= animationName then
       self.nameOfCurrentAnimation = animationName
       self.currentTime = 0
       self.playing = true
+      self.onComplete = function ()
+        onComplete()
+        self.onComplete = nil
+      end
     end
   end
 

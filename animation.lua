@@ -12,6 +12,10 @@ function animator(componentsTable, dt)
         animationClip.currentTime = animationClip.currentTime - currentAnimationDuration
       else
         animationClip.currentTime = currentAnimationDuration - dt
+
+        if animationClip.onComplete ~= nil then
+          animationClip.onComplete()
+        end
       end
       
     else

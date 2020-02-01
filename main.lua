@@ -46,7 +46,10 @@ function love.load()
     },
     healing = {},
     experienceEffect = {},
-    itemBoxes = {}
+    itemBoxes = {},
+    inputs = {
+      megasapi = true
+    }
   }
 
   components.assertDependency(componentsTable, "goals", "positions")
