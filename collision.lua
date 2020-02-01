@@ -209,20 +209,9 @@ local function checkSlopesCollision(collisionBox, position, velocity, terrain, d
         checkCeilingOfBottomSlopeCollision(collisionBox, position, velocity, y1, dt)
         checkFloorOfBottomSlopeCollision(collisionBox, position, velocity, m, x1, y1, x2, y2, dt)
 
-        -- Extensions (slope-boundary joints)
-        for j in pairs(terrain.boundaries) do
-          local boundaries = terrain.boundaries[j]
-          local xb1 = math.min(boundaries[1], boundaries[3])
-          local yb1 = math.min(boundaries[2], boundaries[4])
-          local xb2 = math.max(boundaries[1], boundaries[3])
-          local yb2 = math.max(boundaries[2], boundaries[4])
-
-          if position.x >= xb1 and position.x <= xb2
-              and position.x + velocity.x*dt > xLeft then
-            local slopeY = y1 + m*(position.x-x1)
-            position.y = slopeY
-            velocity.y = 0
-          end
+        if velocity.x ~= 0 and position.y == m*(position.x-x1) + y1 and velocity.y >= 0 then
+          position.y = m*(position.x+velocity.x*dt-x1) + y1
+          velocity.y = 0
         end
       end
     end
