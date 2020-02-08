@@ -6,22 +6,9 @@ module("control", package.seeall)
 local holdingJumpKey
 currentLevel = {}  -- modified by playerController system 
 
-
-function playerController(componentsTable)
-  -- players depend on velocities and positions
-  components.assertDependency(componentsTable, "players", "velocities", "positions")
-
-  -- This for loop could be avoided if there is only one entity with a "player"
-  -- component.
-  for entity, player in pairs(componentsTable.players or {}) do
-    local input = componentsTable.inputs[entity]
-
-    if input ~= nil then
-      local velocity = componentsTable.velocities[entity]
-      local animationClip = componentsTable.animationClips[entity]
-      components.assertExistence(entity, "player", {velocity, "velocity"})    
-
-      -- X Movement Input
+local fsm = {
+  idle = function (player, input, velocity, animationClip)
+    -- X Movement Input
       if love.keyboard.isDown("a") and not love.keyboard.isDown("d") then
         velocity.x = -velocity.xSpeed
         animationClip.facingRight = false
@@ -48,10 +35,10 @@ function playerController(componentsTable)
       -- Y Movement Input
 
       if love.keyboard.isDown("k") and velocity.y == 0 and not holdingJumpKey then
-        componentsTable.inputs[entity] = nil
+        player.state = "startingJump"
         velocity.x = 0
         animationClip:setAnimation("startingJump", function ()
-          componentsTable.inputs[entity] = input
+          player.state = "idle"
           velocity.y = -velocity.jumpImpulseSpeed
           animationClip:setAnimation("jumping")
         end)
@@ -59,6 +46,27 @@ function playerController(componentsTable)
       elseif not love.keyboard.isDown("k") and holdingJumpKey then
         holdingJumpKey = false
       end
+  end,
+
+  startingJump = function () end
+}
+
+
+function playerController(componentsTable)
+  -- players depend on velocities and positions
+  components.assertDependency(componentsTable, "players", "velocities", "positions")
+
+  -- This for loop could be avoided if there is only one entity with a "player"
+  -- component.
+  for entity, player in pairs(componentsTable.players or {}) do
+    local input = componentsTable.inputs[entity]
+
+    if input ~= nil then
+      local velocity = componentsTable.velocities[entity]
+      local animationClip = componentsTable.animationClips[entity]
+      components.assertExistence(entity, "player", {velocity, "velocity"})
+
+      fsm[player.state](player, input, velocity, animationClip)
 
       -- This could be moved to the collision module or something similar
       -- Goal control

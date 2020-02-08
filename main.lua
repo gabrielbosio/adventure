@@ -17,7 +17,7 @@ function love.load()
 
   componentsTable = {
     players = {  -- or maybe "player", there is just one...
-      megasapi = {experience = 0, stunned = false}
+      megasapi = {experience = 0, stunned = false, state = "idle"}
     },
     collisionBoxes = {
       megasapi = components.collisionBox(50, 100)
