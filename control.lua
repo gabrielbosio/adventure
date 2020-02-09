@@ -46,9 +46,24 @@ local fsm = {
       elseif not love.keyboard.isDown("k") and holdingJumpKey then
         holdingJumpKey = false
       end
+
+      if love.keyboard.isDown("j") then
+        player.state = "flyingHurt"
+        velocity.x = (animationClip.facingRight and -1 or 1) * velocity.xSpeed
+        velocity.y = -velocity.jumpImpulseSpeed
+        animationClip:setAnimation("flyingHurt")
+      end
   end,
 
-  startingJump = function () end
+  startingJump = function () end,
+
+  flyingHurt = function (player, input, velocity, animationClip)
+    
+    if velocity.y == 0 then
+      velocity.x = 0
+      animationClip:setAnimation("lyingDown")
+    end
+  end
 }
 
 

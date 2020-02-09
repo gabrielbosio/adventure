@@ -94,7 +94,7 @@ function animationClip(animations, nameOfCurrentAnimation, spriteSheet)
       self.currentTime = 0
       self.playing = true
       self.onComplete = function ()
-        onComplete()
+        (onComplete or function () end)()
         self.onComplete = nil
       end
     end
