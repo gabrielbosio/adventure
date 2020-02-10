@@ -67,8 +67,8 @@ function love.update(dt)
   items.healthSupply(componentsTable)
   items.experienceSupply(componentsTable)
 
-  control.playerController(componentsTable, currentLevel)
-  currentLevel = control.currentLevel
+  control.playerController(componentsTable)
+  currentLevel = collision.goalCollision(componentsTable, currentLevel)
 
   mruv.gravity(componentsTable, dt)
   collision.terrainCollision(componentsTable, currentLevel.terrain, dt)
