@@ -6,7 +6,13 @@ module("control", package.seeall)
 local holdingJumpKey
 
 local fsm = {
-  idle = function (player, input, velocity, animationClip)
+  idle = function (componentsTable, player, entity)
+    local input = componentsTable.inputs[entity]
+    local velocity = componentsTable.velocities[entity]
+    local animationClip = componentsTable.animationClips[entity]
+    components.assertExistence(entity, "player", {velocity, "velocity",
+                               {animationClip, "animationClip"}})
+
     -- X Movement Input
       if love.keyboard.isDown("a") and not love.keyboard.isDown("d") then
         velocity.x = -velocity.xSpeed
@@ -47,7 +53,8 @@ local fsm = {
       end
 
       if love.keyboard.isDown("j") then
-        player.state = "flyingHurt"
+        player.state = "hurt"
+        componentsTable.collectors[entity] = nil
         velocity.x = (animationClip.facingRight and -1 or 1) * velocity.xSpeed
         velocity.y = -velocity.jumpImpulseSpeed
         animationClip:setAnimation("flyingHurt")
@@ -56,8 +63,12 @@ local fsm = {
 
   startingJump = function () end,
 
-  flyingHurt = function (player, input, velocity, animationClip)
-    
+  hurt = function (componentsTable, player, entity)
+    local velocity = componentsTable.velocities[entity]
+    local animationClip = componentsTable.animationClips[entity]
+    components.assertExistence(entity, "player", {velocity, "velocity",
+                               {animationClip, "animationClip"}})
+
     if velocity.y == 0 then
       velocity.x = 0
       animationClip:setAnimation("lyingDown")
@@ -76,11 +87,7 @@ function playerController(componentsTable)
     local input = componentsTable.inputs[entity]
 
     if input ~= nil then
-      local velocity = componentsTable.velocities[entity]
-      local animationClip = componentsTable.animationClips[entity]
-      components.assertExistence(entity, "player", {velocity, "velocity"})
-
-      fsm[player.state](player, input, velocity, animationClip)
+      fsm[player.state](componentsTable, player, entity)
     end 
   end
 end

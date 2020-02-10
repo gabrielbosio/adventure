@@ -258,53 +258,57 @@ function goalCollision(componentsTable, currentLevel)
   local nextLevel = currentLevel
 
   for entity, player in pairs(componentsTable.players or {}) do
-    local position = componentsTable.positions[entity]
-    local velocity = componentsTable.velocities[entity]
-    local collisionBox = componentsTable.collisionBoxes[entity]
-    components.assertExistence(entity, "player", {position, "position"},
-                                {collisionBox, "collisionBox"}, {velocity, "velocity"})
+    local collector = componentsTable.collectors[entity]
 
-    for goalEntity, nextLevelID in pairs(componentsTable.goals or {}) do
-      local goalPosition = componentsTable.positions[goalEntity]
+    if collector ~= nil then
+      local position = componentsTable.positions[entity]
+      local velocity = componentsTable.velocities[entity]
+      local collisionBox = componentsTable.collisionBoxes[entity]
+      components.assertExistence(entity, "player", {position, "position"},
+                                  {collisionBox, "collisionBox"}, {velocity, "velocity"})
 
-      local GOAL_SIZE = 110  -- store this variable somewhere else
-      -- (variable repeated in outline.lua)
+      for goalEntity, nextLevelID in pairs(componentsTable.goals or {}) do
+        local goalPosition = componentsTable.positions[goalEntity]
 
-      if position.x + collisionBox.width/2 >= goalPosition.x - GOAL_SIZE/2
-          and position.x - collisionBox.width/2 <= goalPosition.x + GOAL_SIZE/2
-          and position.y >= goalPosition.y - GOAL_SIZE
-          and position.y - collisionBox.height <= goalPosition.y then
-        nextLevel = levels.level[nextLevelID]  -- changes module variable
+        local GOAL_SIZE = 110  -- store this variable somewhere else
+        -- (variable repeated in outline.lua)
 
-        -- Player position loading and movement restore
-        position.x = nextLevel.entitiesData.player[1]
-        position.y = nextLevel.entitiesData.player[2]
-        velocity.x = 0
-        velocity.y = 0
+        if position.x + collisionBox.width/2 >= goalPosition.x - GOAL_SIZE/2
+            and position.x - collisionBox.width/2 <= goalPosition.x + GOAL_SIZE/2
+            and position.y >= goalPosition.y - GOAL_SIZE
+            and position.y - collisionBox.height <= goalPosition.y then
+          nextLevel = levels.level[nextLevelID]  -- changes module variable
 
-        -- Reload goals and items
-        -- This should actually load ANY entity in the new level
-        items.load(componentsTable, nextLevel, "medkits", "pomodori")
+          -- Player position loading and movement restore
+          position.x = nextLevel.entitiesData.player[1]
+          position.y = nextLevel.entitiesData.player[2]
+          velocity.x = 0
+          velocity.y = 0
 
-        for _id in pairs(componentsTable.goals) do
-          componentsTable.positions[_id] = nil
-          componentsTable.goals[_id] = nil
-        end
+          -- Reload goals and items
+          -- This should actually load ANY entity in the new level
+          items.load(componentsTable, nextLevel, "medkits", "pomodori")
 
-        local currentGoals = nextLevel.entitiesData.goals
-
-        if currentGoals ~= nil then
-          for goalIndex, goalData in pairs(nextLevel.entitiesData.goals) do
-            local id = "goal" .. tostring(goalIndex)
-            componentsTable.positions[id] = {x = goalData[1], y = goalData[2]}
-            componentsTable.goals[id] = goalData[3]
+          for _id in pairs(componentsTable.goals) do
+            componentsTable.positions[_id] = nil
+            componentsTable.goals[_id] = nil
           end
-        end
 
-        break
+          local currentGoals = nextLevel.entitiesData.goals
+
+          if currentGoals ~= nil then
+            for goalIndex, goalData in pairs(nextLevel.entitiesData.goals) do
+              local id = "goal" .. tostring(goalIndex)
+              componentsTable.positions[id] = {x = goalData[1], y = goalData[2]}
+              componentsTable.goals[id] = goalData[3]
+            end
+          end
+
+          break
+        end
       end
-    end
-  end -- for entity, player
+    end -- for entity, player
+  end
 
   return nextLevel
 end

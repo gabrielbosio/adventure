@@ -49,6 +49,9 @@ function love.load()
     itemBoxes = {},
     inputs = {
       megasapi = true
+    },
+    collectors = {
+      megasapi = true
     }
   }
 
