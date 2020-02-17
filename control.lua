@@ -6,7 +6,7 @@ module("control", package.seeall)
 local holdingJumpKey
 
 local fsm = {
-  idle = function (componentsTable, player, input, velocity, animationClip)
+  idle = function (componentsTable, entity, player, input, velocity, animationClip)
     -- X Movement Input
       if love.keyboard.isDown("a") and not love.keyboard.isDown("d") then
         velocity.x = -velocity.xSpeed
@@ -57,7 +57,7 @@ local fsm = {
 
   startingJump = function () end,
 
-  hurt = function (componentsTable, _, _, velocity, animationClip)
+  hurt = function (componentsTable, _, _, _, velocity, animationClip)
     if velocity.y == 0 then
       velocity.x = 0
       animationClip:setAnimation("lyingDown")
@@ -80,7 +80,7 @@ function playerController(componentsTable)
       local animationClip = componentsTable.animationClips[entity]
       components.assertExistence(entity, "player", {velocity, "velocity",
                                  {animationClip, "animationClip"}})  
-      fsm[player.state](componentsTable, player, input, velocity, animationClip)
+      fsm[player.state](componentsTable, entity, player, input, velocity, animationClip)
     end 
   end
 end
