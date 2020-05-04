@@ -57,12 +57,24 @@ local fsm = {
 
   hurt = function (componentsTable, entity, finiteStateMachine, _, velocity,
                    animationClip, living)
+    living.health = living.health - 1
     if living.health == 0 then
       finiteStateMachine:setState("flyingHurt")
       animationClip:setAnimation("flyingHurt")
       componentsTable.collectors[entity] = nil
       velocity.x = (animationClip.facingRight and -1 or 1) * velocity.xSpeed
       velocity.y = -velocity.jumpImpulseSpeed
+    else
+      finiteStateMachine:setState("hit")
+      animationClip:setAnimation("hitByHighPunch")
+    end
+  end,
+
+  hit = function (_, _, finiteStateMachine, _, velocity, animationClip, _)
+    --velocity.x must be set to aproperty value from another component
+    velocity.x = (animationClip.facingRight and -1 or 1) * velocity.xSpeed / 10
+    if animationClip.done then
+      finiteStateMachine:setState("idle")
     end
   end,
 
