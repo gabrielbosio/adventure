@@ -21,7 +21,7 @@ function love.load()
       megasapi = {experience = 0, stunned = false}
     },
     collisionBoxes = {
-      megasapi = components.collisionBox(50, 100)
+      megasapi = components.CollisionBox(50, 100)
     },
     solids = {
       megasapi = true
@@ -40,7 +40,7 @@ function love.load()
     },
     goals = {},
     animationClips = {
-      megasapi = components.animationClip(animations.megasapi, "standing", spriteSheet)
+      megasapi = components.AnimationClip(animations.megasapi, "standing", spriteSheet)
     },
     living = {
       megasapi = {health = 10, stamina = 100, deathType = nil}
@@ -55,7 +55,7 @@ function love.load()
       megasapi = true
     },
     finiteStateMachines = {
-      megasapi = components.finiteStateMachine("idle")
+      megasapi = components.FiniteStateMachine("idle")
     }
   }
 

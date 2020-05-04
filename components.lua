@@ -66,7 +66,7 @@ local function createAnimationsTable(animations, spriteSheet)
 end
 
 
-function animationClip(animations, nameOfCurrentAnimation, spriteSheet)
+function AnimationClip(animations, nameOfCurrentAnimation, spriteSheet)
   local newComponent = {
     animations = createAnimationsTable(animations, spriteSheet),
     nameOfCurrentAnimation = nameOfCurrentAnimation,
@@ -101,14 +101,14 @@ function animationClip(animations, nameOfCurrentAnimation, spriteSheet)
   return newComponent
 end
 
-function itemBox(width, height)
+function ItemBox(width, height)
   local component = Box(width, height)
 
   return component
 end
 
 
-function collisionBox(width, height)
+function CollisionBox(width, height)
   local component = Box(width, height)
 
   component.onSlope = false
@@ -118,7 +118,7 @@ function collisionBox(width, height)
 end
 
 
-function finiteStateMachine(currentState)
+function FiniteStateMachine(currentState)
   local newComponent = {
     currentState = currentState,
     stateTime = 0
