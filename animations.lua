@@ -10,6 +10,6 @@ animations = {
 	jumping = {{{15, 1}}, false},
 	flyingHurt = {{{16, 1}}, false},
 	lyingDown = {{{17, 1}}, false},
-	hitByHighPunch = {{{18, 0.5}}, false}
+	hitByHighPunch = {{{18, 0.1}}, false}
   }
 }

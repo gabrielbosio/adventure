@@ -72,7 +72,7 @@ local fsm = {
 
   hit = function (_, _, finiteStateMachine, _, velocity, animationClip, _)
     --velocity.x must be set to aproperty value from another component
-    velocity.x = (animationClip.facingRight and -1 or 1) * velocity.xSpeed / 10
+    velocity.x = (animationClip.facingRight and -1 or 1) * velocity.xSpeed / 3
     if animationClip.done then
       finiteStateMachine:setState("idle")
     end
