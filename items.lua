@@ -30,30 +30,34 @@ function healthSupply(componentsTable)
                                         "players", "positions")
 
   for entity, player in pairs(componentsTable.players) do
-    local position = componentsTable.positions[entity]
-    local collisionBox = componentsTable.collisionBoxes[entity]
-    local livingEntities = componentsTable.living[entity]
-    components.assertExistence(entity, "player", {position, "position"},
-                               {collisionBox, "collisionBox"},
-                               {livingEntities, "living"})
-    local parameter = componentsTable.living[entity].health
-    components.assertExistence(entity, "player", {parameter, "health"})
+    local collector = componentsTable.collectors[entity]
 
-    for itemEntity, amount in pairs(componentsTable.healing or {}) do
-      local itemPosition = componentsTable.positions[itemEntity]
+    if collector ~= nil then
+      local position = componentsTable.positions[entity]
+      local collisionBox = componentsTable.collisionBoxes[entity]
+      local livingEntities = componentsTable.living[entity]
+      components.assertExistence(entity, "player", {position, "position"},
+                                 {collisionBox, "collisionBox"},
+                                 {livingEntities, "living"})
+      local parameter = componentsTable.living[entity].health
+      components.assertExistence(entity, "player", {parameter, "health"})
 
-      local ITEM_SIZE = 10  -- maybe access it from outline.lua?
+      for itemEntity, amount in pairs(componentsTable.healing or {}) do
+        local itemPosition = componentsTable.positions[itemEntity]
 
-      if position.x + collisionBox.width/2 >= itemPosition.x - ITEM_SIZE/2
-          and position.x - collisionBox.width/2 <= itemPosition.x + ITEM_SIZE/2
-          and position.y >= itemPosition.y - ITEM_SIZE
-          and position.y - collisionBox.height <= itemPosition.y then
-        livingEntities.health = parameter + amount
-        positions = nil
-        componentsTable.healing[itemEntity] = nil
+        local ITEM_SIZE = 10  -- maybe access it from outline.lua?
+
+        if position.x + collisionBox.width/2 >= itemPosition.x - ITEM_SIZE/2
+            and position.x - collisionBox.width/2 <= itemPosition.x + ITEM_SIZE/2
+            and position.y >= itemPosition.y - ITEM_SIZE
+            and position.y - collisionBox.height <= itemPosition.y then
+          livingEntities.health = parameter + amount
+          positions = nil
+          componentsTable.healing[itemEntity] = nil
+        end
+
       end
-
-    end
+    end -- if collector ~= nil
   end
 end
 
@@ -65,26 +69,30 @@ function experienceSupply(componentsTable)
                               "positions")
 
   for entity, player in pairs(componentsTable.players) do
-    local position = componentsTable.positions[entity]
-    local collisionBox = componentsTable.collisionBoxes[entity]
-    components.assertExistence(entity, "player", {position, "position"},
-                               {collisionBox, "collisionBox"})
-    local parameter = player.experience
+    local collector = componentsTable.collectors[entity]
 
-    for itemEntity, amount in pairs(componentsTable.experienceEffect or {}) do
-      local itemPosition = componentsTable.positions[itemEntity]
+    if collector ~= nil then
+      local position = componentsTable.positions[entity]
+      local collisionBox = componentsTable.collisionBoxes[entity]
+      components.assertExistence(entity, "player", {position, "position"},
+                                 {collisionBox, "collisionBox"})
+      local parameter = player.experience
 
-      local ITEM_SIZE = 10  -- maybe access it from outline.lua?
+      for itemEntity, amount in pairs(componentsTable.experienceEffect or {}) do
+        local itemPosition = componentsTable.positions[itemEntity]
 
-      if position.x + collisionBox.width/2 >= itemPosition.x - ITEM_SIZE/2
-          and position.x - collisionBox.width/2 <= itemPosition.x + ITEM_SIZE/2
-          and position.y >= itemPosition.y - ITEM_SIZE
-          and position.y - collisionBox.height <= itemPosition.y then
-        player.experience = parameter + amount
-        positions = nil
-        componentsTable.experienceEffect[itemEntity] = nil
+        local ITEM_SIZE = 10  -- maybe access it from outline.lua?
+
+        if position.x + collisionBox.width/2 >= itemPosition.x - ITEM_SIZE/2
+            and position.x - collisionBox.width/2 <= itemPosition.x + ITEM_SIZE/2
+            and position.y >= itemPosition.y - ITEM_SIZE
+            and position.y - collisionBox.height <= itemPosition.y then
+          player.experience = parameter + amount
+          positions = nil
+          componentsTable.experienceEffect[itemEntity] = nil
+        end
+
       end
-
     end
   end
 end

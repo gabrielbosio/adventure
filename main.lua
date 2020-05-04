@@ -6,6 +6,7 @@ require("mruv")
 require("control")
 require("items")
 require("outline")
+require("state")
 
 
 function love.load()
@@ -20,7 +21,7 @@ function love.load()
       megasapi = {experience = 0, stunned = false}
     },
     collisionBoxes = {
-      megasapi = components.collisionBox(50, 100)
+      megasapi = components.CollisionBox(50, 100)
     },
     solids = {
       megasapi = true
@@ -39,14 +40,23 @@ function love.load()
     },
     goals = {},
     animationClips = {
-      megasapi = components.animationClip(animations.megasapi, "standing", spriteSheet)
+      megasapi = components.AnimationClip(animations.megasapi, "standing", spriteSheet)
     },
     living = {
       megasapi = {health = 10, stamina = 100, deathType = nil}
     },
     healing = {},
     experienceEffect = {},
-    itemBoxes = {}
+    itemBoxes = {},
+    inputs = {
+      megasapi = true
+    },
+    collectors = {
+      megasapi = true
+    },
+    finiteStateMachines = {
+      megasapi = components.FiniteStateMachine("idle")
+    }
   }
 
   components.assertDependency(componentsTable, "goals", "positions")
@@ -64,13 +74,14 @@ function love.update(dt)
   items.healthSupply(componentsTable)
   items.experienceSupply(componentsTable)
 
-  control.playerController(componentsTable, currentLevel)
-  currentLevel = control.currentLevel
+  control.playerController(componentsTable)
+  currentLevel = collision.goalCollision(componentsTable, currentLevel)
 
   mruv.gravity(componentsTable, dt)
   collision.terrainCollision(componentsTable, currentLevel.terrain, dt)
   mruv.movement(componentsTable, dt)
   animation.animator(componentsTable, dt)
+  state.finiteStateMachineRunner(componentsTable, dt)
 end
 
 function love.draw()
