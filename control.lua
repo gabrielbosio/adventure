@@ -6,7 +6,8 @@ module("control", package.seeall)
 local holdingJumpKey
 
 local fsm = {
-  idle = function (componentsTable, entity, player, input, velocity, animationClip)
+  idle = function (componentsTable, entity, finiteStateMachine, input, velocity,
+                   animationClip)
     -- X Movement Input
       if love.keyboard.isDown("a") and not love.keyboard.isDown("d") then
         velocity.x = -velocity.xSpeed
@@ -34,10 +35,10 @@ local fsm = {
       -- Y Movement Input
 
       if love.keyboard.isDown("k") and velocity.y == 0 and not holdingJumpKey then
-        player.state = "startingJump"
+        finiteStateMachine:setState("startingJump")
         velocity.x = 0
         animationClip:setAnimation("startingJump", function ()
-          player.state = "idle"
+          finiteStateMachine:setState("idle")
           velocity.y = -velocity.jumpImpulseSpeed
           animationClip:setAnimation("jumping")
         end)
@@ -47,7 +48,7 @@ local fsm = {
       end
 
       if love.keyboard.isDown("j") then
-        player.state = "hurt"
+        finiteStateMachine:setState("hurt")
         componentsTable.collectors[entity] = nil
         velocity.x = (animationClip.facingRight and -1 or 1) * velocity.xSpeed
         velocity.y = -velocity.jumpImpulseSpeed
@@ -78,9 +79,12 @@ function playerController(componentsTable)
     if input ~= nil then
       local velocity = componentsTable.velocities[entity]
       local animationClip = componentsTable.animationClips[entity]
+      local finiteStateMachine = componentsTable.finiteStateMachines[entity]
       components.assertExistence(entity, "player", {velocity, "velocity",
-                                 {animationClip, "animationClip"}})  
-      fsm[player.state](componentsTable, entity, player, input, velocity, animationClip)
+                                 {animationClip, "animationClip"},
+                                 {finiteStateMachine, "finiteStateMachine"}})  
+      fsm[finiteStateMachine.currentState](componentsTable, entity, finiteStateMachine,
+                                           input, velocity, animationClip)
     end 
   end
 end

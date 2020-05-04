@@ -120,6 +120,28 @@ function collisionBox(width, height)
 end
 
 
+function finiteStateMachine(stateNames)
+  local newComponent = {
+    currentState = stateNames[1],
+    time = 0
+  }
+
+  function newComponent:setState(name, time)
+    local foundState = false
+    for _, stateName in ipairs(stateNames) do
+      if stateName == name then
+        self.currentState = name
+        self.time = time or 0
+        foundState = true
+      end
+    end
+    return foundState
+  end
+
+  return newComponent
+end
+
+
 function assertDependency(componentsTable, dependentComponentName, ...)
   if componentsTable[dependentComponentName] ~= nil then
     for i, nameToAssert in ipairs{...} do
