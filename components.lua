@@ -121,12 +121,12 @@ end
 function finiteStateMachine(currentState)
   local newComponent = {
     currentState = currentState,
-    time = 0
+    stateTime = 0
   }
 
   function newComponent:setState(newState, time)
     self.currentState = newState
-    self.time = time or 0
+    self.stateTime = time or 0
   end
 
   return newComponent

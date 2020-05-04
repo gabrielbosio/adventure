@@ -60,10 +60,17 @@ local fsm = {
     end
   end,
 
-  hurt = function (componentsTable, _, _, _, velocity, animationClip)
+  hurt = function (_, _, finiteStateMachine, _, velocity, animationClip)
     if velocity.y == 0 then
       velocity.x = 0
+      finiteStateMachine:setState("lyingDown", 3)
       animationClip:setAnimation("lyingDown")
+    end
+  end,
+
+  lyingDown = function (_, _, finiteStateMachine)
+    if finiteStateMachine.stateTime == 0 then
+      love.load()
     end
   end
 }

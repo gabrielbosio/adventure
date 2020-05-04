@@ -6,6 +6,7 @@ require("mruv")
 require("control")
 require("items")
 require("outline")
+require("state")
 
 
 function love.load()
@@ -80,6 +81,7 @@ function love.update(dt)
   collision.terrainCollision(componentsTable, currentLevel.terrain, dt)
   mruv.movement(componentsTable, dt)
   animation.animator(componentsTable, dt)
+  state.finiteStateMachineRunner(componentsTable, dt)
 end
 
 function love.draw()
