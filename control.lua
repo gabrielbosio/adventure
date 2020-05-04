@@ -83,6 +83,8 @@ local fsm = {
       velocity.x = 0
       finiteStateMachine:setState("lyingDown", 3)
       animationClip:setAnimation("lyingDown")
+    elseif velocity.y > 5000 then
+      love.load()
     end
   end,
 
