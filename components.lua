@@ -118,22 +118,15 @@ function collisionBox(width, height)
 end
 
 
-function finiteStateMachine(stateNames)
+function finiteStateMachine(currentState)
   local newComponent = {
-    currentState = stateNames[1],
+    currentState = currentState,
     time = 0
   }
 
-  function newComponent:setState(name, time)
-    local foundState = false
-    for _, stateName in ipairs(stateNames) do
-      if stateName == name then
-        self.currentState = name
-        self.time = time or 0
-        foundState = true
-      end
-    end
-    return foundState
+  function newComponent:setState(newState, time)
+    self.currentState = newState
+    self.time = time or 0
   end
 
   return newComponent

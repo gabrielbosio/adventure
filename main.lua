@@ -54,7 +54,7 @@ function love.load()
       megasapi = true
     },
     finiteStateMachines = {
-      megasapi = components.finiteStateMachine({"idle", "startingJump", "hurt"})
+      megasapi = components.finiteStateMachine("idle")
     }
   }
 
