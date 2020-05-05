@@ -225,6 +225,11 @@ local function checkBoundaries(collisionBox, position, velocity, terrain, dt)
 end
 
 
+local function linear(slope, initialValue, x)
+  return slope*x + initialValue
+end
+
+
 local function checkSlopes(collisionBox, position, velocity, terrain, dt)
   for i in pairs(terrain.slopes or {}) do
     local x1, y1, x2, y2 = unpack(terrain.slopes[i])
@@ -236,16 +241,24 @@ local function checkSlopes(collisionBox, position, velocity, terrain, dt)
         and position.y + collisionBox:bottom() >= yTop
         and position.y + collisionBox:bottom() <= yBottom then
       local m = (y2-y1) / (x2-x1)
-      local ySlope = m*(position.x-x1) + y1
-      if position.y + collisionBox:bottom() + velocity.y*dt >= ySlope then
-        position.y = ySlope
-        velocity.y = 0
-        collisionBox.slopeId = i
-      end
+      local ySlope = linear(m, y1, position.x - x1)
 
-      print("touching slope", i, "y", ySlope)
-    else
-      print("not touching slope")
+      -- if pointing up
+      if y1 > y2 then
+        if position.y + collisionBox:bottom() + velocity.y*dt >= ySlope then
+          position.y = ySlope
+          velocity.y = 0
+          collisionBox.slopeId = i
+        end
+
+        xSlopeNew = position.x + collisionBox:bottom() + velocity.x*dt - x1
+        ySlopeNew = linear(m, y1, xSlopeNew)
+        if velocity.x ~= 0 and velocity.y == 0
+            and position.y + collisionBox:bottom() + velocity.x*dt < ySlopeNew
+            then
+          position.y = ySlopeNew
+        end
+      end
     end
 
   end  -- for
