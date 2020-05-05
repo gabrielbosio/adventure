@@ -119,3 +119,23 @@ function playerController(componentsTable)
     end 
   end
 end
+
+
+function playerAfterTerrainCollisionChecking(componentsTable)
+  components.assertDependency(componentsTable, "players", "velocities")
+
+  -- This for loop could be avoided if there is only one entity with a "player"
+  -- component.
+  for entity, player in pairs(componentsTable.players or {}) do
+    local velocity = componentsTable.velocities[entity]
+    local animationClip = componentsTable.animationClips[entity]
+    local finiteStateMachine = componentsTable.finiteStateMachines[entity]
+    components.assertExistence(entity, "player", {velocity, "velocity",
+                               {animationClip, "animationClip"},
+                               {finiteStateMachine, "finiteStateMachine"}})
+    if finiteStateMachine.currentState == "idle" and velocity.x == 0 and
+       velocity.y == 0 then
+      animationClip:setAnimation("standing")
+    end
+  end
+end
