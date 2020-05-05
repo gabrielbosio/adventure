@@ -12,6 +12,7 @@ function animator(componentsTable, dt)
         animationClip.currentTime = animationClip.currentTime - currentAnimationDuration
       else
         animationClip.currentTime = currentAnimationDuration - dt
+        animationClip.done = true
       end
       
     else

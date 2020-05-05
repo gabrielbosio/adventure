@@ -2,7 +2,7 @@ require("components")
 module("collision", package.seeall)
 
 
-local function checkBottomBoundaryCollision(collisionBox, position, velocity, x1, y1, x2, y2, dt)
+local function checkBottomBoundary(collisionBox, position, velocity, x1, y1, x2, y2, dt)
   if position.x + collisionBox:right() > x1
       and position.x + collisionBox:left() < x2
       and position.y + collisionBox:bottom() + velocity.y*dt > y1
@@ -13,7 +13,7 @@ local function checkBottomBoundaryCollision(collisionBox, position, velocity, x1
 end
 
 
-local function checkTopBoundaryCollision(collisionBox, position, velocity, x1, y1, x2, y2, dt)
+local function checkTopBoundary(collisionBox, position, velocity, x1, y1, x2, y2, dt)
   if position.x + collisionBox:right() > x1
       and position.x + collisionBox:left() < x2
       and position.y + collisionBox:top() + velocity.y*dt < y2
@@ -24,7 +24,7 @@ local function checkTopBoundaryCollision(collisionBox, position, velocity, x1, y
 end
 
 
-local function checkLeftBoundaryCollision(collisionBox, position, velocity, x1, y1, x2, y2, dt)
+local function checkLeftBoundary(collisionBox, position, velocity, x1, y1, x2, y2, dt)
   if (position.x + collisionBox:left() + velocity.x*dt < x2
       and position.x + collisionBox:right() > x1
       and position.y + collisionBox:top() < y2
@@ -39,7 +39,7 @@ local function checkLeftBoundaryCollision(collisionBox, position, velocity, x1, 
 end
 
 
-local function checkRightBoundaryCollision(collisionBox, position, velocity, x1, y1, x2, y2, dt)
+local function checkRightBoundary(collisionBox, position, velocity, x1, y1, x2, y2, dt)
   if position.x + collisionBox:right() + velocity.x*dt > x1
       and position.x + collisionBox:left() < x2
       and position.y + collisionBox:top() < y2
@@ -51,7 +51,7 @@ local function checkRightBoundaryCollision(collisionBox, position, velocity, x1,
 end
 
 -- Right angle side (acts like a wall)
-local function checkRightAngleSideSlopeCollision(collisionBox, position, velocity, x1, x2, yTop, yBottom, dt)
+local function checkRightAngleSideSlope(collisionBox, position, velocity, x1, x2, yTop, yBottom, dt)
   if position.y + collisionBox:bottom() > yTop
       and position.y + collisionBox:top() < yBottom then
     
@@ -69,7 +69,7 @@ local function checkRightAngleSideSlopeCollision(collisionBox, position, velocit
 end
 
 -- Sharp corner (acts like a wall)
-local function checkSharpCornerSlopeCollision(collisionBox, position, velocity, x1, y1, x2, y2, dt)
+local function checkSharpCornerSlope(collisionBox, position, velocity, x1, y1, x2, y2, dt)
   if x1 > x2 and position.x + collisionBox:right() > x1
       and position.x + collisionBox:left() + velocity.x*dt < x1 then
     
@@ -95,7 +95,7 @@ local function checkSharpCornerSlopeCollision(collisionBox, position, velocity, 
 end
 
 -- Ceiling (leaning)
-local function checkCeilingOfTopSlopeCollision(collisionBox, position, velocity, m, x1, y1, x2, y2, dt)
+local function checkCeilingOfTopSlope(collisionBox, position, velocity, m, x1, y1, x2, y2, dt)
   if position.y + collisionBox:top() >= y1
       and position.y + collisionBox:top() <= y2 then
     collisionBox.slopeX = x1 + (position.y + collisionBox:top() - y1)/m
@@ -124,7 +124,7 @@ local function checkCeilingOfTopSlopeCollision(collisionBox, position, velocity,
 end
 
 -- Floor (flat)
-local function checkFloorOfTopSlopeCollision(collisionBox, position, velocity, y1, dt)
+local function checkFloorOfTopSlope(collisionBox, position, velocity, y1, dt)
   if position.y + collisionBox:bottom() + velocity.y*dt > y1
       and position.y + collisionBox:bottom() <= y1 then
     velocity.y = 0
@@ -133,7 +133,7 @@ local function checkFloorOfTopSlopeCollision(collisionBox, position, velocity, y
 end
 
 -- Ceiling (flat)
-local function checkCeilingOfBottomSlopeCollision(collisionBox, position, velocity, y1, dt)
+local function checkCeilingOfBottomSlope(collisionBox, position, velocity, y1, dt)
   if velocity.y < 0 and position.y + collisionBox:top() >= y1
       and position.y + collisionBox:top() + velocity.y*dt < y1 then
     velocity.y = 0
@@ -142,7 +142,7 @@ local function checkCeilingOfBottomSlopeCollision(collisionBox, position, veloci
 end
 
 -- Floor (leaning)
-local function checkFloorOfBottomSlopeCollision(collisionBox, position, velocity, m, x1, y1, x2, y2, dt)
+local function checkFloorOfBottomSlope(collisionBox, position, velocity, m, x1, y1, x2, y2, dt)
   local slopeY = y1 + m*(position.x + collisionBox.x - x1)
 
   if position.y + collisionBox:bottom() <= math.max(y2, slopeY)
@@ -169,7 +169,7 @@ local function checkFloorOfBottomSlopeCollision(collisionBox, position, velocity
 end
 
 
-local function checkBoundariesCollision(collisionBox, position, velocity, terrain, dt)
+local function checkBoundaries(collisionBox, position, velocity, terrain, dt)
   for i in pairs(terrain.boundaries) do
     local boundaries = terrain.boundaries[i]
     local x1 = math.min(boundaries[1], boundaries[3])
@@ -177,15 +177,15 @@ local function checkBoundariesCollision(collisionBox, position, velocity, terrai
     local x2 = math.max(boundaries[1], boundaries[3])
     local y2 = math.max(boundaries[2], boundaries[4])
 
-    checkBottomBoundaryCollision(collisionBox, position, velocity, x1, y1, x2, y2, dt)
-    checkTopBoundaryCollision(collisionBox, position, velocity, x1, y1, x2, y2, dt)
-    checkLeftBoundaryCollision(collisionBox, position, velocity, x1, y1, x2, y2, dt)
-    checkRightBoundaryCollision(collisionBox, position, velocity, x1, y1, x2, y2, dt)
+    checkBottomBoundary(collisionBox, position, velocity, x1, y1, x2, y2, dt)
+    checkTopBoundary(collisionBox, position, velocity, x1, y1, x2, y2, dt)
+    checkLeftBoundary(collisionBox, position, velocity, x1, y1, x2, y2, dt)
+    checkRightBoundary(collisionBox, position, velocity, x1, y1, x2, y2, dt)
   end
 end
 
 
-local function checkSlopesCollision(collisionBox, position, velocity, terrain, dt)
+local function checkSlopes(collisionBox, position, velocity, terrain, dt)
   collisionBox.onSlope = false
 
   for i in pairs(terrain.slopes or {}) do
@@ -193,8 +193,8 @@ local function checkSlopesCollision(collisionBox, position, velocity, terrain, d
     local xLeft, xRight = math.min(x1, x2), math.max(x1, x2)
     local yTop, yBottom = math.min(y1, y2), math.max(y1, y2)
 
-    checkRightAngleSideSlopeCollision(collisionBox, position, velocity, x1, x2, yTop, yBottom, dt)
-    checkSharpCornerSlopeCollision(collisionBox, position, velocity, x1, y1, x2, y2, dt)
+    checkRightAngleSideSlope(collisionBox, position, velocity, x1, x2, yTop, yBottom, dt)
+    checkSharpCornerSlope(collisionBox, position, velocity, x1, y1, x2, y2, dt)
 
     -- Top and bottom
     if position.x + collisionBox:right() > xLeft
@@ -202,17 +202,16 @@ local function checkSlopesCollision(collisionBox, position, velocity, terrain, d
       local m = (y2-y1) / (x2-x1)
 
       if y1 < y2 then
-        checkCeilingOfTopSlopeCollision(collisionBox, position, velocity, m, x1, y1, x2, y2, dt)
-        checkFloorOfTopSlopeCollision(collisionBox, position, velocity, y1, dt)
-
-      else
-        checkCeilingOfBottomSlopeCollision(collisionBox, position, velocity, y1, dt)
-        checkFloorOfBottomSlopeCollision(collisionBox, position, velocity, m, x1, y1, x2, y2, dt)
 
         if velocity.x ~= 0 and position.y == m*(position.x-x1) + y1 and velocity.y >= 0 then
           position.y = m*(position.x+velocity.x*dt-x1) + y1
           velocity.y = 0
         end
+        checkCeilingOfTopSlope(collisionBox, position, velocity, m, x1, y1, x2, y2, dt)
+        checkFloorOfTopSlope(collisionBox, position, velocity, y1, dt)
+      else
+        checkCeilingOfBottomSlope(collisionBox, position, velocity, y1, dt)
+        checkFloorOfBottomSlope(collisionBox, position, velocity, m, x1, y1, x2, y2, dt)
       end
     end
 
@@ -220,7 +219,7 @@ local function checkSlopesCollision(collisionBox, position, velocity, terrain, d
 end
 
 
-local function checkCloudsCollision(collisionBox, position, velocity, terrain, dt)
+local function checkClouds(collisionBox, position, velocity, terrain, dt)
   for i in pairs(terrain.clouds or {}) do
     local clouds = terrain.clouds[i]
     local x1 = math.min(clouds[1], clouds[3])
@@ -239,7 +238,7 @@ local function checkCloudsCollision(collisionBox, position, velocity, terrain, d
 end
 
 
-function terrainCollision(componentsTable, terrain, dt)
+function terrain(componentsTable, terrain, dt)
   -- solid depends on collisionBox, position and velocity
   components.assertDependency(componentsTable, "solids", "collisionBoxes",
                               "positions", "velocities")
@@ -251,12 +250,72 @@ function terrainCollision(componentsTable, terrain, dt)
     components.assertExistence(entity, "solid", {collisionBox, "collisionBox"},
                                {position, "position"}, {velocity, "velocity"})
 
-    checkBoundariesCollision(collisionBox, position, velocity, terrain, dt)
-    checkSlopesCollision(collisionBox, position, velocity, terrain, dt)
-    checkCloudsCollision(collisionBox, position, velocity, terrain, dt)
+    checkBoundaries(collisionBox, position, velocity, terrain, dt)
+    checkSlopes(collisionBox, position, velocity, terrain, dt)
+    checkClouds(collisionBox, position, velocity, terrain, dt)
   end
 end
 
 
 function playerTouchingEntity(playerPosition, playerCollisionBox)
+end
+
+
+function goal(componentsTable, currentLevel)
+  local nextLevel = currentLevel
+
+  for entity, player in pairs(componentsTable.players or {}) do
+    local collector = componentsTable.collectors[entity]
+
+    if collector ~= nil then
+      local position = componentsTable.positions[entity]
+      local velocity = componentsTable.velocities[entity]
+      local collisionBox = componentsTable.collisionBoxes[entity]
+      components.assertExistence(entity, "player", {position, "position"},
+                                  {collisionBox, "collisionBox"}, {velocity, "velocity"})
+
+      for goalEntity, nextLevelID in pairs(componentsTable.goals or {}) do
+        local goalPosition = componentsTable.positions[goalEntity]
+
+        local GOAL_SIZE = 110  -- store this variable somewhere else
+        -- (variable repeated in outline.lua)
+
+        if position.x + collisionBox.width/2 >= goalPosition.x - GOAL_SIZE/2
+            and position.x - collisionBox.width/2 <= goalPosition.x + GOAL_SIZE/2
+            and position.y >= goalPosition.y - GOAL_SIZE
+            and position.y - collisionBox.height <= goalPosition.y then
+          nextLevel = levels.level[nextLevelID]  -- changes module variable
+
+          -- Player position loading and movement restore
+          position.x = nextLevel.entitiesData.player[1]
+          position.y = nextLevel.entitiesData.player[2]
+          velocity.x = 0
+          velocity.y = 0
+
+          -- Reload goals and items
+          -- This should actually load ANY entity in the new level
+          items.load(componentsTable, nextLevel, "medkits", "pomodori")
+
+          for _id in pairs(componentsTable.goals) do
+            componentsTable.positions[_id] = nil
+            componentsTable.goals[_id] = nil
+          end
+
+          local currentGoals = nextLevel.entitiesData.goals
+
+          if currentGoals ~= nil then
+            for goalIndex, goalData in pairs(nextLevel.entitiesData.goals) do
+              local id = "goal" .. tostring(goalIndex)
+              componentsTable.positions[id] = {x = goalData[1], y = goalData[2]}
+              componentsTable.goals[id] = goalData[3]
+            end
+          end
+
+          break
+        end
+      end
+    end -- for entity, player
+  end
+
+  return nextLevel
 end

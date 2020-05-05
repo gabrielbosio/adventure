@@ -66,13 +66,14 @@ local function createAnimationsTable(animations, spriteSheet)
 end
 
 
-function animationClip(animations, nameOfCurrentAnimation, spriteSheet)
+function AnimationClip(animations, nameOfCurrentAnimation, spriteSheet)
   local newComponent = {
     animations = createAnimationsTable(animations, spriteSheet),
     nameOfCurrentAnimation = nameOfCurrentAnimation,
     currentTime = 0,
     facingRight = true,
-    playing = true
+    playing = true,
+    done = false
   }
 
   function newComponent:currentFrameNumber()
@@ -88,31 +89,47 @@ function animationClip(animations, nameOfCurrentAnimation, spriteSheet)
   end
 
   function newComponent:setAnimation(animationName)
-    if self.animations[animationName] ~= nil and
-        self.nameOfCurrentAnimation ~= animationName then
+    if self.animations[animationName] ~= nil
+        and self.nameOfCurrentAnimation ~= animationName then
       self.nameOfCurrentAnimation = animationName
       self.currentTime = 0
       self.playing = true
+      self.done = false
     end
   end
 
   return newComponent
 end
 
-function itemBox(width, height)
+function ItemBox(width, height)
   local component = Box(width, height)
 
   return component
 end
 
 
-function collisionBox(width, height)
+function CollisionBox(width, height)
   local component = Box(width, height)
 
   component.onSlope = false
   component.slopeX = 0
 
   return component
+end
+
+
+function FiniteStateMachine(currentState)
+  local newComponent = {
+    currentState = currentState,
+    stateTime = 0
+  }
+
+  function newComponent:setState(newState, time)
+    self.currentState = newState
+    self.stateTime = time or 0
+  end
+
+  return newComponent
 end
 
 

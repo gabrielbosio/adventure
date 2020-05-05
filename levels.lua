@@ -51,11 +51,59 @@ level = {
     }
   },
 
+  ["slope-free"] = {
+    terrain = {
+      boundaries = {
+        -- {x1, y1, x2, y2}
+
+        -- Main (level delimiters)
+        {-5, 580, 805, 605},
+        {-5, -5, 5, 605},
+        {795, -5, 805, 605},
+      }
+    },
+    entitiesData = {
+      player = {50, 200}  -- {x, y}
+    }
+  },
+
+  ["slope test"] = {
+    terrain = {
+      boundaries = {
+        -- {x1, y1, x2, y2}
+
+        -- Main (level delimiters)
+        {-5, 580, 805, 605},
+        {-5, -5, 5, 605},
+        {795, -5, 805, 605},
+
+        -- Slope extensions
+        {480, 480, 805, 605},
+        {100, 300, 320, 200},
+
+        -- Flying platforms
+        {100, 300, 620, 320},
+      },
+
+      clouds = {
+        {620, 300, 805, 320},
+      },
+
+      slopes = {
+        {320, 580, 480, 480},
+        {480, 300, 320, 200}
+      },
+    },
+    entitiesData = {
+      player = {446, 500}  -- {x, y}
+    }
+  },
+
   ["another level"] = {
     terrain = {
       boundaries = {
         {0, 500, 800, 600}
-      }
+      },
     },
     entitiesData = {
       player = {400, 450}
@@ -66,7 +114,7 @@ level = {
     terrain = {
       boundaries = {
         {300, 200, 500, 300}
-      }
+      },
     },
     entitiesData = {
       player = {400, 100},
@@ -77,4 +125,4 @@ level = {
   },
 }
 
-first = "test"  -- the game loads this level at start
+first = "slope test"  -- the game loads this level at start
