@@ -13,7 +13,7 @@ level = {
         {795, -100, 805, 605}, 	-- right
 
         -- Platforms
-        {620, 216, 740, 250},
+        {660, 216, 740, 250},
         {120, 165, 206, 186},
 
         -- Slope extension
@@ -125,4 +125,4 @@ level = {
   },
 }
 
-first = "slope test"  -- the game loads this level at start
+first = "test"  -- the game loads this level at start
