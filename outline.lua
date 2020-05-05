@@ -118,6 +118,13 @@ local function displayPlayerExperience(value)
                      3*love.graphics.getFont():getHeight(text), "north west")
 end
 
+local function displayPlayerStamina(value)
+  love.graphics.setColor(0, 1, 0)
+
+  place.textByAnchor(tostring(value), 0,
+                     4*love.graphics.getFont():getHeight(text), "north west")
+end
+
 
 -- End of subroutines
 
@@ -156,6 +163,7 @@ function debug(componentsTable)
   displayMouseCoordinates()
   displayPlayerHealth(componentsTable.living.megasapi.health)
   displayPlayerExperience(componentsTable.players.megasapi.experience)
+  displayPlayerStamina(componentsTable.living.megasapi.stamina)
   
   love.graphics.setColor(r, g, b)
 end

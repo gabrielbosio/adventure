@@ -57,7 +57,8 @@ local statesLogic = {
   hurt = function (componentsTable, entity, finiteStateMachine, _, velocity,
                    animationClip, living)
     living.health = living.health - 1
-    if living.health == 0 then
+    living.stamina = math.max(0, living.stamina - 25)
+    if living.health == 0 or living.stamina == 0 then
       finiteStateMachine:setState("flyingHurt")
       animationClip:setAnimation("flyingHurt")
       componentsTable.collectors[entity] = nil
@@ -80,16 +81,21 @@ local statesLogic = {
   flyingHurt = function (_, _, finiteStateMachine, _, velocity, animationClip, _)
     if velocity.y == 0 then
       velocity.x = 0
-      finiteStateMachine:setState("lyingDown", 3)
+      finiteStateMachine:setState("lyingDown", 1)
       animationClip:setAnimation("lyingDown")
     elseif velocity.y > 5000 then
       love.load()
     end
   end,
 
-  lyingDown = function (_, _, finiteStateMachine)
+  lyingDown = function (_, _, finiteStateMachine, _, _, _, living)
     if finiteStateMachine.stateTime == 0 then
-      love.load()
+      if living.health == 0 then
+        love.load()
+      else
+        finiteStateMachine:setState("idle")
+        living.stamina = 100
+      end
     end
   end
 }
