@@ -253,9 +253,7 @@ local function checkSlopes(collisionBox, position, velocity, terrain, dt)
 
         xSlopeNew = position.x + collisionBox:bottom() + velocity.x*dt - x1
         ySlopeNew = linear(m, y1, xSlopeNew)
-        if velocity.x ~= 0 and velocity.y == 0
-            and position.y + collisionBox:bottom() + velocity.x*dt < ySlopeNew
-            then
+        if velocity.x ~= 0 and velocity.y == 0 then
           position.y = ySlopeNew
         end
       end
