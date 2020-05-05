@@ -95,7 +95,7 @@ level = {
       },
     },
     entitiesData = {
-      player = {446, 500}  -- {x, y}
+      player = {45, 580}  -- {x, y}
     }
   },
 
@@ -125,4 +125,4 @@ level = {
   },
 }
 
-first = "slope test"  -- the game loads this level at start
+first = "test"  -- the game loads this level at start
