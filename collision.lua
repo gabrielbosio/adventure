@@ -173,18 +173,7 @@ local function checkFloorOfBottomSlope(collisionBox, position, velocity, m, x1, 
 end
 ]]
 
-
-local function checkBoundaries(collisionBox, position, velocity, terrain, dt)
-  for i in pairs(terrain.boundaries) do
-    local boundaries = terrain.boundaries[i]
-    local x1 = math.min(boundaries[1], boundaries[3])
-    local y1 = math.min(boundaries[2], boundaries[4])
-    local x2 = math.max(boundaries[1], boundaries[3])
-    local y2 = math.max(boundaries[2], boundaries[4])
-
-    checkBottomBoundary(collisionBox, position, velocity, x1, y1, x2, y2, dt)
-    checkTopBoundary(collisionBox, position, velocity, x1, y1, x2, y2, dt)
-
+local function mustCheckSides(collisionBox, position, terrain, x1, y1, x2, y2)
     -- Decide if collision with boundary sides must be checked.
     -- Verify that there are no slopes around.
     local mustCheckLeft = true
@@ -209,6 +198,25 @@ local function checkBoundaries(collisionBox, position, velocity, terrain, dt)
         end
       end
     end
+
+    return mustCheckLeft, mustCheckRight
+end
+
+
+local function checkBoundaries(collisionBox, position, velocity, terrain, dt)
+  for i in pairs(terrain.boundaries) do
+    local boundaries = terrain.boundaries[i]
+    local x1 = math.min(boundaries[1], boundaries[3])
+    local y1 = math.min(boundaries[2], boundaries[4])
+    local x2 = math.max(boundaries[1], boundaries[3])
+    local y2 = math.max(boundaries[2], boundaries[4])
+
+    checkBottomBoundary(collisionBox, position, velocity, x1, y1, x2, y2, dt)
+    checkTopBoundary(collisionBox, position, velocity, x1, y1, x2, y2, dt)
+
+    local mustCheckLeft, mustCheckRight = mustCheckSides(collisionBox,
+                                                         position, terrain,
+                                                         x1, y1, x2, y2)
 
     if mustCheckLeft then
       checkLeftBoundary(collisionBox, position, velocity, x1, y1, x2, y2, dt)
