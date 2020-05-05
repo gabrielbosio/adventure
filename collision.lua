@@ -48,127 +48,6 @@ local function checkRightBoundary(collisionBox, position, velocity, x1, y1, x2, 
 end
 
 
---[[
--- Right angle side (acts like a wall)
-local function checkRightAngleSideSlope(collisionBox, position, velocity, x1, x2, yTop, yBottom, dt)
-  if position.y + collisionBox:bottom() > yTop
-      and position.y + collisionBox:top() < yBottom then
-    
-    if x1 > x2 and position.x + collisionBox:right() <= x2
-        and position.x + collisionBox:right() + velocity.x*dt > x2 then
-      velocity.x = 0
-      position.x = x2 - collisionBox.width/2
-    
-    elseif x1 < x2 and position.x + collisionBox:left() >= x2
-        and position.x + collisionBox:left() + velocity.x*dt < x2 then
-      velocity.x = 0
-      position.x = x2 + collisionBox.width/2
-    end
-  end
-end
-
--- Sharp corner (acts like a wall)
-local function checkSharpCornerSlope(collisionBox, position, velocity, x1, y1, x2, y2, dt)
-  if x1 > x2 and position.x + collisionBox:right() > x1
-      and position.x + collisionBox:left() + velocity.x*dt < x1 then
-    
-    if (y1 > y2 and position.y + collisionBox:bottom() > y1
-        and position.y + collisionBox:top() < y1) or (y1 < y2
-        and position.y + collisionBox:bottom() > y1
-        and position.y + collisionBox:top() < y1) then
-      velocity.x = 0
-      position.x = x1 + collisionBox.width/2
-    end
-
-  elseif x1 < x2 and position.x + collisionBox:left() < x1
-      and position.x + collisionBox:right() + velocity.x*dt > x1 then
-    
-    if (y1 > y2 and position.y + collisionBox:bottom() > y1
-        and position.y + collisionBox:top() < y1) or (y1 < y2
-        and position.y + collisionBox:bottom() > y1
-        and position.y + collisionBox:top() < y1) then
-      velocity.x = 0
-      position.x = x1 - collisionBox.width/2
-    end
-  end
-end
-
--- Ceiling (leaning)
-local function checkCeilingOfTopSlope(collisionBox, position, velocity, m, x1, y1, x2, y2, dt)
-  if position.y + collisionBox:top() >= y1
-      and position.y + collisionBox:top() <= y2 then
-    collisionBox.slopeX = x1 + (position.y + collisionBox:top() - y1)/m
-
-    if x1 > x2 and position.x + collisionBox:left() >= collisionBox.slopeX
-        and position.x + collisionBox:left() + velocity.x*dt < collisionBox.slopeX
-        then
-      velocity.x = 0
-      position.x = collisionBox.slopeX + collisionBox.width/2
-    elseif x1 < x2 and position.x + collisionBox:right() <= collisionBox.slopeX
-        and position.x + collisionBox:right() + velocity.x*dt > collisionBox.slopeX
-        then
-      velocity.x = 0
-      position.x = collisionBox.slopeX - collisionBox.width/2
-    end
-  end
-
-  local slopeY = y1 + m*(collisionBox.x-x1)
-
-  if position.y + collisionBox:top() >= slopeY
-      and position.y + collisionBox:top() + velocity.y*dt < slopeY
-      then
-    velocity.y = 0
-    position.y = slopeY + collisionBox.height
-  end
-end
-
--- Floor (flat)
-local function checkFloorOfTopSlope(collisionBox, position, velocity, y1, dt)
-  if position.y + collisionBox:bottom() + velocity.y*dt > y1
-      and position.y + collisionBox:bottom() <= y1 then
-    velocity.y = 0
-    position.y = y1
-  end
-end
-
--- Ceiling (flat)
-local function checkCeilingOfBottomSlope(collisionBox, position, velocity, y1, dt)
-  if velocity.y < 0 and position.y + collisionBox:top() >= y1
-      and position.y + collisionBox:top() + velocity.y*dt < y1 then
-    velocity.y = 0
-    position.y = y1 + collisionBox.height
-  end
-end
-
--- Floor (leaning)
-local function checkFloorOfBottomSlope(collisionBox, position, velocity, m, x1, y1, x2, y2, dt)
-  local slopeY = y1 + m*(position.x + collisionBox.x - x1)
-
-  if position.y + collisionBox:bottom() <= math.max(y2, slopeY)
-      and position.y + collisionBox:bottom() + velocity.y*dt > math.max(y2, slopeY) then
-    velocity.y = 0
-
-    -- Prevent floating character at slope corner
-    if (position.x + collisionBox.x - x1)*(position.x + collisionBox.x - x2) < 0 then
-      position.y = slopeY
-    else
-      position.y = y2
-    end
-  end
-
-  if position.y + collisionBox:bottom() <= y1 and position.y + collisionBox:bottom() > math.max(y2, slopeY)
-      and ((x1 > x2 and position.x + collisionBox:left() <= x1
-      and position.x + collisionBox:right() >= x2)
-      or (x1 < x2 and position.x + collisionBox:right() >= x1
-      and position.x + collisionBox:left() <= x2)) then
-    velocity.y = 0
-    position.y = slopeY
-    collisionBox.onSlope = true
-  end
-end
-]]
-
-
 local function mustCheckSides(collisionBox, position, terrain, x1, y1, x2, y2)
     -- Decide if collision with boundary sides must be checked.
     local mustCheckLeft = true
@@ -241,7 +120,7 @@ local function checkSlopes(collisionBox, position, velocity, terrain, dt)
         and position.y + collisionBox:bottom() >= yTop
         and position.y + collisionBox:bottom() <= yBottom then
       local m = (y2-y1) / (x2-x1)
-      local ySlope = linear(m, y1, position.x - x1)
+      local ySlope = m*(position.x-x1) + y1
 
       -- if pointing up
       if y1 > y2 then
@@ -251,10 +130,10 @@ local function checkSlopes(collisionBox, position, velocity, terrain, dt)
           collisionBox.slopeId = i
         end
 
-        xSlopeNew = position.x + collisionBox:bottom() + velocity.x*dt - x1
-        ySlopeNew = linear(m, y1, xSlopeNew)
+        -- snap position to slope, in order to avoid "rolling down the hill"
         if velocity.x ~= 0 and velocity.y == 0 then
-          position.y = ySlopeNew
+          local xNew = position.x + collisionBox:bottom() + velocity.x*dt
+          position.y = m*(xNew-x1) + y1
         end
       end
     end
