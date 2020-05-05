@@ -131,7 +131,7 @@ function draw(componentsTable, terrain)
   -- Terrain
   drawBoundaries(terrain.boundaries)
   drawClouds(terrain.clouds)
-  drawSlopes(terrain.slopes)
+  --drawSlopes(terrain.slopes)
 
   -- Player
   drawPlayerCollisionBox(positions.megasapi,

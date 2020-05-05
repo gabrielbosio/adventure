@@ -18,7 +18,9 @@ local function checkTopBoundary(collisionBox, position, velocity, x1, y1, x2, y2
       and position.x + collisionBox:left() < x2
       and position.y + collisionBox:top() + velocity.y*dt < y2
       and position.y + collisionBox:bottom() > y1 then
-    velocity.y = 0
+    -- Y-velocity cannot be set to zero
+    -- The player "thinks" that it is on the ground and can jump in the air
+    velocity.y = 1
     position.y = y2 + collisionBox.height
   end
 end
@@ -186,6 +188,7 @@ end
 
 
 local function checkSlopes(collisionBox, position, velocity, terrain, dt)
+  --[[
   collisionBox.onSlope = false
 
   for i in pairs(terrain.slopes or {}) do
@@ -216,6 +219,7 @@ local function checkSlopes(collisionBox, position, velocity, terrain, dt)
     end
 
   end 
+  --]]
 end
 
 
