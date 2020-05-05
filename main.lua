@@ -75,10 +75,10 @@ function love.update(dt)
   items.experienceSupply(componentsTable)
 
   control.playerController(componentsTable)
-  currentLevel = collision.goalCollision(componentsTable, currentLevel)
+  currentLevel = collision.goal(componentsTable, currentLevel)
 
   mruv.gravity(componentsTable, dt)
-  collision.terrainCollision(componentsTable, currentLevel.terrain, dt)
+  collision.terrain(componentsTable, currentLevel.terrain, dt)
   mruv.movement(componentsTable, dt)
   animation.animator(componentsTable, dt)
   state.finiteStateMachineRunner(componentsTable, dt)
