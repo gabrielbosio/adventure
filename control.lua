@@ -5,7 +5,7 @@ module("control", package.seeall)
 
 local holdingJumpKey
 
-local fsm = {
+local statesLogic = {
   idle = function (_, _, finiteStateMachine, input, velocity, animationClip, _)
     -- X Movement Input
       if love.keyboard.isDown("a") and not love.keyboard.isDown("d") then
@@ -111,9 +111,30 @@ function playerController(componentsTable)
       components.assertExistence(entity, "player", {velocity, "velocity",
                                  {animationClip, "animationClip"},
                                  {finiteStateMachine, "finiteStateMachine"},
-                                 {living, "living"}})  
-      fsm[finiteStateMachine.currentState](componentsTable, entity, finiteStateMachine,
-                                           input, velocity, animationClip, living)
+                                 {living, "living"}})
+      local runStateLogic = statesLogic[finiteStateMachine.currentState]
+      runStateLogic(componentsTable, entity, finiteStateMachine, input, velocity,
+                    animationClip, living)
     end 
+  end
+end
+
+
+function playerAfterTerrainCollisionChecking(componentsTable)
+  components.assertDependency(componentsTable, "players", "velocities")
+
+  -- This for loop could be avoided if there is only one entity with a "player"
+  -- component.
+  for entity, player in pairs(componentsTable.players or {}) do
+    local velocity = componentsTable.velocities[entity]
+    local animationClip = componentsTable.animationClips[entity]
+    local finiteStateMachine = componentsTable.finiteStateMachines[entity]
+    components.assertExistence(entity, "player", {velocity, "velocity",
+                               {animationClip, "animationClip"},
+                               {finiteStateMachine, "finiteStateMachine"}})
+    if finiteStateMachine.currentState == "idle" and velocity.x == 0 and
+       velocity.y == 0 then
+      animationClip:setAnimation("standing")
+    end
   end
 end

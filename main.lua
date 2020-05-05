@@ -79,6 +79,7 @@ function love.update(dt)
 
   mruv.gravity(componentsTable, dt)
   collision.terrain(componentsTable, currentLevel.terrain, dt)
+  control.playerAfterTerrainCollisionChecking(componentsTable)
   mruv.movement(componentsTable, dt)
   animation.animator(componentsTable, dt)
   state.finiteStateMachineRunner(componentsTable, dt)
