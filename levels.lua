@@ -51,6 +51,22 @@ level = {
     }
   },
 
+  ["slope-free"] = {
+    terrain = {
+        -- {x1, y1, x2, y2}
+
+        -- Main (level delimiters)
+      boundaries = {
+        {-5, 580, 805, 605},
+        {-5, -5, 5, 605},
+        {795, -5, 805, 605},
+      }
+    },
+    entitiesData = {
+      player = {50, 200}  -- {x, y}
+    }
+  },
+
   ["another level"] = {
     terrain = {
       boundaries = {
@@ -77,4 +93,4 @@ level = {
   },
 }
 
-first = "test"  -- the game loads this level at start
+first = "slope-free"  -- the game loads this level at start

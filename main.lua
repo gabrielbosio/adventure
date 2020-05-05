@@ -60,7 +60,7 @@ function love.load()
   }
 
   components.assertDependency(componentsTable, "goals", "positions")
-  for goalIndex, goalData in pairs(currentLevel.entitiesData.goals) do
+  for goalIndex, goalData in pairs(currentLevel.entitiesData.goals or {}) do
     local id = "goal" .. tostring(goalIndex)
     componentsTable.positions[id] = {x = goalData[1], y = goalData[2]}
     componentsTable.goals[id] = goalData[3]
