@@ -1,37 +1,6 @@
 module("components", package.seeall)
 dofile("sprites.lua")
 
-local function Box(width, height)
-  local component = {
-    x = 0,
-    y = 0,
-    width = width,
-    height = height
-  }
-
-  function component:left()
-    return self.x - self.width/2
-  end
-  
-  function component:right()
-    return self.x + self.width/2
-  end
-
-  function component:top()
-    return self.y - self.height
-  end
-  
-  function component:bottom()
-    return self.y
-  end
-
-  function component:center()
-    return self.y - self.height/2
-  end
-
-  return component
-end
-
 -- Animation Clip
 local function createAnimationsTable(animations, spriteSheet)
   local animationsTable = {}
@@ -101,18 +70,49 @@ function AnimationClip(animations, nameOfCurrentAnimation, spriteSheet)
   return newComponent
 end
 
+
+local function Box(width, height)
+  local component = {
+    x = 0,
+    y = 0,
+    width = width,
+    height = height
+  }
+
+  function component:left()
+    return self.x - self.width/2
+  end
+  
+  function component:right()
+    return self.x + self.width/2
+  end
+
+  function component:top()
+    return self.y - self.height
+  end
+  
+  function component:bottom()
+    return self.y
+  end
+
+  function component:center()
+    return self.y - self.height/2
+  end
+
+  return component
+end
+
 function ItemBox(width, height)
   local component = Box(width, height)
 
   return component
 end
 
-
 function CollisionBox(width, height)
   local component = Box(width, height)
 
-  component.onSlope = false
   component.slopeX = 0
+  component.slopeId = nil
 
   return component
 end

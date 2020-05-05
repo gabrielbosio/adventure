@@ -26,7 +26,7 @@ function movement(componentsTable, dt)
     local winWidth, winHeight = love.window.getMode()
     components.assertExistence(entity, "velocity", {position, "position"})
 
-    position.x = (position.x + velocity.x*dt)
-    position.y = (position.y + velocity.y*dt)
+    position.x = position.x + velocity.x*dt
+    position.y = position.y + velocity.y*dt
   end
 end
