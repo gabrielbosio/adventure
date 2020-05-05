@@ -5,7 +5,7 @@ module("control", package.seeall)
 
 local holdingJumpKey
 
-local fsm = {
+local statesLogic = {
   idle = function (_, _, finiteStateMachine, input, velocity, animationClip, _)
     -- X Movement Input
       if love.keyboard.isDown("a") and not love.keyboard.isDown("d") then
@@ -112,9 +112,10 @@ function playerController(componentsTable)
       components.assertExistence(entity, "player", {velocity, "velocity",
                                  {animationClip, "animationClip"},
                                  {finiteStateMachine, "finiteStateMachine"},
-                                 {living, "living"}})  
-      fsm[finiteStateMachine.currentState](componentsTable, entity, finiteStateMachine,
-                                           input, velocity, animationClip, living)
+                                 {living, "living"}})
+      local runStateLogic = statesLogic[finiteStateMachine.currentState]
+      runStateLogic(componentsTable, entity, finiteStateMachine, input, velocity,
+                    animationClip, living)
     end 
   end
 end
