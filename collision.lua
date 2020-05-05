@@ -21,18 +21,12 @@ local function checkTopBoundary(collisionBox, position, velocity, x1, y1, x2, y2
     -- Y-velocity cannot be set to zero
     -- The player "thinks" that it is on the ground and can jump in the air
     velocity.y = 1
-    position.y = y2 + collisionBox.height
+    position.y = y2 - collisionBox:top()
   end
 end
 
 
 local function checkLeftBoundary(collisionBox, position, velocity, x1, y1, x2, y2, dt)
-  --[[
-  if position.x + collisionBox:left() + velocity.x*dt < x2
-      and position.x + collisionBox:right() > x1
-      and position.y + collisionBox:top() < y2
-      and position.y + collisionBox:bottom() > y1 then
-      --]]
   if position.x + collisionBox:right() <= x1
       and position.x + collisionBox:right() + velocity.x*dt > x1
       and position.y + collisionBox:top() < y2
@@ -52,6 +46,7 @@ local function checkRightBoundary(collisionBox, position, velocity, x1, y1, x2, 
     position.x = x2 - collisionBox:left()
   end
 end
+
 
 --[[
 -- Right angle side (acts like a wall)
@@ -173,12 +168,13 @@ local function checkFloorOfBottomSlope(collisionBox, position, velocity, m, x1, 
 end
 ]]
 
+
 local function mustCheckSides(collisionBox, position, terrain, x1, y1, x2, y2)
     -- Decide if collision with boundary sides must be checked.
-    -- Verify that there are no slopes around.
     local mustCheckLeft = true
     local mustCheckRight = true
 
+    -- Verify that there are no slopes around.
     for i in pairs(terrain.slopes or {}) do
       local sx1, sy1, sx2, sy2 = unpack(terrain.slopes[i])
       local xLeft, xRight = math.min(sx1, sx2), math.max(sx1, sx2)
@@ -236,8 +232,7 @@ local function checkSlopes(collisionBox, position, velocity, terrain, dt)
     local yTop, yBottom = math.min(y1, y2), math.max(y1, y2)
 
     -- slope test
-    if position.x + collisionBox:right() >= xLeft
-        and position.x + collisionBox:left() <= xRight 
+    if position.x >= xLeft and position.x <= xRight 
         and position.y + collisionBox:bottom() >= yTop
         and position.y + collisionBox:bottom() <= yBottom then
       local m = (y2-y1) / (x2-x1)
@@ -247,6 +242,10 @@ local function checkSlopes(collisionBox, position, velocity, terrain, dt)
         velocity.y = 0
         collisionBox.slopeId = i
       end
+
+      print("touching slope", i, "y", ySlope)
+    else
+      print("not touching slope")
     end
 
   end  -- for
