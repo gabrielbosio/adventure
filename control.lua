@@ -36,7 +36,6 @@ local fsm = {
       if love.keyboard.isDown("k") and velocity.y == 0 and not holdingJumpKey then
         finiteStateMachine:setState("startingJump")
         animationClip:setAnimation("startingJump")
-        velocity.x = 0
         holdingJumpKey = true
       elseif not love.keyboard.isDown("k") and holdingJumpKey then
         holdingJumpKey = false
