@@ -195,18 +195,13 @@ function goal(componentsTable, currentLevel)
       components.assertExistence(entity, "player", {position, "position"},
                                   {collisionBox, "collisionBox"}, {velocity, "velocity"})
 
-      for goalEntity, nextLevelID in pairs(componentsTable.goals or {}) do
+      local box = collisionBox:translated(position)
+
+      for goalEntity, goalBox in pairs(componentsTable.goals or {}) do
         local goalPosition = componentsTable.positions[goalEntity]
 
-        -- Make a GoalBox 
-        local GOAL_SIZE = 110  -- store this variable somewhere else
-        -- (variable repeated in outline.lua)
-
-        if position.x + collisionBox.width/2 >= goalPosition.x - GOAL_SIZE/2
-            and position.x - collisionBox.width/2 <= goalPosition.x + GOAL_SIZE/2
-            and position.y >= goalPosition.y - GOAL_SIZE
-            and position.y - collisionBox.height <= goalPosition.y then
-          nextLevel = levels.level[nextLevelID]  -- changes module variable
+        if goalBox:translated(goalPosition):intersects(box) then
+          nextLevel = levels.level[goalBox.nextLevel]
 
           -- Player position loading and movement restore
           position.x = nextLevel.entitiesData.player[1]
@@ -223,21 +218,16 @@ function goal(componentsTable, currentLevel)
             componentsTable.goals[_id] = nil
           end
 
-          local currentGoals = nextLevel.entitiesData.goals
-
-          if currentGoals ~= nil then
-            for goalIndex, goalData in pairs(nextLevel.entitiesData.goals) do
-              local id = "goal" .. tostring(goalIndex)
-              componentsTable.positions[id] = {x = goalData[1], y = goalData[2]}
-              componentsTable.goals[id] = goalData[3]
-            end
+          if nextLevel.entitiesData.goals ~= nil then
+            goals.load(componentsTable, nextLevel)
           end
 
           break
         end
-      end
-    end -- for entity, player
-  end
+      end -- for goalEntity
+    end
+
+  end -- for entity, player
 
   return nextLevel
 end

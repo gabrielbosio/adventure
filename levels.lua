@@ -34,7 +34,7 @@ level = {
       player = {46, 250},  -- {x, y}
       goals = {  -- {x, y, newLevelID}
         --{740, 430, "another level"},
-        {740, 20, "secret"},
+        {163, 166, "secret"},
       },
       medkits = {  -- {x, y}
         {45, 50},
@@ -118,7 +118,7 @@ level = {
       },
     },
     entitiesData = {
-      player = {400, 100},
+      player = {400, 200},
       goals = {
         {555, 200, "test"}
       }

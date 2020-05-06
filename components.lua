@@ -108,6 +108,29 @@ function ItemBox(width, height)
   return component
 end
 
+function GoalBox(width, height, nextLevel)
+  local component = Box(width, height)
+
+  component.nextLevel = nextLevel
+
+  function component:translated(position)
+    newBox = GoalBox(component.width, component.height, component.nextLevel)
+    if position ~= nil then
+      newBox.x = position.x
+      newBox.y = position.y
+    end
+
+    return newBox
+  end
+
+  function component:intersects(box)
+    return component:left() <= box:right() and component:right() >= box:left()
+      and component:top() <= box:bottom() and component:bottom() >= box:top()
+  end
+
+  return component
+end
+
 function CollisionBox(width, height)
   local component = Box(width, height)
 
