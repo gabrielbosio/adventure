@@ -67,8 +67,7 @@ end
 
 
 function love.update(dt)
-  items.healthSupply(componentsTable)
-  items.experienceSupply(componentsTable)
+  items.update(componentsTable)
 
   control.playerController(componentsTable)
   currentLevel = collision.goal(componentsTable, currentLevel)

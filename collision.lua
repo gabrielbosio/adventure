@@ -115,7 +115,6 @@ local function checkSlopes(collisionBox, position, velocity, terrain, dt)
 
     local box = collisionBox:translated(position)
 
-    -- slope test
     if position.x >= xLeft and position.x <= xRight 
         and box:bottom() >= yTop and box:bottom() <= yBottom then
       local m = (y2-y1) / (x2-x1)
@@ -210,8 +209,7 @@ function goal(componentsTable, currentLevel)
           velocity.y = 0
 
           -- Reload goals and items
-          -- This should actually load ANY entity in the new level
-          items.load(componentsTable, nextLevel, "medkits", "pomodori")
+          items.reload(componentsTable, nextLevel)
 
           for _id in pairs(componentsTable.goals) do
             componentsTable.positions[_id] = nil

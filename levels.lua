@@ -33,8 +33,8 @@ level = {
     entitiesData = {
       player = {46, 250},  -- {x, y}
       goals = {  -- {x, y, newLevelID}
-        --{740, 430, "another level"},
-        {163, 166, "secret"},
+        {700, 15, "secret"},
+        {163, 166, "another level"},
       },
       medkits = {  -- {x, y}
         {45, 50},
@@ -68,19 +68,19 @@ level = {
     }
   },
 
-  ["slope test"] = {
+  ["another level"] = {
     terrain = {
       boundaries = {
         -- {x1, y1, x2, y2}
 
         -- Main (level delimiters)
         {-5, 580, 805, 605},
-        {-5, -5, 5, 605},
-        {795, -5, 805, 605},
+        {-5, -50, 5, 605},
+        {795, -50, 805, 605},
 
         -- Slope extensions
         {480, 480, 805, 605},
-        {100, 300, 320, 200},
+        {100, 300, 320, 140},
 
         -- Flying platforms
         {100, 300, 620, 320},
@@ -92,23 +92,15 @@ level = {
 
       slopes = {
         {320, 580, 480, 480},
-        {480, 300, 320, 200}
+        {480, 300, 320, 140}
       },
     },
     entitiesData = {
-      player = {480, 480}  -- {x, y}
-    }
-  },
-
-  ["another level"] = {
-    terrain = {
-      boundaries = {
-        {0, 500, 800, 600}
-      },
+      player = {55, 425},  -- {x, y}
+      goals = {
+        {50, 290, "test"}
+      }
     },
-    entitiesData = {
-      player = {400, 450}
-    }
   },
 
   ["secret"] = {

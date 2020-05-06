@@ -1,15 +1,17 @@
 require("components")
+require("levels")
 module("items", package.seeall)
 
+
+local componentGroup = {
+  ["medkits"] = "healing",
+  ["pomodori"] = "experienceEffect",
+  -- ["item nuevo"] = {"healing", "experienceEffect"}
+}
 
 function load(componentsTable, currentLevel, ...)
   -- item effect amount
   local amount = 1 -- currentLevel.entitiesData could store this
-
-  local componentGroup = {
-    ["medkits"] = "healing",
-    ["pomodori"] = "experienceEffect"
-  }
 
   for i, itemGroupName in ipairs{...} do
     componentsTable[componentGroup[itemGroupName]] = {}
@@ -25,7 +27,20 @@ function load(componentsTable, currentLevel, ...)
 end
 
 
-function healthSupply(componentsTable)
+function reload(componentsTable, nextLevel)
+  -- Reload absolutely all components in the next level
+  names = {}
+
+  -- Look for components in the componentGroup table
+  for name in pairs(componentGroup) do
+    table.insert(names, name)
+  end
+
+  load(componentsTable, nextLevel, unpack(names))
+end
+
+
+local function healthSupply(componentsTable)
   -- healing depends on living, player and position
   components.assertDependency(componentsTable, "healing", "living",
                                         "players", "positions")
@@ -64,7 +79,7 @@ end
 
 
 
-function experienceSupply(componentsTable)
+local function experienceSupply(componentsTable)
   -- experienceEffect depends on player and position
   components.assertDependency(componentsTable, "experienceEffect", "players",
                               "positions")
@@ -96,4 +111,10 @@ function experienceSupply(componentsTable)
       end
     end
   end
+end
+
+
+function update(componentsTable)
+  healthSupply(componentsTable)
+  experienceSupply(componentsTable)
 end
