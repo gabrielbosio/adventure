@@ -114,6 +114,16 @@ function CollisionBox(width, height)
   component.slopeId = nil  -- slope this box is on
   component.reactingWithClouds = true  -- whether clouds affect this box or not
 
+  function component:translated(position)
+    newBox = CollisionBox(component.width, component.height)
+    if position ~= nil then
+      newBox.x = position.x
+      newBox.y = position.y
+    end
+
+    return newBox
+  end
+
   return component
 end
 
