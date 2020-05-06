@@ -58,13 +58,13 @@ local function drawPlayerCollisionBox(position, box)
 end
 
 local function drawGoals(goals, positions)
-  local size = 110
   love.graphics.setColor(0.5, 1, 0.5)
 
-  for goal in pairs(goals) do
+  for goal, goalBox in pairs(goals) do
     local position = positions[goal]
-    love.graphics.rectangle("fill", position.x-size/2, position.y-size, size,
-                            size)
+    local box = goalBox:translated(position)
+    love.graphics.rectangle("fill", box:left(), box:top(), box.width,
+                            box.height)
   end
 end
 
@@ -140,12 +140,12 @@ function draw(componentsTable, terrain)
   drawClouds(terrain.clouds)
   drawSlopes(terrain.slopes)
 
+  -- Goals
+  drawGoals(componentsTable.goals, positions)
+
   -- Player
   drawPlayerCollisionBox(positions.megasapi,
                          componentsTable.collisionBoxes.megasapi)
-
-  -- Goals
-  drawGoals(componentsTable.goals, positions)
 
   -- Items
   drawMedkits(componentsTable.healing, positions)

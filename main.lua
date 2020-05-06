@@ -23,7 +23,7 @@ function love.load()
       megasapi = {experience = 0, stunned = false}
     },
     collisionBoxes = {
-      megasapi = components.CollisionBox(50, 100)
+      megasapi = components.CollisionBox:new{width = 50, height = 100}
     },
     solids = {
       megasapi = true
@@ -62,13 +62,12 @@ function love.load()
   }
 
   goals.load(componentsTable, currentLevel)
-  items.load(componentsTable, currentLevel, "medkits", "pomodori")
+  items.load(componentsTable, currentLevel)
 end
 
 
 function love.update(dt)
-  items.healthSupply(componentsTable)
-  items.experienceSupply(componentsTable)
+  items.update(componentsTable)
 
   control.playerController(componentsTable)
   currentLevel = collision.goal(componentsTable, currentLevel)

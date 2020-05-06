@@ -71,51 +71,95 @@ function AnimationClip(animations, nameOfCurrentAnimation, spriteSheet)
 end
 
 
-local function Box(width, height)
-  local component = {
-    x = 0,
-    y = 0,
-    width = width,
-    height = height
-  }
+-- Abstract class
+Box = {
+  x = 0,
+  y = 0,
 
-  function component:left()
+  -- Constructor arguments
+  width = nil,
+  height = nil,
+
+  -- Constructor
+  new = function (self, o)
+    o = o or {}
+    setmetatable(o, self)
+    self.__index = self
+
+    return o
+  end,
+
+  -- Object methods
+  left = function (self)
     return self.x - self.width/2
-  end
-  
-  function component:right()
+  end,
+  right = function (self)
     return self.x + self.width/2
-  end
-
-  function component:top()
+  end,
+	top = function (self)
     return self.y - self.height
-  end
-  
-  function component:bottom()
+  end,
+	bottom = function (self)
     return self.y
-  end
-
-  function component:center()
+  end,
+	center = function (self)
     return self.y - self.height/2
-  end
+  end,
+	intersects = function (self, box)
+    return self:left() <= box:right() and self:right() >= box:left()
+      and self:top() <= box:bottom() and self:bottom() >= box:top()
+  end,
 
-  return component
-end
 
-function ItemBox(width, height)
-  local component = Box(width, height)
+  -- Static method
+  translated = function (o, position) 
+    if position ~= nil then
+      x, y = position.x, position.y
+    else
+      x, y = 0, 0
+    end
 
-  return component
-end
+    local attributes = {}
+    for k, v in pairs(o) do
+      attributes[k] = v
+    end
+    attributes.x = x
+    attributes.y = y
 
-function CollisionBox(width, height)
-  local component = Box(width, height)
+    return o:new(attributes)
+  end,
+}
 
-  component.slopeId = nil  -- slope this box is on
-  component.reactingWithClouds = true  -- whether clouds affect this box or not
+-- Inherited classes
+ItemBox = Box:new{
+  width = 10,
+  height = 10,
 
-  return component
-end
+  effectAmount = 0,
+}
+GoalBox = Box:new{
+  nextLevel = nil,  -- constructor argument
+
+  width = 100,
+  height = 100,
+
+  -- Extended method
+  translated = function (self, position, nextLevel)
+    local box = Box.translated(self, position)
+    box.nextLevel = nextLevel
+
+    return box
+  end,
+}
+CollisionBox = Box:new{
+  slopeId = nil,
+  reactingWithClouds = true,
+
+  -- Extended method
+  translated = function (self, position)
+    return Box.translated(self, position)
+  end,
+}
 
 
 function FiniteStateMachine(currentState)
