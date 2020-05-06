@@ -184,10 +184,6 @@ function terrain(componentsTable, terrain, dt)
 end
 
 
-function playerTouchingEntity(playerPosition, playerCollisionBox)
-end
-
-
 function goal(componentsTable, currentLevel)
   local nextLevel = currentLevel
 
