@@ -7,6 +7,7 @@ require("control")
 require("items")
 require("outline")
 require("state")
+require("living")
 
 
 function love.load()
@@ -81,6 +82,7 @@ function love.update(dt)
   collision.terrain(componentsTable, currentLevel.terrain, dt)
   control.playerAfterTerrainCollisionChecking(componentsTable)
   mruv.movement(componentsTable, dt)
+  living.staminaSupply(componentsTable, dt)
   animation.animator(componentsTable, dt)
   state.finiteStateMachineRunner(componentsTable, dt)
 end
