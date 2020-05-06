@@ -132,8 +132,10 @@ Box = {
 
 -- Inherited classes
 ItemBox = Box:new{
-  width = 100,
-  height = 100
+  width = 10,
+  height = 10,
+
+  effectAmount = 0,
 }
 GoalBox = Box:new{
   nextLevel = nil,  -- constructor argument

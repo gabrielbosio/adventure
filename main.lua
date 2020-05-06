@@ -62,7 +62,7 @@ function love.load()
   }
 
   goals.load(componentsTable, currentLevel)
-  items.load(componentsTable, currentLevel, "medkits", "pomodori")
+  items.load(componentsTable, currentLevel)
 end
 
 
