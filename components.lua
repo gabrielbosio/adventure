@@ -71,84 +71,93 @@ function AnimationClip(animations, nameOfCurrentAnimation, spriteSheet)
 end
 
 
-local function Box(width, height)
-  local component = {
-    x = 0,
-    y = 0,
-    width = width,
-    height = height
-  }
+-- Abstract class
+Box = {
+  x = 0,
+  y = 0,
 
-  function component:left()
+  -- Constructor arguments
+  width = nil,
+  height = nil,
+
+  -- Constructor
+  new = function (self, o)
+    o = o or {}
+    setmetatable(o, self)
+    self.__index = self
+
+    return o
+  end,
+
+  -- Object methods
+  left = function (self)
     return self.x - self.width/2
-  end
-  
-  function component:right()
+  end,
+  right = function (self)
     return self.x + self.width/2
-  end
-
-  function component:top()
+  end,
+	top = function (self)
     return self.y - self.height
-  end
-  
-  function component:bottom()
+  end,
+	bottom = function (self)
     return self.y
-  end
-
-  function component:center()
+  end,
+	center = function (self)
     return self.y - self.height/2
-  end
+  end,
+	intersects = function (self, box)
+    return self:left() <= box:right() and self:right() >= box:left()
+      and self:top() <= box:bottom() and self:bottom() >= box:top()
+  end,
 
-  return component
-end
 
-function ItemBox(width, height)
-  local component = Box(width, height)
-
-  return component
-end
-
-function GoalBox(width, height, nextLevel)
-  local component = Box(width, height)
-
-  component.nextLevel = nextLevel
-
-  function component:translated(position)
-    newBox = GoalBox(component.width, component.height, component.nextLevel)
+  -- Static method
+  translated = function (o, position) 
     if position ~= nil then
-      newBox.x = position.x
-      newBox.y = position.y
+      x, y = position.x, position.y
+    else
+      x, y = 0, 0
     end
 
-    return newBox
-  end
-
-  function component:intersects(box)
-    return component:left() <= box:right() and component:right() >= box:left()
-      and component:top() <= box:bottom() and component:bottom() >= box:top()
-  end
-
-  return component
-end
-
-function CollisionBox(width, height)
-  local component = Box(width, height)
-
-  component.slopeId = nil  -- slope this box is on
-  component.reactingWithClouds = true  -- whether clouds affect this box or not
-
-  function component:translated(position)
-    newBox = CollisionBox(component.width, component.height)
-    if position ~= nil then
-      newBox.x = position.x
-      newBox.y = position.y
+    local attributes = {}
+    for k, v in pairs(o) do
+      attributes[k] = v
     end
+    attributes.x = x
+    attributes.y = y
 
-    return newBox
-  end
+    return o:new(attributes)
+  end,
+}
 
-  return component
-end
+-- Inherited classes
+ItemBox = Box:new{
+  width = 100,
+  height = 100
+}
+GoalBox = Box:new{
+  nextLevel = nil,  -- constructor argument
+
+  width = 100,
+  height = 100,
+
+  -- Extended method
+  translated = function (self, position, nextLevel)
+    local box = Box.translated(self, position)
+    box.nextLevel = nextLevel
+
+    return box
+  end,
+}
+CollisionBox = Box:new{
+  slopeId = nil,
+  reactingWithClouds = true,
+
+  -- Extended method
+  translated = function (self, position)
+    return Box.translated(self, position)
+  end,
+}
 
 
 function FiniteStateMachine(currentState)

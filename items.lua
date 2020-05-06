@@ -29,7 +29,7 @@ end
 
 function reload(componentsTable, nextLevel)
   -- Reload absolutely all components in the next level
-  names = {}
+  local names = {}
 
   -- Look for components in the componentGroup table
   for name in pairs(componentGroup) do

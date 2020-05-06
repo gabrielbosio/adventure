@@ -23,7 +23,7 @@ function love.load()
       megasapi = {experience = 0, stunned = false}
     },
     collisionBoxes = {
-      megasapi = components.CollisionBox(50, 100)
+      megasapi = components.CollisionBox:new{width = 50, height = 100}
     },
     solids = {
       megasapi = true
