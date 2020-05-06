@@ -3,6 +3,7 @@ module("items", package.seeall)
 
 
 function load(componentsTable, currentLevel, ...)
+  -- item effect amount
   local amount = 1 -- currentLevel.entitiesData could store this
 
   local componentGroup = {
@@ -17,7 +18,7 @@ function load(componentsTable, currentLevel, ...)
     for itemIndex, itemData in pairs(currentLevel.entitiesData[itemGroupName] or {}) do
       local id = itemGroupName .. tostring(itemIndex)
       componentsTable.positions[id] = {x = itemData[1], y = itemData[2]}
-      -- if type(componentGroup[itemGroupName]) ~= "table"  -- several effects
+      -- if type(componentGroup[itemGroupName]) == "table"  -- several effects
       group[id] = amount
     end
   end
@@ -45,7 +46,7 @@ function healthSupply(componentsTable)
       for itemEntity, amount in pairs(componentsTable.healing or {}) do
         local itemPosition = componentsTable.positions[itemEntity]
 
-        local ITEM_SIZE = 10  -- maybe access it from outline.lua?
+        local ITEM_SIZE = 10  -- swap for ItemBox
 
         if position.x + collisionBox.width/2 >= itemPosition.x - ITEM_SIZE/2
             and position.x - collisionBox.width/2 <= itemPosition.x + ITEM_SIZE/2
