@@ -24,7 +24,7 @@ for line in io.lines(jsFileName) do
     local framesLua = string.gsub(framesLua,"{{", "{\n  {")
     local framesLua = string.gsub(framesLua,"},", "},\n  ")
     local framesLua = string.gsub(framesLua,"}}", "}\n}\n")
-    local spritesContent = "sprites = " .. string.gsub(framesLua, ",0", "")
+    local spritesContent = "sprites = " .. string.gsub(framesLua, ", 0,", ",")
     print("\nSprites file")
     print(spritesContent)
     local destinationFile = io.open(luaFileName, "w+")
