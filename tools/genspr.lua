@@ -1,4 +1,5 @@
 local jsFileName = arg[1]
+local luaFileName = arg[2]
 
 if not jsFileName then
   print("Format: genspr.lua <jsFileName>")
@@ -6,6 +7,7 @@ if not jsFileName then
 end
 
 for line in io.lines(jsFileName) do
+  line = string.gsub(line, "\0", "")
   local framesKeyIndex = string.find(line, "frames")
   if framesKeyIndex then
     local framesValueStartIndex = framesKeyIndex + 8
@@ -19,7 +21,7 @@ for line in io.lines(jsFileName) do
     local spritesContent = "sprites = " .. string.gsub(framesLua, ",0", "")
     print("\nSprites file")
     print(spritesContent .. "\n")
-    local destinationFile = io.open("./sprites.lua", "w+")
+    local destinationFile = io.open(luaFileName, "w+")
     destinationFile:write(spritesContent)
     io.close(destinationFile)
     break
