@@ -16,8 +16,8 @@ end
 local function checkTopBoundary(collisionBox, position, velocity, x1, y1, x2, y2, dt)
   local box = collisionBox:translated(position)
 
-  if box:right() > x1 and box:left() < x2 and box:top() >= y2
-      and box:top() + velocity.y*dt < y2 then
+  if box:right() + velocity.x*dt > x1 and box:left() + velocity.x*dt< x2
+      and box:top() >= y2 and box:top() + velocity.y*dt < y2 then
     -- Y-velocity cannot be set to zero
     -- The player "thinks" that it is on the ground and can jump in the air
     velocity.y = 1
