@@ -5,6 +5,7 @@ require("levels")
 require("mruv")
 require("control")
 require("items")
+require("goals")
 require("outline")
 require("state")
 require("living")
@@ -60,13 +61,7 @@ function love.load()
     }
   }
 
-  components.assertDependency(componentsTable, "goals", "positions")
-  for goalIndex, goalData in pairs(currentLevel.entitiesData.goals or {}) do
-    local id = "goal" .. tostring(goalIndex)
-    componentsTable.positions[id] = {x = goalData[1], y = goalData[2]}
-    componentsTable.goals[id] = goalData[3]
-  end
-
+  goals.load(componentsTable, currentLevel)
   items.load(componentsTable, currentLevel, "medkits", "pomodori")
 end
 
