@@ -91,14 +91,21 @@ local statesLogic = {
     end
   end,
 
-  lyingDown = function (_, _, finiteStateMachine, _, _, _, living)
+  lyingDown = function (_, _, finiteStateMachine, _, _, animationClip, living)
     if finiteStateMachine.stateTime == 0 then
       if living.health == 0 then
         love.load()
       else
-        finiteStateMachine:setState("idle")
+        finiteStateMachine:setState("gettingUp")
+        animationClip:setAnimation("gettingUp")
         living.stamina = 100
       end
+    end
+  end,
+
+  gettingUp = function (_, _, finiteStateMachine, _, _, animationClip, _)
+    if animationClip.done then
+      finiteStateMachine:setState("idle")
     end
   end,
 
