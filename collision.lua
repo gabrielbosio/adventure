@@ -143,20 +143,24 @@ end
 
 
 local function checkClouds(collisionBox, position, velocity, terrain, dt)
-  for i in pairs(terrain.clouds or {}) do
-    local clouds = terrain.clouds[i]
-    local x1 = math.min(clouds[1], clouds[3])
-    local y1 = clouds[2]
-    local x2 = math.max(clouds[1], clouds[3])
+  if collisionBox.reactingWithClouds then
+    for i in pairs(terrain.clouds or {}) do
+      local clouds = terrain.clouds[i]
+      local x1 = math.min(clouds[1], clouds[3])
+      local y1 = clouds[2]
+      local x2 = math.max(clouds[1], clouds[3])
 
-    if position.x + collisionBox:right() > x1
-        and position.x + collisionBox:left() < x2
-        and position.y + collisionBox:bottom() + velocity.y*dt > y1
-        and position.y + collisionBox:bottom() <= y1
-        and velocity.y > 0 then
-      velocity.y = 0
-      position.y = y1
+      if position.x + collisionBox:right() > x1
+          and position.x + collisionBox:left() < x2
+          and position.y + collisionBox:bottom() + velocity.y*dt > y1
+          and position.y + collisionBox:bottom() <= y1
+          and velocity.y > 0 then
+        velocity.y = 0
+        position.y = y1
+      end
     end
+  else
+    collisionBox.reactingWithClouds = true
   end
 end
 

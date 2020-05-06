@@ -43,6 +43,10 @@ local statesLogic = {
       if love.keyboard.isDown("j") then
         finiteStateMachine:setState("hurt")
       end
+
+      if love.keyboard.isDown("s") then
+        finiteStateMachine:setState("descend")
+      end
   end,
 
   startingJump = function (_, _, finiteStateMachine, _, velocity, animationClip, _)
@@ -96,7 +100,12 @@ local statesLogic = {
         living.stamina = 100
       end
     end
-  end
+  end,
+
+  descend = function(componentsTable, entity, finiteStateMachine, _, _, _, _)
+    componentsTable.collisionBoxes[entity].reactingWithClouds = false
+    finiteStateMachine:setState("idle")
+  end,
 }
 
 

@@ -111,8 +111,8 @@ end
 function CollisionBox(width, height)
   local component = Box(width, height)
 
-  component.slopeX = 0
-  component.slopeId = nil
+  component.slopeId = nil  -- slope this box is on
+  component.reactingWithClouds = true  -- whether clouds affect this box or not
 
   return component
 end
