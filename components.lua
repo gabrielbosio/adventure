@@ -1,5 +1,5 @@
 module("components", package.seeall)
-dofile("sprites.lua")
+dofile("resources/sprites.lua")
 
 -- Animation Clip
 local function createAnimationsTable(animations, spriteSheet)

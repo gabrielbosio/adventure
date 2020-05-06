@@ -15,8 +15,8 @@ function love.load()
   -- Level data loading
   currentLevel = levels.level[levels.first]
   control.currentLevel = currentLevel
-  dofile("animations.lua")
-  spriteSheet = love.graphics.newImage("sprites/megasapi.png")
+  dofile("resources/animations.lua")
+  spriteSheet = love.graphics.newImage("resources/sprites/megasapi.png")
 
   componentsTable = {
     players = {  -- or maybe "player", there is just one...
