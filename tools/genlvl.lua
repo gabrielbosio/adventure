@@ -1,29 +1,34 @@
 firstLevelName = arg[1]
-root = "../"
-levelsDirectory = "resources/levels"
-levelsPath = root .. levelsDirectory
-outputPath = root .. "levels.lua"
+root = arg[2]
+levelsDirectory = "resources/levels/"
 
-if not firstLevelName then
+if not firstLevelName or not root then
   script = "genlvl.lua"
-  print("Usage: " .. script .. " <firstLevelName>")
-  print()
-  print("Examples:")
-  print("    " .. script .. " park ")
-  print("    " .. script .. " 'some cool level name' ")
-  print()
+  print("Usage: " .. script .. [[ <firstLevelName> <pathToGameRoot>
+
+  <pathToGameRoot>/]] .. levelsDirectory
+                      .. [[<firstLevelName>.lua must exist.
+
+Examples:
+  ]] .. script .. [[ park ..
+  ]] .. script .. [[ 'some cool level name' ~/games/mygame]])
+
   return
 end
 
+root = string.gsub(root .. "/", "//", "/")
+levelsPath = root .. levelsDirectory
+outputPath = root .. "levels.lua"
+
 
 -- Get all files in levelsPath that end with .lua
-stream = io.popen("ls " .. levelsPath .. "/*.lua")
+stream = io.popen("ls " .. levelsPath .. "*.lua")
 files = {}
 for path in stream:lines() do
-  local name = string.gsub(path, levelsPath .. "/(.*).lua", "%1")
-  local filePath = levelsDirectory .. "/" .. name .. ".lua"
+  local name = string.gsub(path, levelsPath .. "(.*).lua", "%1")
+  local filePath = levelsPath .. name .. ".lua"
 
-  print('Found "' .. name .. '"')
+  print('Found "' .. filePath .. '"')
   gotAMatch = name == firstLevelName
   files[#files + 1] = {name=name, path=filePath}
 end
@@ -47,7 +52,7 @@ module("levels", package.seeall)
 level = {
 ]=]
 for i, file in ipairs(files) do
-  io.input(root .. file.path)
+  io.input(file.path)
   newContent = '  ["' .. file.name .. '"] = ' .. io.read("*all")
   newContent = string.gsub(newContent, "\n", "\n  ")
   newContent = string.gsub(newContent, "}[%s^,]*$", "},\n\n")
