@@ -47,7 +47,7 @@ local function healthSupply(componentsTable)
   for entity, player in pairs(componentsTable.players) do
     local collector = componentsTable.collectors[entity]
 
-    if collector ~= nil then
+    if collector then
       local position = componentsTable.positions[entity]
       local collisionBox = componentsTable.collisionBoxes[entity]
       local livingEntities = componentsTable.living[entity]
@@ -69,7 +69,7 @@ local function healthSupply(componentsTable)
         end
 
       end
-    end -- if collector ~= nil
+    end -- if collector
   end
 end
 
@@ -83,7 +83,7 @@ local function experienceSupply(componentsTable)
   for entity, player in pairs(componentsTable.players) do
     local collector = componentsTable.collectors[entity]
 
-    if collector ~= nil then
+    if collector then
       local position = componentsTable.positions[entity]
       local collisionBox = componentsTable.collisionBoxes[entity]
       components.assertExistence(entity, "player", {position, "position"},
