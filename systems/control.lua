@@ -1,5 +1,4 @@
 require("components")
-require("items")
 module("control", package.seeall)
 
 
@@ -64,7 +63,7 @@ local statesLogic = {
     if living.health == 0 or living.stamina == 0 then
       finiteStateMachine:setState("flyingHurt")
       animationClip:setAnimation("flyingHurt")
-      componentsTable.collectors[entity] = nil
+      componentsTable.collectors[entity] = false
       velocity.x = (animationClip.facingRight and -1 or 1) * velocity.xSpeed
       velocity.y = -velocity.jumpImpulseSpeed
     else
@@ -91,7 +90,8 @@ local statesLogic = {
     end
   end,
 
-  lyingDown = function (_, _, finiteStateMachine, _, _, animationClip, living)
+  lyingDown = function (componentsTable, entity, finiteStateMachine, _, _, animationClip,
+                        living)
     if finiteStateMachine.stateTime == 0 then
       if living.health == 0 then
         love.load()
@@ -99,6 +99,7 @@ local statesLogic = {
         finiteStateMachine:setState("gettingUp")
         animationClip:setAnimation("gettingUp")
         living.stamina = 100
+        componentsTable.collectors[entity] = true
       end
     end
   end,

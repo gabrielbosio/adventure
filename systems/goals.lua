@@ -1,4 +1,5 @@
 require("components")
+require("components.box")
 module("goals", package.seeall)
 
 
@@ -8,7 +9,7 @@ function load(componentsTable, currentLevel)
   for goalIndex, goalData in pairs(currentLevel.entitiesData.goals or {}) do
     local id = "goal" .. tostring(goalIndex)
     componentsTable.positions[id] = {x = goalData[1], y = goalData[2]}
-    componentsTable.goals[id] = components.GoalBox:new{
+    componentsTable.goals[id] = box.GoalBox:new{
       width = 110,
       height = 110,
       nextLevel = goalData[3]

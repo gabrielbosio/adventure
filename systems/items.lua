@@ -1,5 +1,5 @@
 require("components")
-require("levels")
+require("components.box")
 module("items", package.seeall)
 
 
@@ -20,7 +20,7 @@ function load(componentsTable, currentLevel)
       local id = itemGroupName .. tostring(itemIndex)
       componentsTable.positions[id] = {x = itemData[1], y = itemData[2]}
       -- if type(componentGroup[itemGroupName]) == "table"  -- several effects
-      group[id] = components.ItemBox:new{effectAmount = 1}  -- hard-coded
+      group[id] = box.ItemBox:new{effectAmount = 1}  -- hard-coded
     end
   end
 end
@@ -69,7 +69,7 @@ local function healthSupply(componentsTable)
         end
 
       end
-    end -- if collector ~= nil
+    end -- if collector
   end
 end
 
@@ -83,7 +83,7 @@ local function experienceSupply(componentsTable)
   for entity, player in pairs(componentsTable.players) do
     local collector = componentsTable.collectors[entity]
 
-    if collector ~= nil then
+    if collector then
       local position = componentsTable.positions[entity]
       local collisionBox = componentsTable.collisionBoxes[entity]
       components.assertExistence(entity, "player", {position, "position"},
