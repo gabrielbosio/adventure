@@ -1,5 +1,4 @@
 require("components")
-require("items")
 module("control", package.seeall)
 
 

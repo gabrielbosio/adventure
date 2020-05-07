@@ -1,14 +1,16 @@
-require("animation")
-require("collision")
-require("components")
+require("components.box")
+require("components.animation")
+require("components.fsm")
 require("levels")
-require("mruv")
-require("control")
-require("items")
-require("goals")
+require("systems.animation")
+require("systems.collision")
+require("systems.mruv")
+require("systems.control")
+require("systems.items")
+require("systems.goals")
+require("systems.state")
+require("systems.living")
 require("outline")
-require("state")
-require("living")
 
 
 function love.load()
@@ -23,7 +25,7 @@ function love.load()
       megasapi = {experience = 0, stunned = false}
     },
     collisionBoxes = {
-      megasapi = components.CollisionBox:new{width = 50, height = 100}
+      megasapi = box.CollisionBox:new{width = 50, height = 100}
     },
     solids = {
       megasapi = true
@@ -42,7 +44,7 @@ function love.load()
     },
     goals = {},
     animationClips = {
-      megasapi = components.AnimationClip(animations.megasapi, "standing", spriteSheet)
+      megasapi = animation.AnimationClip(animations.megasapi, "standing", spriteSheet)
     },
     living = {
       megasapi = {health = 10, stamina = 100, deathType = nil}
@@ -57,7 +59,7 @@ function love.load()
       megasapi = true
     },
     finiteStateMachines = {
-      megasapi = components.FiniteStateMachine("idle")
+      megasapi = fsm.FiniteStateMachine("idle")
     }
   }
 
