@@ -6,30 +6,13 @@ if not jsFileName or not luaFileName then
   return
 end
 
-for line in io.lines(jsFileName) do
-  line = string.gsub(line, "\0", "")  -- string.char(0) == "\0"
-  local pattern = "frames: "
-  local framesKeyIndex = string.find(line, pattern)
-  if framesKeyIndex then
-    local framesValueStartIndex = framesKeyIndex + #pattern
-    local framesValueEndIndex = string.find(line, "]]});") + 1;
-    local framesJS = string.sub(line, framesValueStartIndex, framesValueEndIndex)
-    print("\nJS Frames")
-    print(framesJS .. "\n")
-    local framesLua = string.gsub(framesJS,"[%[|%]]", {["["] = "{", ["]"] = "}"})
-    print("\nLua Frames")
-    print(framesLua)
-    -- Add indentation
-    local framesLua = string.gsub(framesLua,",([^%s\n])", ", %1")
-    local framesLua = string.gsub(framesLua,"{{", "{\n  {")
-    local framesLua = string.gsub(framesLua,"},", "},\n  ")
-    local framesLua = string.gsub(framesLua,"}}", "}\n}\n")
-    local spritesContent = "sprites = " .. string.gsub(framesLua, ", 0,", ",")
-    print("\nSprites file")
-    print(spritesContent)
-    local destinationFile = io.open(luaFileName, "w+")
-    destinationFile:write(spritesContent)
-    io.close(destinationFile)
-    break
-  end
-end
+io.input(jsFileName)
+jsContent = string.gsub(io.read("*all"), string.char(0), "")
+filtered = string.gsub(jsContent, ".*frames:%s*(%[.*%])}.*$", "%1")
+luaContent = string.gsub(filtered, "%[([%d%.,]+)%]", "\n  {%1}")
+luaContent = string.gsub(luaContent, "[%[|%]]", {["["] = "{", ["]"] = "\n}\n"})
+luaContent = "sprites = " .. string.gsub(luaContent, ",([^}])", ", %1")
+print("JS Frames\n" .. jsContent .. "\n")
+print("Lua Frames\n" .. luaContent)
+io.output(luaFileName)
+io.write(luaContent)
