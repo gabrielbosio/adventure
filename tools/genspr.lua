@@ -9,6 +9,7 @@ end
 io.input(jsFileName)
 jsContent = string.gsub(io.read("*all"), string.char(0), "")
 filtered = string.gsub(jsContent, ".*frames:%s*(%[.*%])}.*$", "%1")
+filtered, c = string.gsub(filtered, ",%s*0%s*,", ",")
 luaContent = string.gsub(filtered, "%[([%d%.,]+)%]", "\n  {%1}")
 luaContent = string.gsub(luaContent, "[%[|%]]", {["["] = "{", ["]"] = "\n}\n"})
 luaContent = "sprites = " .. string.gsub(luaContent, ",([^}])", ", %1")
