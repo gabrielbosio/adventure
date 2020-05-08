@@ -72,7 +72,7 @@ function love.update(dt)
   items.update(componentsTable)
 
   control.playerController(componentsTable)
-  currentLevel = collision.goal(componentsTable, currentLevel)
+  currentLevel = goals.update(componentsTable, currentLevel)
 
   mruv.gravity(componentsTable, dt)
   collision.terrain(componentsTable, currentLevel.terrain, dt)

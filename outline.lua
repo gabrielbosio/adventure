@@ -12,6 +12,7 @@ local function drawBox(corners)
 end
 
 local function drawRightTriangle(corners)
+  -- Horizontal side drawn first
   love.graphics.polygon("fill", corners.x1, corners.y1, corners.x2, corners.y1,
                         corners.x2, corners.y2)
 end
