@@ -203,8 +203,8 @@ function goal(componentsTable, currentLevel)
           nextLevel = levels.level[goalBox.nextLevel]
 
           -- Player position loading and movement restore
-          position.x = nextLevel.entitiesData.player[1]
-          position.y = nextLevel.entitiesData.player[2]
+          position.x = nextLevel.entitiesData.player[1][1]
+          position.y = nextLevel.entitiesData.player[1][2]
           velocity.x = 0
           velocity.y = 0
 

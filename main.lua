@@ -35,8 +35,8 @@ function love.load()
     },
     positions = {
       megasapi = {
-        x = currentLevel.entitiesData.player[1],
-        y = currentLevel.entitiesData.player[2]
+        x = currentLevel.entitiesData.player[1][1],
+        y = currentLevel.entitiesData.player[1][2]
       }
     },
     velocities = {
