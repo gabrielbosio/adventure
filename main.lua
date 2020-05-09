@@ -2,14 +2,7 @@ require("components.box")
 require("components.animation")
 require("components.fsm")
 require("levels")
-require("systems.animation")
-require("systems.collision")
-require("systems.mruv")
-require("systems.control")
-require("systems.items")
-require("systems.goals")
-require("systems.state")
-require("systems.living")
+require("systems")
 require("outline")
 
 
@@ -69,18 +62,7 @@ end
 
 
 function love.update(dt)
-  items.update(componentsTable)
-
-  control.playerController(componentsTable)
-  currentLevel = goals.update(componentsTable, currentLevel)
-
-  mruv.gravity(componentsTable, dt)
-  collision.terrain(componentsTable, currentLevel.terrain, dt)
-  control.playerAfterTerrainCollisionChecking(componentsTable)
-  mruv.movement(componentsTable, dt)
-  living.staminaSupply(componentsTable, dt)
-  animation.animator(componentsTable, dt)
-  state.finiteStateMachineRunner(componentsTable, dt)
+  currentLevel = systems.update(collisionTable, currentLevel, dt)
 end
 
 function love.draw()
