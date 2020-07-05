@@ -11,6 +11,7 @@ animations = {
 		flyingHurt = {{{16, 0.08}, {17, 1}}, false},
 		lyingDown = {{{18, 1}}, false},
 		gettingUp = {{{19, 0.05}, {20, 0.03}}, false},
-		hitByHighPunch = {{{22, 0.05}, {21, 0.05}}, false}
+		hitByHighPunch = {{{22, 0.05}, {21, 0.05}}, false},
+		punching = {{{23, 0.05}, {24, 0.2}, {25, 0.1}}, false}
   }
 }
