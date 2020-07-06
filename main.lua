@@ -29,6 +29,12 @@ function love.load()
       megasapi = true,
       bag = true
     },
+    cameras = {  -- or maybe "camera", there is just one...
+      vcam = true
+    },
+    cameraTargets = {  -- or maybe "target", there is just one...
+      megasapi = true
+    },
     positions = {
       megasapi = {
         x = currentLevel.entitiesData.player[1][1],
@@ -37,6 +43,10 @@ function love.load()
       bag = {
         x = 140,
         y = 500
+      },
+      vcam = {
+        x = 0,
+        y = 0
       }
     },
     velocities = {
@@ -70,6 +80,9 @@ end
 
 
 function love.update(dt)
+  componentsTable.positions.vcam.x = 0.1 + componentsTable.positions.vcam.x
+  componentsTable.positions.vcam.y = 0.2 + componentsTable.positions.vcam.y
+  
   currentLevel = systems.update(collisionTable, currentLevel, dt)
 end
 

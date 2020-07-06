@@ -4,7 +4,7 @@ module("items", package.seeall)
 
 
 -- Link names in levels.lua to components in componentsTable
--- In other words, link item name to its effect.
+-- In other words, link each item name to its effect.
 local componentGroup = {
   ["medkits"] = "healing",
   ["pomodori"] = "experienceEffect",

@@ -1,6 +1,7 @@
+require("place")
+
 -- I could not name this module "debug" because there is already a library 
 -- named "debug" in lua. 
-require("place")
 module("outline", package.seeall)
 
 
@@ -42,7 +43,7 @@ local function drawSlopes(slopes)
   love.graphics.setColor(0, 0.3, 0)
 
   for i in pairs(slopes or {}) do
-    local slope = currentLevel.terrain.slopes[i]
+    local slope = slopes[i]
     drawRightTriangle{x1 = slope[1], y1 = slope[2], x2 = slope[3],
                       y2 = slope[4]}
   end
@@ -54,7 +55,8 @@ local function drawCollisionBoxes(positions, boxes)
     local position = positions[entity]
     -- Box
     love.graphics.setColor(0, 0, 1)
-    love.graphics.rectangle("fill",position.x + box:left(), position.y + box:top(), box.width, box.height)
+    love.graphics.rectangle("fill", position.x + box:left(),
+      position.y + box:top(), box.width, box.height)
 
     -- Origin
     love.graphics.setColor(1, 1, 0)
@@ -137,23 +139,56 @@ end
 function draw(componentsTable, terrain)
   local r, g, b = love.graphics.getColor()
 
-  -- Shared data
-  local positions = componentsTable.positions
+  local translated
+  for entity, camera in pairs(componentsTable.cameras) do  -- BEAUTIFY THIS
+    local position = componentsTable.positions[entity]
+    components.assertExistence(entity, "camera", {position, "position"})
 
-  -- Terrain
-  drawBoundaries(terrain.boundaries)
-  drawClouds(terrain.clouds)
-  drawSlopes(terrain.slopes)
+    -- Translate boundaries
+    translated = {}
+    for i, boundary in ipairs(terrain.boundaries or {}) do
+      table.insert(translated, {
+        boundary[1] - position.x, boundary[2] + position.y,
+        boundary[3] - position.x, boundary[4] + position.y 
+      })
+    end
+    drawBoundaries(translated)
 
-  -- Goals
-  drawGoals(componentsTable.goals, positions)
+    -- Translate clouds
+    translated = {}
+    for i, cloud in ipairs(terrain.clouds or {}) do
+      table.insert(translated, {
+        cloud[1] - position.x, cloud[2] + position.y,
+        cloud[3] - position.x
+      })
+    end
+    drawClouds(translated)
 
-  -- Collision boxes
-  drawCollisionBoxes(positions, componentsTable.collisionBoxes)
+    -- Translate slopes
+    translated = {}
+    for i, slope in ipairs(terrain.slopes or {}) do
+      table.insert(translated, {
+        slope[1] - position.x, slope[2] + position.y,
+        slope[3] - position.x, slope[4] + position.y 
+      })
+    end
+    drawSlopes(translated)
 
-  -- Items
-  drawMedkits(componentsTable.healing, positions)
-  drawPomodori(componentsTable.experienceEffect, positions)
+    -- Translate boxes
+    translated = {}
+    for otherEntity, otherPosition in pairs(componentsTable.positions) do
+      if (otherEntity ~= entity) then
+        translated[otherEntity] = {
+          x = otherPosition.x - position.x,
+          y = otherPosition.y + position.y
+        }
+      end
+    end
+    drawGoals(componentsTable.goals, translated)
+    drawCollisionBoxes(translated, componentsTable.collisionBoxes)
+    drawMedkits(componentsTable.healing, translated)
+    drawPomodori(componentsTable.experienceEffect, translated)
+  end
 
   -- Reset drawing color
   love.graphics.setColor(r, g, b)
