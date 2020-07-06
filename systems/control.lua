@@ -48,6 +48,7 @@ local statesLogic = {
       end
 
       if love.keyboard.isDown("l") then
+        velocity.x = 0
         finiteStateMachine:setState("punching")
         animationClip:setAnimation("punching")
       end
