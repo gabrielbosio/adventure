@@ -2,14 +2,7 @@ require("components.box")
 require("components.animation")
 require("components.fsm")
 require("levels")
-require("systems.animation")
-require("systems.collision")
-require("systems.mruv")
-require("systems.control")
-require("systems.items")
-require("systems.goals")
-require("systems.state")
-require("systems.living")
+require("systems")
 require("outline")
 
 
@@ -35,8 +28,8 @@ function love.load()
     },
     positions = {
       megasapi = {
-        x = currentLevel.entitiesData.player[1],
-        y = currentLevel.entitiesData.player[2]
+        x = currentLevel.entitiesData.player[1][1],
+        y = currentLevel.entitiesData.player[1][2]
       }
     },
     velocities = {
@@ -69,18 +62,7 @@ end
 
 
 function love.update(dt)
-  items.update(componentsTable)
-
-  control.playerController(componentsTable)
-  currentLevel = collision.goal(componentsTable, currentLevel)
-
-  mruv.gravity(componentsTable, dt)
-  collision.terrain(componentsTable, currentLevel.terrain, dt)
-  control.playerAfterTerrainCollisionChecking(componentsTable)
-  mruv.movement(componentsTable, dt)
-  living.staminaSupply(componentsTable, dt)
-  animation.animator(componentsTable, dt)
-  state.finiteStateMachineRunner(componentsTable, dt)
+  currentLevel = systems.update(collisionTable, currentLevel, dt)
 end
 
 function love.draw()

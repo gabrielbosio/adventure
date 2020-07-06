@@ -12,6 +12,7 @@ local function drawBox(corners)
 end
 
 local function drawRightTriangle(corners)
+  -- Horizontal side drawn first
   love.graphics.polygon("fill", corners.x1, corners.y1, corners.x2, corners.y1,
                         corners.x2, corners.y2)
 end
@@ -69,24 +70,24 @@ local function drawGoals(goals, positions)
 end
 
 local function drawMedkits(medkits, positions)
-  local size = 10
   love.graphics.setColor(1, 0, 0)
 
-  for medkit in pairs(medkits) do
+  for medkit, itemBox in pairs(medkits) do
     local position = positions[medkit]
-    love.graphics.rectangle("fill", position.x-size/2, position.y-size, size,
-                            size)
+    local width, height = itemBox.width, itemBox.height
+    love.graphics.rectangle("fill", position.x-width/2, position.y-height,
+    						width, height)
   end
 end
 
 local function drawPomodori(pomodori, positions)
-  local size = 10
   love.graphics.setColor(0.5, 0.5, 0.5)
 
-  for pomodoro in pairs(pomodori) do
+  for pomodoro, itemBox in pairs(pomodori) do
     local position = positions[pomodoro]
-    love.graphics.rectangle("fill", position.x-size/2, position.y-size, size,
-                            size)
+    local width, height = itemBox.width, itemBox.height
+    love.graphics.rectangle("fill", position.x-width/2, position.y-height,
+    						width, height)
   end
 end
 

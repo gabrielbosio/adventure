@@ -129,7 +129,7 @@ local statesLogic = {
 }
 
 
-function playerController(componentsTable)
+function player(componentsTable)
   -- players depend on velocities and positions
   components.assertDependency(componentsTable, "players", "velocities", "positions")
 
