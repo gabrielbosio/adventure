@@ -48,14 +48,18 @@ local function drawSlopes(slopes)
   end
 end
 
-local function drawPlayerCollisionBox(position, box)
-  -- Box
-  love.graphics.setColor(0, 0, 1)
-  love.graphics.rectangle("fill",position.x + box:left(), position.y + box:top(), box.width, box.height)
+local function drawCollisionBoxes(positions, boxes)
 
-  -- Origin
-  love.graphics.setColor(1, 1, 0)
-  love.graphics.circle("fill", position.x, position.y, 2)
+  for entity, box in pairs(boxes) do
+    local position = positions[entity]
+    -- Box
+    love.graphics.setColor(0, 0, 1)
+    love.graphics.rectangle("fill",position.x + box:left(), position.y + box:top(), box.width, box.height)
+
+    -- Origin
+    love.graphics.setColor(1, 1, 0)
+    love.graphics.circle("fill", position.x, position.y, 2)
+  end
 end
 
 local function drawGoals(goals, positions)
@@ -144,9 +148,8 @@ function draw(componentsTable, terrain)
   -- Goals
   drawGoals(componentsTable.goals, positions)
 
-  -- Player
-  drawPlayerCollisionBox(positions.megasapi,
-                         componentsTable.collisionBoxes.megasapi)
+  -- Collision boxes
+  drawCollisionBoxes(positions, componentsTable.collisionBoxes)
 
   -- Items
   drawMedkits(componentsTable.healing, positions)
