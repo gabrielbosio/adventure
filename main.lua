@@ -18,22 +18,30 @@ function love.load()
       megasapi = {experience = 0, stunned = false}
     },
     collisionBoxes = {
-      megasapi = box.CollisionBox:new{width = 50, height = 100}
+      megasapi = box.CollisionBox:new{width = 50, height = 100},
+      bag = box.CollisionBox:new{width = 50, height = 100}
     },
     solids = {
-      megasapi = true
+      megasapi = true,
+      bag = true
     },
     weights = {
-      megasapi = true
+      megasapi = true,
+      bag = true
     },
     positions = {
       megasapi = {
         x = currentLevel.entitiesData.player[1][1],
         y = currentLevel.entitiesData.player[1][2]
+      },
+      bag = {
+        x = 140,
+        y = 500
       }
     },
     velocities = {
-      megasapi = {x = 0, y = 0, xSpeed = 500, jumpImpulseSpeed = 1400}
+      megasapi = {x = 0, y = 0, xSpeed = 500, jumpImpulseSpeed = 1400},
+      bag = {x = 0, y = 0}
     },
     goals = {},
     animationClips = {
