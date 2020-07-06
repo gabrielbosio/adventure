@@ -34,8 +34,7 @@ function animationRenderer(componentsTable, spriteSheet)
     local currentFrame = currentAnimation.frames[animationClip:currentFrameNumber()]
     local __, __, width, height = currentFrame.quad:getViewport()
     local directionFactor = animationClip.facingRight and 1 or -1
-    local offsetX = (animationClip.facingRight and currentFrame.origin.x or 0) +
-                    width/2*scale
+    local offsetX = (animationClip.facingRight and 1 or -1)*currentFrame.origin.x*scale
     local transform = love.math.newTransform(position.x, position.y)
 
     transform:translate(offsetX,

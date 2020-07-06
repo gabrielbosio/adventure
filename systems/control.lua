@@ -46,6 +46,12 @@ local statesLogic = {
       if love.keyboard.isDown("s") then
         finiteStateMachine:setState("descend")
       end
+
+      if love.keyboard.isDown("l") then
+        velocity.x = 0
+        finiteStateMachine:setState("punching")
+        animationClip:setAnimation("punching")
+      end
   end,
 
   startingJump = function (_, _, finiteStateMachine, _, velocity, animationClip, _)
@@ -114,6 +120,12 @@ local statesLogic = {
     componentsTable.collisionBoxes[entity].reactingWithClouds = false
     finiteStateMachine:setState("idle")
   end,
+
+  punching = function (_, _, finiteStateMachine, _, _, animationClip, _)
+    if animationClip.done then
+      finiteStateMachine:setState("idle")
+    end
+  end
 }
 
 
