@@ -29,6 +29,12 @@ function love.load()
       megasapi = true,
       bag = true
     },
+    cameras = {  -- or maybe "camera", there is just one...
+      vcam = true
+    },
+    cameraTargets = {  -- or maybe "target", there is just one...
+      megasapi = true
+    },
     positions = {
       megasapi = {
         x = currentLevel.entitiesData.player[1][1],
@@ -37,6 +43,10 @@ function love.load()
       bag = {
         x = 140,
         y = 500
+      },
+      vcam = {
+        x = 0,
+        y = 0
       }
     },
     velocities = {
@@ -70,6 +80,22 @@ end
 
 
 function love.update(dt)
+  -- vCam test
+  for vcamEntity, isVcam in pairs(componentsTable.cameras) do
+    if isVcam then
+      for targetEntity, isTarget in pairs(componentsTable.cameraTargets) do
+        if isTarget then
+          local vcamPosition = componentsTable.positions[vcamEntity]
+          local targetPosition = componentsTable.positions[targetEntity]
+          local width, height = love.window.getMode()
+
+          vcamPosition.x = targetPosition.x - width/2
+          vcamPosition.y = -targetPosition.y + height/2
+        end
+      end
+    end
+  end
+
   currentLevel = systems.update(collisionTable, currentLevel, dt)
 end
 
