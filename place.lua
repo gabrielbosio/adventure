@@ -67,7 +67,7 @@ end
 --  * the chosen table entry
 --  * position coordinates (x, y)
 --  * dimensions (width, height)
--- Call any of them using the signature
+-- @usage Call any of them using the signature
 --  moveBy[anchor](x, y, w, h)
 --
 -- Examples:

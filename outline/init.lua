@@ -1,6 +1,7 @@
 require("outline.drawings")
 require("outline.display")
 
+--- Debug module
 -- I could not name this module "debug" because there is already a library
 -- named "debug" in lua.
 module("outline", package.seeall)
@@ -109,5 +110,6 @@ function debug(componentsTable)
     0, 1, 0
   )
 
+  -- Reset drawing color
   love.graphics.setColor(r, g, b)
 end
