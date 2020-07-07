@@ -1,4 +1,5 @@
 require("systems.animation")
+require("systems.camera")
 require("systems.terrain")
 require("systems.mruv")
 require("systems.control")
@@ -10,7 +11,9 @@ require("systems.living")
 module("systems", package.seeall)
 
 
-function update(collisionTable, currentLevel, dt)
+function update(componentsTable, currentLevel, dt)
+  camera.update(componentsTable)
+
   items.update(componentsTable)
 
   control.player(componentsTable)

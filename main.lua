@@ -80,29 +80,15 @@ end
 
 
 function love.update(dt)
-  -- vCam test
-  for vcamEntity, isVcam in pairs(componentsTable.cameras) do
-    if isVcam then
-      for targetEntity, isTarget in pairs(componentsTable.cameraTargets) do
-        if isTarget then
-          local vcamPosition = componentsTable.positions[vcamEntity]
-          local targetPosition = componentsTable.positions[targetEntity]
-          local width, height = love.window.getMode()
-
-          vcamPosition.x = targetPosition.x - width/2
-          vcamPosition.y = -targetPosition.y + height/2
-        end
-      end
-    end
-  end
-
-  currentLevel = systems.update(collisionTable, currentLevel, dt)
+  currentLevel = systems.update(componentsTable, currentLevel, dt)
 end
 
 function love.draw()
+  local positions = camera.positions(componentsTable, currentLevel.terrain)
   -- Shapes
-  outline.draw(componentsTable, currentLevel.terrain)
-  animation.animationRenderer(componentsTable, spriteSheet)
+  outline.draw(componentsTable, currentLevel.terrain, positions)
+  animation.animationRenderer(componentsTable, spriteSheet,
+                              positions.components)
   -- Text
   outline.debug(componentsTable)
 end
