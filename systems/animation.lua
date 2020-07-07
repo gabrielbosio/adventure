@@ -26,8 +26,21 @@ function animationRenderer(componentsTable, spriteSheet)
   components.assertDependency(componentsTable, "animationClips", "positions")
 
   for entity, animationClip in pairs(componentsTable.animationClips or {}) do
-    local position = componentsTable.positions[entity]
-    components.assertExistence(entity, "animationClip", {position, "position"})
+    local position
+    for camEntity, camera in pairs(componentsTable.cameras) do  -- BEAUTIFY
+      if camEntity ~= entity then
+        position = componentsTable.positions[entity]
+        components.assertExistence(entity, "animationClip",
+                                   {position, "position"})
+        local camPosition = componentsTable.positions[camEntity]
+        components.assertExistence(entity, "camera",
+                                   {camPosition, "camPosition"})
+        position = {
+          x = position.x - camPosition.x,
+          y = position.y + camPosition.y
+        }
+      end
+    end
     
     local scale = 0.5
     local currentAnimation = animationClip.animations[animationClip.nameOfCurrentAnimation]
