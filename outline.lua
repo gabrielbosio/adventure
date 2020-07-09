@@ -62,6 +62,27 @@ local function drawCollisionBoxes(positions, boxes)
   end
 end
 
+local function drawAttackBoxes(positions, animationClips)
+
+  for entity, animationClip in pairs(animationClips) do
+    local currentAnimation = animationClip.animations[animationClip.nameOfCurrentAnimation]
+    local attackBox = currentAnimation.frames[animationClip:currentFrameNumber()].attackBox
+
+    if attackBox ~= nil then
+      local position = positions[entity]
+      local translatedBox = attackBox:translated(position, animationClip)
+      -- Box
+      love.graphics.setColor(1, 0, 0)
+      love.graphics.rectangle("fill", translatedBox:left(), translatedBox:top(),
+                              translatedBox.width, translatedBox.height)
+
+      -- Origin
+      love.graphics.setColor(1, 1, 0)
+      love.graphics.circle("fill", position.x, position.y, 2)
+    end
+  end
+end
+
 local function drawGoals(goals, positions)
   love.graphics.setColor(0.5, 1, 0.5)
 
@@ -150,6 +171,9 @@ function draw(componentsTable, terrain)
 
   -- Collision boxes
   drawCollisionBoxes(positions, componentsTable.collisionBoxes)
+
+  -- Attack boxes
+  drawAttackBoxes(positions, componentsTable.animationClips)
 
   -- Items
   drawMedkits(componentsTable.healing, positions)

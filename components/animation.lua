@@ -1,5 +1,10 @@
+require("box")
 module("animation", package.seeall)
 dofile("resources/sprites.lua")
+
+
+-- Constants
+scale = 0.5
 
 
 -- Animation Clip
@@ -15,11 +20,18 @@ local function createAnimationsTable(animations, spriteSheet)
 
     for _, frame in ipairs(animation[1]) do
       local x, y, width, height, originX, originY = unpack(sprites[frame[1]])
+      local attackBox = frame[3]
 
       newAnimation.frames[#newAnimation.frames + 1] = {
         quad = love.graphics.newQuad(x, y, width, height, spriteSheet:getDimensions()),
-        origin = {x = -originX, y = -originY},
-        duration = frame[2]
+        origin = {x = -originX*scale, y = -originY*scale},
+        duration = frame[2],
+        attackBox = attackBox and box.AttackBox:new{
+          x = attackBox[1]*scale,
+          y = attackBox[2]*scale,
+          width = attackBox[3]*scale,
+          height = attackBox[4]*scale
+        }
       }
     end
 
@@ -34,7 +46,6 @@ local function createAnimationsTable(animations, spriteSheet)
 
   return animationsTable
 end
-
 
 function AnimationClip(animations, nameOfCurrentAnimation, spriteSheet)
   local newComponent = {
