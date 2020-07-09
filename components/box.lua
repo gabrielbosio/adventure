@@ -76,11 +76,8 @@ GoalBox = Box:new{
   height = 100,
 
   -- Extended method
-  translated = function (self, position, nextLevel)
-    local box = Box.translated(self, position)
-    box.nextLevel = nextLevel
-
-    return box
+  translated = function (self, position)
+    return Box.translated(self, position)
   end,
 }
 
