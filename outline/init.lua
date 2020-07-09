@@ -73,6 +73,14 @@ function debug(componentsTable)
     componentsTable.living.megasapi.stamina,
     0, 1, 0
   )
+  display.add(
+    "vcam",
+    function (position)
+      return math.floor(position.x) .. "," .. math.floor(position.y)
+    end,
+    componentsTable.positions.vcam,
+    0.556863, 0.333333, 0.556863
+  )
 
   -- Reset drawing color
   love.graphics.setColor(r, g, b)
