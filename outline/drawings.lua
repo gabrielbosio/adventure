@@ -72,6 +72,27 @@ function collisionBoxes(boxes, positions)
   end
 end
 
+function attackBoxes(animationClips, positions)
+
+  for entity, animationClip in pairs(animationClips) do
+    local currentAnimation = animationClip.animations[animationClip.nameOfCurrentAnimation]
+    local attackBox = currentAnimation.frames[animationClip:currentFrameNumber()].attackBox
+
+    if attackBox ~= nil then
+      local position = positions[entity]
+      local translatedBox = attackBox:translated(position, animationClip)
+      -- Box
+      love.graphics.setColor(1, 0, 0)
+      love.graphics.rectangle("fill", translatedBox:left(), translatedBox:top(),
+                              translatedBox.width, translatedBox.height)
+
+      -- Origin
+      love.graphics.setColor(1, 1, 0)
+      love.graphics.circle("fill", position.x, position.y, 2)
+    end
+  end
+end
+
 function goals(goals, positions)
   boxShape(goals, positions, 0.5, 1, 0.5)
 end

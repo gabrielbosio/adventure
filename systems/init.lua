@@ -7,6 +7,7 @@ require("systems.items")
 require("systems.goals")
 require("systems.state")
 require("systems.living")
+require("systems.attack")
 
 module("systems", package.seeall)
 
@@ -17,6 +18,7 @@ function update(componentsTable, currentLevel, dt)
   items.update(componentsTable)
 
   control.player(componentsTable)
+  attack.collision(componentsTable)
   currentLevel = goals.update(componentsTable, currentLevel)
 
   mruv.gravity(componentsTable, dt)
