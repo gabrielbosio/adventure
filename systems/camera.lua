@@ -2,6 +2,36 @@ require("components")
 module("camera", package.seeall)
 
 
+local function snapToTarget(vcamPosition, targetPosition)
+  local width, height = love.window.getMode()
+
+  -- No tweening, just center the target on screen
+  vcamPosition.x = targetPosition.x - width/2
+  vcamPosition.y = -targetPosition.y + height/2
+end
+
+local function applyLinearTweening(vcamPosition, targetPosition, dt, parameters)
+  local width, height = love.window.getMode()
+  local diff = {
+    x = vcamPosition.x - targetPosition.x + width/2,
+    y = vcamPosition.y + targetPosition.y - height/2
+  }
+  local slope = {
+    x = 0,
+    y = 0
+  }
+
+  if (math.abs(diff.x) > parameters.threshold) then
+    slope.x = -diff.x / math.abs(diff.x) * parameters.multiplier
+  end
+  if (math.abs(diff.y) > parameters.threshold) then
+    slope.y = -diff.y / math.abs(diff.y) * parameters.multiplier
+  end
+
+  vcamPosition.x = vcamPosition.x + slope.x*dt
+  vcamPosition.y = vcamPosition.y + slope.y*dt
+end
+
 --- Follow camera targets
 function update(componentsTable, dt)
   for vcamEntity, isVcam in pairs(componentsTable.cameras or {}) do
@@ -15,26 +45,11 @@ function update(componentsTable, dt)
           components.assertExistence(targetEntity, "cameraTarget",
                                      {targetPosition, "targetPosition"})
 
-          local width, height = love.window.getMode()
-
-          --[[
-          -- Step (no dt needed)
-          vcamPosition.x = targetPosition.x - width/2
-          vcamPosition.y = -targetPosition.y + height/2
-          ]]
-
-          -- Linear tweening
-          local diff = {
-            x = vcamPosition.x - targetPosition.x + width/2,
-            y = vcamPosition.y + targetPosition.y - height/2
-          }
-          local m = 500
-          local slope = {
-            x = math.abs(diff.x) < m/10 and 0 or -diff.x/math.abs(diff.x)*m,
-            y = math.abs(diff.y) < m/10 and 0 or -diff.y/math.abs(diff.y)*m
-          }
-          vcamPosition.x = vcamPosition.x + slope.x*dt
-          vcamPosition.y = vcamPosition.y + slope.y*dt
+          applyLinearTweening(vcamPosition, targetPosition, dt,
+            {
+              multiplier = 500,
+              threshold = 10
+            })
         end
       end
     end
