@@ -45,8 +45,8 @@ function love.load()
         y = 500
       },
       vcam = {
-        x = 0,
-        y = 0
+        x = -400,
+        y = 300
       }
     },
     velocities = {
@@ -78,7 +78,6 @@ function love.load()
   items.load(componentsTable, currentLevel)
 end
 
-
 function love.update(dt)
   currentLevel = systems.update(componentsTable, currentLevel, dt)
 end
@@ -86,7 +85,7 @@ end
 function love.draw()
   local positions = camera.positions(componentsTable, currentLevel.terrain)
   -- Shapes
-  outline.draw(componentsTable, currentLevel.terrain, positions)
+  outline.draw(componentsTable, positions)
   animation.animationRenderer(componentsTable, spriteSheet,
                               positions.components)
   -- Text

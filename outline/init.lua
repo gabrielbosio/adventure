@@ -7,10 +7,9 @@ require("outline.display")
 module("outline", package.seeall)
 
 
-function draw(componentsTable, terrain, positions)
+function draw(componentsTable, positions)
   local r, g, b = love.graphics.getColor()
 
-  for entity, camera in pairs(componentsTable.cameras) do
     local position
 
     -- Move terrain
@@ -26,7 +25,6 @@ function draw(componentsTable, terrain, positions)
     drawings.goals(componentsTable.goals, position)
     drawings.medkits(componentsTable.healing, position)
     drawings.pomodori(componentsTable.experienceEffect, position)
-  end
 
   -- Reset drawing color
   love.graphics.setColor(r, g, b)

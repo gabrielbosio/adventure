@@ -13,7 +13,7 @@ module("systems", package.seeall)
 
 
 function update(componentsTable, currentLevel, dt)
-  camera.update(componentsTable)
+  camera.update(componentsTable, dt)
 
   items.update(componentsTable)
 
