@@ -56,6 +56,7 @@ function draw(componentsTable, terrain)
       end
     end
     drawings.collisionBoxes(componentsTable.collisionBoxes, translated)
+    drawings.attackBoxes(componentsTable.animationClips, translated)
     drawings.goals(componentsTable.goals, translated)
     drawings.medkits(componentsTable.healing, translated)
     drawings.pomodori(componentsTable.experienceEffect, translated)
