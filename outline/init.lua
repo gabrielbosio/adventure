@@ -22,6 +22,7 @@ function draw(componentsTable, terrain, positions)
     -- Move boxes
     position = positions.components
     drawings.collisionBoxes(componentsTable.collisionBoxes, position)
+    drawings.attackBoxes(componentsTable.animationClips, position)
     drawings.goals(componentsTable.goals, position)
     drawings.medkits(componentsTable.healing, position)
     drawings.pomodori(componentsTable.experienceEffect, position)
