@@ -18,11 +18,8 @@ function update(componentsTable, dt)
           components.assertExistence(targetEntity, "cameraTarget",
                                      {targetPosition, "targetPosition"})
 
-          tweening.linear(vcamPosition, targetPosition, dt,
-            {
-              multiplier = 500,
-              threshold = 10
-            })
+          -- tweening.linear(vcamPosition, targetPosition, dt)
+          tweening.exp(vcamPosition, targetPosition, dt, 25)
         end
       end
     end
@@ -39,7 +36,6 @@ function positions(componentsTable, terrain)
 
   -- Move
   for vcamEntity, isVcam in pairs(componentsTable.cameras or {}) do
-
     if isVcam then
       local vcamPosition = componentsTable.positions[vcamEntity]
 
