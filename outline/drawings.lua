@@ -16,7 +16,7 @@ end
 local function terrainShape(cornersArray, subroutine, red, green, blue)
   love.graphics.setColor(red, green, blue)
 
-  for i, corners in ipairs(cornersArray or {}) do
+  for _, corners in ipairs(cornersArray or {}) do
     subroutine(corners)
   end
 end
@@ -66,7 +66,7 @@ function collisionBoxes(boxes, positions)
   -- Origin
   love.graphics.setColor(1, 1, 0)
 
-  for entity, box in pairs(boxes or {}) do
+  for entity, _ in pairs(boxes or {}) do
     local position = positions[entity]
     love.graphics.circle("fill", position.x, position.y, 2)
   end

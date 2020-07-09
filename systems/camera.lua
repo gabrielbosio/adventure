@@ -3,7 +3,7 @@ module("camera", package.seeall)
 
 
 --- Follow camera targets
-function update(componentsTable)
+function update(componentsTable, dt)
   for vcamEntity, isVcam in pairs(componentsTable.cameras or {}) do
     if isVcam then
       for targetEntity, isTarget in pairs(componentsTable.cameraTargets) do
@@ -17,8 +17,24 @@ function update(componentsTable)
 
           local width, height = love.window.getMode()
 
+          --[[
+          -- Step (no dt needed)
           vcamPosition.x = targetPosition.x - width/2
           vcamPosition.y = -targetPosition.y + height/2
+          ]]
+
+          -- Linear tweening
+          local diff = {
+            x = vcamPosition.x - targetPosition.x + width/2,
+            y = vcamPosition.y + targetPosition.y - height/2
+          }
+          local m = 500
+          local slope = {
+            x = math.abs(diff.x) < m/10 and 0 or -diff.x/math.abs(diff.x)*m,
+            y = math.abs(diff.y) < m/10 and 0 or -diff.y/math.abs(diff.y)*m
+          }
+          vcamPosition.x = vcamPosition.x + slope.x*dt
+          vcamPosition.y = vcamPosition.y + slope.y*dt
         end
       end
     end
@@ -57,7 +73,7 @@ function positions(componentsTable, terrain)
 
       -- Now, move terrain
       -- boundaries
-      for i, boundary in ipairs(terrain.boundaries or {}) do
+      for _, boundary in ipairs(terrain.boundaries or {}) do
         table.insert(translated.terrain.boundaries, {
           boundary[1] - vcamPosition.x, boundary[2] + vcamPosition.y,
           boundary[3] - vcamPosition.x, boundary[4] + vcamPosition.y
@@ -65,7 +81,7 @@ function positions(componentsTable, terrain)
       end
 
       -- clouds
-      for i, cloud in ipairs(terrain.clouds or {}) do
+      for _, cloud in ipairs(terrain.clouds or {}) do
         table.insert(translated.terrain.clouds, {
           cloud[1] - vcamPosition.x, cloud[2] + vcamPosition.y,
           cloud[3] - vcamPosition.x
@@ -73,7 +89,7 @@ function positions(componentsTable, terrain)
       end
 
       -- slopes
-      for i, slope in ipairs(terrain.slopes or {}) do
+      for _, slope in ipairs(terrain.slopes or {}) do
         table.insert(translated.terrain.slopes, {
           slope[1] - vcamPosition.x, slope[2] + vcamPosition.y,
           slope[3] - vcamPosition.x, slope[4] + vcamPosition.y

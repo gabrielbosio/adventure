@@ -98,7 +98,7 @@ for anchor, aliases in pairs{
   ["south west"] = {"sw", "ws"},
   ["south east"] = {"se", "es"}
 } do
-  for i, alias in ipairs(aliases) do
+  for _, alias in ipairs(aliases) do
     moveBy[alias] = moveBy[anchor]
   end
 end

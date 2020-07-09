@@ -70,5 +70,3 @@ function AnimationClip(animations, nameOfCurrentAnimation, spriteSheet)
 
   return newComponent
 end
-
-
