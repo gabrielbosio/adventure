@@ -17,23 +17,24 @@ if not input then
   return
 end
 io.input(input)
-io.output(arg[2])  -- to stdout if nil
+output = ""
 
 for line in io.lines() do
   -- Look for the deprecated pattern
   if not foundDeprecated then
     local s, n = string.gsub(line, deprecated, "local M = {}")
-    io.write(s, "\n")
+    output = output .. s .. "\n"
     foundDeprecated = n > 0
   else
     -- Add nonlocal fields to the module table
     local s = string.gsub(string.gsub(line, "^(function%s+)", "%1M."),
       "^(%S+%s*=)", "M.%1")
-    io.write(s, "\n")
+    output = output .. s .. "\n"
   end
 end
 
 if foundDeprecated then
-  io.write("\nreturn M\n")
+  io.output(arg[2])  -- to stdout if nil
+  io.write(output, "\nreturn M\n")
 end
 
