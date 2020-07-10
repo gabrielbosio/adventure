@@ -6,6 +6,8 @@ require("systems")
 require("outline")
 
 
+local currentLevel, spriteSheet, componentsTable
+
 function love.load()
   -- Level data loading
   currentLevel = levels.level[levels.first]

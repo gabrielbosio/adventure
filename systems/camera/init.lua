@@ -18,8 +18,9 @@ function update(componentsTable, dt)
           components.assertExistence(targetEntity, "cameraTarget",
                                      {targetPosition, "targetPosition"})
 
-          -- tweening.linear(vcamPosition, targetPosition, dt)
+          -- Movement constraints here
           tweening.exp(vcamPosition, targetPosition, dt, 25)
+          -- tweening.linear(vcamPosition, targetPosition, dt)
         end
       end
     end
