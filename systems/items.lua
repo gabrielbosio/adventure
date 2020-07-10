@@ -32,7 +32,7 @@ function reload(componentsTable, nextLevel)
 
   -- Look for components in the componentGroup table
   for name in pairs(componentGroup) do
-    table.insert(names, name)
+    names[#names + 1] = name
   end
 
   load(componentsTable, nextLevel, unpack(names))

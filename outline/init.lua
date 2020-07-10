@@ -18,30 +18,30 @@ function draw(componentsTable, terrain)
     -- Translate boundaries
     translated = {}
     for i, boundary in ipairs(terrain.boundaries or {}) do
-      table.insert(translated, {
+      translated[#translated + 1] = {
         boundary[1] - position.x, boundary[2] + position.y,
         boundary[3] - position.x, boundary[4] + position.y
-      })
+      }
     end
     drawings.boundaries(translated)
 
     -- Translate clouds
     translated = {}
     for i, cloud in ipairs(terrain.clouds or {}) do
-      table.insert(translated, {
+      translated[#translated + 1] = {
         cloud[1] - position.x, cloud[2] + position.y,
         cloud[3] - position.x
-      })
+      }
     end
     drawings.clouds(translated)
 
     -- Translate slopes
     translated = {}
     for i, slope in ipairs(terrain.slopes or {}) do
-      table.insert(translated, {
+      translated[#translated + 1] = {
         slope[1] - position.x, slope[2] + position.y,
         slope[3] - position.x, slope[4] + position.y
-      })
+      }
     end
     drawings.slopes(translated)
 
