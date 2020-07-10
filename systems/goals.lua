@@ -53,7 +53,7 @@ function update(componentsTable, currentLevel)
             componentsTable.goals[_id] = nil
           end
 
-          if nextLevel.entitiesData.goals ~= nil then
+          if nextLevel.entitiesData.goals then
             goals.load(componentsTable, nextLevel)
           end
 

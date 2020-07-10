@@ -42,8 +42,8 @@ Box = {
 
 
   -- Static method
-  translated = function (o, position) 
-    if position ~= nil then
+  translated = function (o, position)
+    if position then
       x, y = position.x, position.y
     else
       x, y = 0, 0

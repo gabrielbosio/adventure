@@ -59,7 +59,7 @@ function AnimationClip(animations, nameOfCurrentAnimation, spriteSheet)
   end
 
   function newComponent:setAnimation(animationName)
-    if self.animations[animationName] ~= nil
+    if self.animations[animationName]
         and self.nameOfCurrentAnimation ~= animationName then
       self.nameOfCurrentAnimation = animationName
       self.currentTime = 0

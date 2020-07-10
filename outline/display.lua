@@ -15,7 +15,7 @@ local textList = {}
 -- @blue float between 0 and 1
 function add(id, textFunction, args, red, green, blue)
   local i = textList[id]
-  if (i ~= nil) then
+  if i then
     love.graphics.setColor(red, green, blue)
     local text = textFunction(args)
     local height = love.graphics.getFont():getHeight(text)
