@@ -88,11 +88,11 @@ function graphicsAndClips(frames)
 function roundNumeric(array)
 {
 	result = array;
-	for (var i = 0; i < array.length; i++) { 
+	for (var i = 0; i < array.length; i++) {
 		if (!isNaN(array[i]))
 			result[i] = Math.round(array[i]*100)/100;
 	}
-	
+
 	return result;
 }
 
@@ -136,7 +136,7 @@ function getDataFromInstance(groupName, elementName, element)
 			}
 			break
 	}
-	
+
 	return roundNumeric(result);
 }
 
@@ -151,8 +151,8 @@ function generateFrom(symbols, frames)
 					+ "     You shouldn't edit this file.\n"
 					+ "     Any change you make here could be overwritten.\n"
 					+ "  ]]\n"
-					+ 'module("levels", package.seeall)\n\n\n'
-					+ "level = {\n";
+					+ 'local M = {}\n\n\n'
+					+ "M.level = {\n";
 		for (var levelName in symbols) {
 			content += '  ["' + levelName + '"] = {\n';
 			var level = symbols[levelName];
@@ -180,8 +180,9 @@ function generateFrom(symbols, frames)
 			content += "  },\n";
 		}
 		content += "}\n\n";
-		content += 'first = "' + frames[0].name + '"\n';
-		
+		content += 'M.first = "' + frames[0].name + '"\n';
+    content += '\nreturn M\n'
+
 		return content
 	}
 }
