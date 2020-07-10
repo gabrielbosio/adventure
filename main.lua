@@ -2,7 +2,7 @@ require("components.box")
 require("components.animation")
 require("components.fsm")
 require("levels")
-require("systems")
+local systems = require("systems")
 require("outline")
 
 
@@ -96,7 +96,7 @@ function love.update(dt)
     end
   end
 
-  currentLevel = systems.update(collisionTable, currentLevel, dt)
+  currentLevel = systems.update(currentLevel, dt)
 end
 
 function love.draw()

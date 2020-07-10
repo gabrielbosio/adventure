@@ -7,10 +7,10 @@ require("systems.goals")
 require("systems.state")
 require("systems.living")
 
-module("systems", package.seeall)
 
+local M = {}
 
-function update(collisionTable, currentLevel, dt)
+function M.update(currentLevel, dt)
   items.update(componentsTable)
 
   control.player(componentsTable)
@@ -26,3 +26,5 @@ function update(collisionTable, currentLevel, dt)
 
   return currentLevel
 end
+
+return M
