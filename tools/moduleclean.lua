@@ -5,7 +5,7 @@
 -- @author Federico A. Bosio
 -- @script moduleclean
 
-local deprecated = "^%s*module%(%s*[^,]+(,%s*package.seeall%s*%)?)"
+local deprecated = "^module%(%s*[^,]+(,%s*package.seeall%s*%)?)"
 local foundDeprecated = false
 
 io.input(arg[1])
@@ -20,9 +20,11 @@ for line in io.lines() do
     -- Add nonlocal fields to the module table
     local s = string.gsub(string.gsub(line, "^(function%s+)", "%1M."),
       "^(%S+%s*=)", "M.%1")
-
     io.write(s, "\n")
-  end  -- if not foundDeprecated
-end  -- for
+  end
+end
 
-io.write("\nreturn M\n")
+if foundDeprecated then
+  io.write("\nreturn M\n")
+end
+
