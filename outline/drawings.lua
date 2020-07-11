@@ -16,7 +16,7 @@ end
 local function terrainShape(cornersArray, subroutine, red, green, blue)
   love.graphics.setColor(red, green, blue)
 
-  for i, corners in ipairs(cornersArray or {}) do
+  for _, corners in ipairs(cornersArray or {}) do
     subroutine(corners)
   end
 end
@@ -66,9 +66,30 @@ function collisionBoxes(boxes, positions)
   -- Origin
   love.graphics.setColor(1, 1, 0)
 
-  for entity, box in pairs(boxes or {}) do
+  for entity, _ in pairs(boxes or {}) do
     local position = positions[entity]
     love.graphics.circle("fill", position.x, position.y, 2)
+  end
+end
+
+function attackBoxes(animationClips, positions)
+
+  for entity, animationClip in pairs(animationClips) do
+    local currentAnimation = animationClip.animations[animationClip.nameOfCurrentAnimation]
+    local attackBox = currentAnimation.frames[animationClip:currentFrameNumber()].attackBox
+
+    if attackBox ~= nil then
+      local position = positions[entity]
+      local translatedBox = attackBox:translated(position, animationClip)
+      -- Box
+      love.graphics.setColor(1, 0, 0)
+      love.graphics.rectangle("fill", translatedBox:left(), translatedBox:top(),
+                              translatedBox.width, translatedBox.height)
+
+      -- Origin
+      love.graphics.setColor(1, 1, 0)
+      love.graphics.circle("fill", position.x, position.y, 2)
+    end
   end
 end
 

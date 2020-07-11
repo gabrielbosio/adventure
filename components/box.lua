@@ -83,10 +83,20 @@ GoalBox = Box:new{
 
 CollisionBox = Box:new{
   slopeId = nil,
-  reactingWithClouds = true,
+  reactingWithClouds = true
+}
 
+AttackBox = Box:new{
   -- Extended method
-  translated = function (self, position)
-    return Box.translated(self, position)
+  translated = function (self, position, animationClip)
+    local currentAnimation = animationClip.animations[animationClip.nameOfCurrentAnimation]
+    local currentFrame = currentAnimation.frames[animationClip:currentFrameNumber()]
+    local frameAttackBox = currentFrame.attackBox
+    local offsetX = (animationClip.facingRight and 1 or -1)* frameAttackBox.x
+    local box = Box.translated(self, position)
+    box.x = box.x + offsetX
+    box.y = box.y + frameAttackBox.y
+
+    return box
   end,
 }

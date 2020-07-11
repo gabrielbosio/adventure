@@ -5,7 +5,7 @@ module("control", package.seeall)
 local holdingJumpKey
 
 local statesLogic = {
-  idle = function (_, _, finiteStateMachine, input, velocity, animationClip, _)
+  idle = function (_, _, finiteStateMachine, _, velocity, animationClip, _)
     -- X Movement Input
       if love.keyboard.isDown("a") and not love.keyboard.isDown("d") then
         velocity.x = -velocity.xSpeed

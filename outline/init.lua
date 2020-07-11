@@ -7,59 +7,22 @@ require("outline.display")
 module("outline", package.seeall)
 
 
-function draw(componentsTable, terrain)
+function draw(componentsTable, positions)
   local r, g, b = love.graphics.getColor()
 
-  local translated
-  for entity, camera in pairs(componentsTable.cameras) do  -- BEAUTIFY THIS
-    local position = componentsTable.positions[entity]
-    components.assertExistence(entity, "camera", {position, "position"})
+    -- Move terrain
+    position = positions.terrain
+    drawings.boundaries(position.boundaries)
+    drawings.clouds(position.clouds)
+    drawings.slopes(position.slopes)
 
-    -- Translate boundaries
-    translated = {}
-    for i, boundary in ipairs(terrain.boundaries or {}) do
-      translated[#translated + 1] = {
-        boundary[1] - position.x, boundary[2] + position.y,
-        boundary[3] - position.x, boundary[4] + position.y
-      }
-    end
-    drawings.boundaries(translated)
-
-    -- Translate clouds
-    translated = {}
-    for i, cloud in ipairs(terrain.clouds or {}) do
-      translated[#translated + 1] = {
-        cloud[1] - position.x, cloud[2] + position.y,
-        cloud[3] - position.x
-      }
-    end
-    drawings.clouds(translated)
-
-    -- Translate slopes
-    translated = {}
-    for i, slope in ipairs(terrain.slopes or {}) do
-      translated[#translated + 1] = {
-        slope[1] - position.x, slope[2] + position.y,
-        slope[3] - position.x, slope[4] + position.y
-      }
-    end
-    drawings.slopes(translated)
-
-    -- Translate boxes
-    translated = {}
-    for otherEntity, otherPosition in pairs(componentsTable.positions) do
-      if (otherEntity ~= entity) then
-        translated[otherEntity] = {
-          x = otherPosition.x - position.x,
-          y = otherPosition.y + position.y
-        }
-      end
-    end
-    drawings.collisionBoxes(componentsTable.collisionBoxes, translated)
-    drawings.goals(componentsTable.goals, translated)
-    drawings.medkits(componentsTable.healing, translated)
-    drawings.pomodori(componentsTable.experienceEffect, translated)
-  end
+    -- Move boxes
+    position = positions.components
+    drawings.collisionBoxes(componentsTable.collisionBoxes, position)
+    drawings.attackBoxes(componentsTable.animationClips, position)
+    drawings.goals(componentsTable.goals, position)
+    drawings.medkits(componentsTable.healing, position)
+    drawings.pomodori(componentsTable.experienceEffect, position)
 
   -- Reset drawing color
   love.graphics.setColor(r, g, b)
@@ -108,6 +71,14 @@ function debug(componentsTable)
     end,
     componentsTable.living.megasapi.stamina,
     0, 1, 0
+  )
+  display.add(
+    "vcam",
+    function (position)
+      return math.floor(position.x) .. "," .. math.floor(position.y)
+    end,
+    componentsTable.positions.vcam,
+    0.556863, 0.333333, 0.556863
   )
 
   -- Reset drawing color

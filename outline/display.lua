@@ -17,7 +17,7 @@ function add(id, textFunction, args, red, green, blue)
   local i = textList[id]
   if i then
     love.graphics.setColor(red, green, blue)
-    local text = textFunction(args)
+    local text = id .. ": " .. textFunction(args)
     local height = love.graphics.getFont():getHeight(text)
     place.textByAnchor(text, 0, height*i, "nw")
   else
