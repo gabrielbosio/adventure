@@ -1,7 +1,7 @@
-module("components", package.seeall)
+local M = {}
 
 
-function assertDependency(componentsTable, dependentComponentName, ...)
+function M.assertDependency(componentsTable, dependentComponentName, ...)
   if componentsTable[dependentComponentName] then
     for _, nameToAssert in ipairs{...} do
       if not componentsTable[nameToAssert] then
@@ -14,7 +14,7 @@ function assertDependency(componentsTable, dependentComponentName, ...)
 end
 
 
-function assertExistence(entity, existingComponentName, ...)
+function M.assertExistence(entity, existingComponentName, ...)
   for _, pairToAssert in ipairs{...} do
     componentToAssert, nameToAssert = pairToAssert[1], pairToAssert[2]
     assert(componentToAssert,
@@ -22,3 +22,5 @@ function assertExistence(entity, existingComponentName, ...)
             " component but has not " .. nameToAssert .. " component")
   end
 end
+
+return M

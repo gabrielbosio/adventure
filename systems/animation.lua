@@ -1,7 +1,10 @@
-module("animation", package.seeall)
+local components = require "components"
+local animation = require "components.animation"
+
+local M = {}
 
 
-function animator(componentsTable, dt)
+function M.animator(componentsTable, dt)
   for entity, animationClip in pairs(componentsTable.animationClips or {}) do
     local currentAnimation = animationClip.animations[animationClip.nameOfCurrentAnimation]
     local currentAnimationDuration = currentAnimation:duration()
@@ -22,7 +25,7 @@ function animator(componentsTable, dt)
 end
 
 
-function animationRenderer(componentsTable, spriteSheet, positions)
+function M.animationRenderer(componentsTable, spriteSheet, positions)
   components.assertDependency(componentsTable, "animationClips", "positions")
 
   for entity, animationClip in pairs(componentsTable.animationClips or {}) do
@@ -41,3 +44,5 @@ function animationRenderer(componentsTable, spriteSheet, positions)
     love.graphics.draw(spriteSheet, currentFrame.quad, transform)
   end
 end
+
+return M

@@ -1,5 +1,5 @@
-require("components")
-module("control", package.seeall)
+local components = require "components"
+local M = {}
 
 
 local holdingJumpKey
@@ -129,7 +129,7 @@ local statesLogic = {
 }
 
 
-function player(componentsTable)
+function M.player(componentsTable)
   -- players depend on velocities and positions
   components.assertDependency(componentsTable, "players", "velocities", "positions")
 
@@ -155,7 +155,7 @@ function player(componentsTable)
 end
 
 
-function playerAfterTerrainCollisionChecking(componentsTable)
+function M.playerAfterTerrainCollisionChecking(componentsTable)
   components.assertDependency(componentsTable, "players", "velocities")
 
   -- This for loop could be avoided if there is only one entity with a "player"
@@ -173,3 +173,5 @@ function playerAfterTerrainCollisionChecking(componentsTable)
     end
   end
 end
+
+return M

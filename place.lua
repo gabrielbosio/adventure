@@ -1,7 +1,18 @@
 --- Helper functions for placing objects on the screen
 -- @module place
-module("place", package.seeall)
+local M = {}
 
+local moveBy = {
+  ["center"] = function (x, y, w, h) return x - w/2, y - h/2 end,
+  ["north"] = function (x, y, w, h) return x - w/2, y end,
+  ["east"] = function (x, y, w, h) return x - w, y - h/2 end,
+  ["south"] = function (x, y, w, h) return x - w/2, y - h end,
+  ["west"] = function (x, y, w, h) return x, y - h/2 end,
+  ["north east"] = function (x, y, w, h) return x - w, y end,
+  ["north west"] = function (x, y, w, h) return x, y end,
+  ["south west"] = function (x, y, w, h) return x, y - h end,
+  ["south east"] = function (x, y, w, h) return x - w, y - h end
+}
 
 -- Check if the given anchor is defined in the moveBy table.
 local function check(anchor)
@@ -18,7 +29,7 @@ end
 -- @param y vertical coordinate
 -- @param anchor one of the moveBy table keys (default: "center")
 -- @see moveBy
-function textByAnchor(text, x, y, anchor, font)
+function M.textByAnchor(text, x, y, anchor, font)
   -- "center" anchor by default
   local anchor = anchor or "center"
 
@@ -49,7 +60,7 @@ end
 
   @see moveBy
 --]]
-function quadByAnchor(texture, quad, transform, anchor)
+function M.quadByAnchor(texture, quad, transform, anchor)
   -- "center" anchor by default
   local anchor = anchor or "center"
 
@@ -64,7 +75,6 @@ function quadByAnchor(texture, quad, transform, anchor)
   love.graphics.draw(texture, quad, transform)
 end
 
-
 --- Table of coordinate transformations
 -- Each one of its entries is a different translation.
 -- A translation calculates and returns a position based on
@@ -74,17 +84,7 @@ end
 -- @usage moveBy["south east"](20, 35, 250, 137)
 -- @usage moveBy["center"](20, 35, 250, 137)
 -- @usage moveBy["nw"](20, 35, 250, 137)
-moveBy = {
-  ["center"] = function (x, y, w, h) return x - w/2, y - h/2 end,
-  ["north"] = function (x, y, w, h) return x - w/2, y end,
-  ["east"] = function (x, y, w, h) return x - w, y - h/2 end,
-  ["south"] = function (x, y, w, h) return x - w/2, y - h end,
-  ["west"] = function (x, y, w, h) return x, y - h/2 end,
-  ["north east"] = function (x, y, w, h) return x - w, y end,
-  ["north west"] = function (x, y, w, h) return x, y end,
-  ["south west"] = function (x, y, w, h) return x, y - h end,
-  ["south east"] = function (x, y, w, h) return x - w, y - h end
-}
+M.moveBy = moveBy
 
 -- Declare aliases for each anchor
 for anchor, aliases in pairs{
@@ -102,3 +102,5 @@ for anchor, aliases in pairs{
     moveBy[alias] = moveBy[anchor]
   end
 end
+
+return M

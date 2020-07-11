@@ -1,5 +1,5 @@
-require("components")
-module("terrain", package.seeall)
+local components = require "components"
+local M = {}
 
 
 local function checkBottomBoundary(collisionBox, position, velocity, x1, y1, x2, y2, dt)
@@ -162,7 +162,7 @@ local function checkClouds(collisionBox, position, velocity, terrain, dt)
 end
 
 
-function collision(componentsTable, terrain, dt)
+function M.collision(componentsTable, terrain, dt)
   -- solid depends on collisionBox, position and velocity
   components.assertDependency(componentsTable, "solids", "collisionBoxes",
                               "positions", "velocities")
@@ -179,3 +179,5 @@ function collision(componentsTable, terrain, dt)
     checkClouds(collisionBox, position, velocity, terrain, dt)
   end
 end
+
+return M

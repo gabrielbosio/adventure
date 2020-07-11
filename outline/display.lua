@@ -1,6 +1,6 @@
-require("place")
+local place = require "place"
 
-module("display", package.seeall)
+local M = {}
 
 
 local addedCount = 0
@@ -13,7 +13,7 @@ local textList = {}
 -- @red float between 0 and 1
 -- @green float between 0 and 1
 -- @blue float between 0 and 1
-function add(id, textFunction, args, red, green, blue)
+function M.add(id, textFunction, args, red, green, blue)
   local i = textList[id]
   if i then
     love.graphics.setColor(red, green, blue)
@@ -25,3 +25,5 @@ function add(id, textFunction, args, red, green, blue)
     addedCount = addedCount + 1
   end
 end
+
+return M

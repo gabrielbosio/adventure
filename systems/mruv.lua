@@ -1,8 +1,8 @@
-require("components")
-module("mruv", package.seeall)
+local components = require "components"
+local M = {}
 
 
-function gravity(componentsTable, dt)
+function M.gravity(componentsTable, dt)
   local gravity = 5000
 
   -- weight depends on velocity
@@ -17,7 +17,7 @@ function gravity(componentsTable, dt)
 end
 
 
-function movement(componentsTable, dt)
+function M.movement(componentsTable, dt)
 
   components.assertDependency(componentsTable, "velocities", "positions")
   
@@ -30,3 +30,5 @@ function movement(componentsTable, dt)
     position.y = position.y + velocity.y*dt
   end
 end
+
+return M

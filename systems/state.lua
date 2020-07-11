@@ -1,7 +1,9 @@
-module("state", package.seeall)
+local M = {}
 
-function finiteStateMachineRunner(componentsTable, dt)
+function M.finiteStateMachineRunner(componentsTable, dt)
   for entity, finiteStateMachine in pairs(componentsTable.finiteStateMachines or {}) do
     finiteStateMachine.stateTime = math.max(0, finiteStateMachine.stateTime - dt)
   end
 end
+
+return M

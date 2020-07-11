@@ -1,4 +1,4 @@
-module("drawings", package.seeall)
+local M = {}
 
 
 -- Subroutines
@@ -35,14 +35,14 @@ end
 
 
 -- Shapes
-function boundaries(cornersArray)
+function M.boundaries(cornersArray)
   terrainShape(cornersArray,
     function (corners)
       box{x1 = corners[1], y1 = corners[2], x2 = corners[3], y2 = corners[4]}
     end, 0, 0.3, 0)
 end
 
-function clouds(cornersArray)
+function M.clouds(cornersArray)
   terrainShape(cornersArray,
     function (corners)
       local cloudHeightDisplay = 10
@@ -51,7 +51,7 @@ function clouds(cornersArray)
     end, 0.3, 0.6, 1)
 end
 
-function slopes(cornersArray)
+function M.slopes(cornersArray)
   terrainShape(cornersArray,
     function (corners)
       rightTriangle{x1 = corners[1], y1 = corners[2], x2 = corners[3],
@@ -59,7 +59,7 @@ function slopes(cornersArray)
     end, 0, 0.3, 0)
 end
 
-function collisionBoxes(boxes, positions)
+function M.collisionBoxes(boxes, positions)
   -- Player box
   boxShape(boxes, positions, 0, 0, 1)
 
@@ -72,7 +72,7 @@ function collisionBoxes(boxes, positions)
   end
 end
 
-function attackBoxes(animationClips, positions)
+function M.attackBoxes(animationClips, positions)
 
   for entity, animationClip in pairs(animationClips) do
     local currentAnimation = animationClip.animations[animationClip.nameOfCurrentAnimation]
@@ -93,14 +93,16 @@ function attackBoxes(animationClips, positions)
   end
 end
 
-function goals(goals, positions)
+function M.goals(goals, positions)
   boxShape(goals, positions, 0.5, 1, 0.5)
 end
 
-function medkits(medkits, positions)
+function M.medkits(medkits, positions)
   boxShape(medkits, positions, 1, 0, 0)
 end
 
-function pomodori(pomodori, positions)
+function M.pomodori(pomodori, positions)
   boxShape(pomodori, positions, 0.5, 0.5, 0.5)
 end
+
+return M

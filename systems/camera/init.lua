@@ -1,12 +1,12 @@
-require("components")
-require("systems.camera.translate")
-require("systems.camera.tweening")
+local components = require "components"
+local translate = require "systems.camera.translate"
+local tweening = require "systems.camera.tweening"
 
-module("camera", package.seeall)
+local M = {}
 
 
 --- Follow camera targets
-function update(componentsTable, dt)
+function M.update(componentsTable, dt)
   for vcamEntity, isVcam in pairs(componentsTable.cameras or {}) do
     if isVcam then
       for targetEntity, isTarget in pairs(componentsTable.cameraTargets) do
@@ -29,7 +29,7 @@ end
 
 
 --- Return the results of applying coordinate translations
-function positions(componentsTable, terrain)
+function M.positions(componentsTable, terrain)
   local translated = {
     terrain = {},
     components = {}
@@ -49,3 +49,5 @@ function positions(componentsTable, terrain)
   -- Done, now return a table with all the moved positions
   return translated
 end
+
+return M

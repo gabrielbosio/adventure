@@ -1,13 +1,13 @@
-require("components")
+local components = require "components"
 
-module("translate", package.seeall)
+local M = {}
 
 
 --- Return a table with the translated positions of all components
 -- @param positions a table with the original positions of the components
 -- @param vcamEntity key of the componentsTable that refers to a camera
 -- @param vcamPosition a table that refers to the vcamEntity position
-function boxes(positions, vcamEntity, vcamPosition)
+function M.boxes(positions, vcamEntity, vcamPosition)
   local translatedPositions = {}
 
   for entity, position in pairs(positions or {}) do
@@ -27,7 +27,7 @@ end
 --- Return a table with the translated positions of all the terrain elements
 -- @param positions a table with the original positions of the elements
 -- @param vcamPosition a table that refers to a vcamEntity position
-function terrain(positions, vcamPosition)
+function M.terrain(positions, vcamPosition)
   local translatedPositions = {
     boundaries = {},
     clouds = {},
@@ -57,3 +57,5 @@ function terrain(positions, vcamPosition)
 
   return translatedPositions
 end
+
+return M

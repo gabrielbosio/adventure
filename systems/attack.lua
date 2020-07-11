@@ -1,6 +1,8 @@
-module("attack", package.seeall)
+local components = require "components"
 
-function collision(componentsTable)
+local M = {}
+
+function M.collision(componentsTable)
 	components.assertDependency(componentsTable, "animationClips", "positions")
 
   for attacker, animationClip in pairs(componentsTable.animationClips or {}) do
@@ -28,3 +30,5 @@ function collision(componentsTable)
     end
   end
 end
+
+return M

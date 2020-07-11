@@ -1,13 +1,13 @@
-require("outline.drawings")
-require("outline.display")
+local drawings = require "outline.drawings"
+local display = require "outline.display"
 
 --- Debug module
 -- I could not name this module "debug" because there is already a library
 -- named "debug" in lua.
-module("outline", package.seeall)
+local M = {}
 
 
-function draw(componentsTable, positions)
+function M.draw(componentsTable, positions)
   local r, g, b = love.graphics.getColor()
 
     -- Move terrain
@@ -29,7 +29,7 @@ function draw(componentsTable, positions)
 end
 
 
-function debug(componentsTable)
+function M.debug(componentsTable)
   local r, g, b = love.graphics.getColor()
 
   display.add(
@@ -84,3 +84,5 @@ function debug(componentsTable)
   -- Reset drawing color
   love.graphics.setColor(r, g, b)
 end
+
+return M
