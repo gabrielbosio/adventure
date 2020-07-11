@@ -35,7 +35,7 @@ function M.reload(componentsTable, nextLevel)
     names[#names + 1] = name
   end
 
-  load(componentsTable, nextLevel, unpack(names))
+  M.load(componentsTable, nextLevel, unpack(names))
 end
 
 

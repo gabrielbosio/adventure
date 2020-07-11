@@ -1,5 +1,7 @@
 local components = require "components"
 local box = require "components.box"
+local items = require "systems.items"
+local levels = require "levels"
 local M = {}
 
 
@@ -54,7 +56,7 @@ function M.update(componentsTable, currentLevel)
           end
 
           if nextLevel.entitiesData.goals then
-            goals.load(componentsTable, nextLevel)
+            M.load(componentsTable, nextLevel)
           end
 
           break

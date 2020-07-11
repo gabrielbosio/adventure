@@ -16,7 +16,7 @@ local currentLevel, spriteSheet, componentsTable
 function love.load()
   -- Level data loading
   currentLevel = levels.level[levels.first]
-  control.currentLevel = currentLevel
+--  control.currentLevel = currentLevel
   dofile("resources/animations.lua")
   spriteSheet = love.graphics.newImage("resources/sprites/megasapi.png")
 
