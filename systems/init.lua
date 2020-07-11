@@ -12,7 +12,7 @@ require("systems.attack")
 
 local M = {}
 
-function M.update(currentLevel, dt)
+function M.update(componentsTable, currentLevel, dt)
   camera.update(componentsTable, dt)
 
   items.update(componentsTable)
