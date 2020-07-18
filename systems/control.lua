@@ -1,5 +1,5 @@
-require("components")
-module("control", package.seeall)
+local components = require "components"
+local M = {}
 
 
 local holdingJumpKey
@@ -10,7 +10,7 @@ local statesLogic = {
       if love.keyboard.isDown("a") and not love.keyboard.isDown("d") then
         velocity.x = -velocity.xSpeed
         animationClip.facingRight = false
-        
+
         if velocity.y == 0 then
           animationClip:setAnimation("walking")
         end
@@ -129,7 +129,7 @@ local statesLogic = {
 }
 
 
-function player(componentsTable)
+function M.player(componentsTable)
   -- players depend on velocities and positions
   components.assertDependency(componentsTable, "players", "velocities", "positions")
 
@@ -138,7 +138,7 @@ function player(componentsTable)
   for entity, player in pairs(componentsTable.players or {}) do
     local input = componentsTable.inputs[entity]
 
-    if input ~= nil then
+    if input ~= nil then  -- input is boolean and false ~= nil
       local velocity = componentsTable.velocities[entity]
       local animationClip = componentsTable.animationClips[entity]
       local finiteStateMachine = componentsTable.finiteStateMachines[entity]
@@ -150,12 +150,12 @@ function player(componentsTable)
       local runStateLogic = statesLogic[finiteStateMachine.currentState]
       runStateLogic(componentsTable, entity, finiteStateMachine, input, velocity,
                     animationClip, living)
-    end 
+    end
   end
 end
 
 
-function playerAfterTerrainCollisionChecking(componentsTable)
+function M.playerAfterTerrainCollisionChecking(componentsTable)
   components.assertDependency(componentsTable, "players", "velocities")
 
   -- This for loop could be avoided if there is only one entity with a "player"
@@ -173,3 +173,5 @@ function playerAfterTerrainCollisionChecking(componentsTable)
     end
   end
 end
+
+return M

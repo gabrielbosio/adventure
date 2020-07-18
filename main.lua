@@ -1,9 +1,14 @@
-require("components.box")
-require("components.animation")
-require("components.fsm")
-require("levels")
-require("systems")
-require("outline")
+local box = require "components.box"
+local animation = require "components.animation"
+local renderer = require "systems.animation".animationRenderer
+local fsm = require "components.fsm"
+local levels = require "levels"
+local systems = require "systems"
+local camera = require "systems.camera"
+local control = require "systems.control"
+local goals = require "systems.goals"
+local items = require "systems.items"
+local outline = require "outline"
 
 
 local currentLevel, spriteSheet, componentsTable
@@ -11,7 +16,7 @@ local currentLevel, spriteSheet, componentsTable
 function love.load()
   -- Level data loading
   currentLevel = levels.level[levels.first]
-  control.currentLevel = currentLevel
+--  control.currentLevel = currentLevel
   dofile("resources/animations.lua")
   spriteSheet = love.graphics.newImage("resources/sprites/megasapi.png")
 
@@ -88,8 +93,7 @@ function love.draw()
   local positions = camera.positions(componentsTable, currentLevel.terrain)
   -- Shapes
   outline.draw(componentsTable, positions)
-  animation.animationRenderer(componentsTable, spriteSheet,
-                              positions.components)
+  renderer(componentsTable, spriteSheet, positions.components)
   -- Text
   outline.debug(componentsTable)
 end

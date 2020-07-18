@@ -1,10 +1,10 @@
-module("components", package.seeall)
+local M = {}
 
 
-function assertDependency(componentsTable, dependentComponentName, ...)
-  if componentsTable[dependentComponentName] ~= nil then
+function M.assertDependency(componentsTable, dependentComponentName, ...)
+  if componentsTable[dependentComponentName] then
     for _, nameToAssert in ipairs{...} do
-      if componentsTable[nameToAssert] == nil then
+      if not componentsTable[nameToAssert] then
         error([[Unsatisfied dependency in componentsTable.
           There is at least one component inside "]] .. dependentComponentName
           ..  '" but no component inside "' .. nameToAssert .. '".')
@@ -14,11 +14,13 @@ function assertDependency(componentsTable, dependentComponentName, ...)
 end
 
 
-function assertExistence(entity, existingComponentName, ...)
+function M.assertExistence(entity, existingComponentName, ...)
   for _, pairToAssert in ipairs{...} do
     componentToAssert, nameToAssert = pairToAssert[1], pairToAssert[2]
-    assert(componentToAssert ~= nil,
+    assert(componentToAssert,
             "Entity " .. entity .. " has " .. existingComponentName ..
             " component but has not " .. nameToAssert .. " component")
   end
 end
+
+return M

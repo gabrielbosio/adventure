@@ -1,9 +1,11 @@
-require("components")
-require("components.box")
-module("goals", package.seeall)
+local components = require "components"
+local box = require "components.box"
+local items = require "systems.items"
+local levels = require "levels"
+local M = {}
 
 
-function load(componentsTable, currentLevel)
+function M.load(componentsTable, currentLevel)
   components.assertDependency(componentsTable, "goals", "positions")
 
   for goalIndex, goalData in pairs(currentLevel.entitiesData.goals or {}) do
@@ -18,7 +20,7 @@ function load(componentsTable, currentLevel)
 end
 
 
-function update(componentsTable, currentLevel)
+function M.update(componentsTable, currentLevel)
   local nextLevel = currentLevel
 
   for entity, player in pairs(componentsTable.players or {}) do
@@ -53,8 +55,8 @@ function update(componentsTable, currentLevel)
             componentsTable.goals[_id] = nil
           end
 
-          if nextLevel.entitiesData.goals ~= nil then
-            goals.load(componentsTable, nextLevel)
+          if nextLevel.entitiesData.goals then
+            M.load(componentsTable, nextLevel)
           end
 
           break
@@ -66,3 +68,5 @@ function update(componentsTable, currentLevel)
 
   return nextLevel
 end
+
+return M

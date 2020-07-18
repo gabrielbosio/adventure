@@ -1,18 +1,18 @@
-require("systems.animation")
-require("systems.camera")
-require("systems.terrain")
-require("systems.mruv")
-require("systems.control")
-require("systems.items")
-require("systems.goals")
-require("systems.state")
-require("systems.living")
-require("systems.attack")
-
-module("systems", package.seeall)
+local animation = require "systems.animation"
+local camera = require "systems.camera"
+local terrain = require "systems.terrain"
+local mruv = require "systems.mruv"
+local control = require "systems.control"
+local items = require "systems.items"
+local goals = require "systems.goals"
+local state = require "systems.state"
+local living = require "systems.living"
+local attack = require "systems.attack"
 
 
-function update(componentsTable, currentLevel, dt)
+local M = {}
+
+function M.update(componentsTable, currentLevel, dt)
   camera.update(componentsTable, dt)
 
   items.update(componentsTable)
@@ -31,3 +31,5 @@ function update(componentsTable, currentLevel, dt)
 
   return currentLevel
 end
+
+return M

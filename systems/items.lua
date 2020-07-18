@@ -1,6 +1,6 @@
-require("components")
-require("components.box")
-module("items", package.seeall)
+local components = require "components"
+local box = require "components.box"
+local M = {}
 
 
 -- Link names in levels.lua to components in componentsTable
@@ -11,7 +11,7 @@ local componentGroup = {
   -- ["my item"] = {"healing", "experienceEffect"}  -- several effects
 }
 
-function load(componentsTable, currentLevel)
+function M.load(componentsTable, currentLevel)
   for itemGroupName, entity in pairs(componentGroup) do
     componentsTable[componentGroup[itemGroupName]] = {}
     local group = componentsTable[entity]
@@ -26,16 +26,16 @@ function load(componentsTable, currentLevel)
 end
 
 
-function reload(componentsTable, nextLevel)
+function M.reload(componentsTable, nextLevel)
   -- Reload absolutely all components in the next level
   local names = {}
 
   -- Look for components in the componentGroup table
   for name in pairs(componentGroup) do
-    table.insert(names, name)
+    names[#names + 1] = name
   end
 
-  load(componentsTable, nextLevel, unpack(names))
+  M.load(componentsTable, nextLevel, unpack(names))
 end
 
 
@@ -108,7 +108,9 @@ local function experienceSupply(componentsTable)
 end
 
 
-function update(componentsTable)
+function M.update(componentsTable)
   healthSupply(componentsTable)
   experienceSupply(componentsTable)
 end
+
+return M

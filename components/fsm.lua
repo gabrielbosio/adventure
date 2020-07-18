@@ -1,7 +1,7 @@
-module("fsm", package.seeall)
+local M = {}
 
 
-function FiniteStateMachine(currentState)
+function M.FiniteStateMachine(currentState)
   local newComponent = {
     currentState = currentState,
     stateTime = 0
@@ -14,3 +14,5 @@ function FiniteStateMachine(currentState)
 
   return newComponent
 end
+
+return M

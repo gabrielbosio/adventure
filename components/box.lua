@@ -1,8 +1,8 @@
-module("box", package.seeall)
+local M = {}
 
 
 -- Abstract class
-Box = {
+M.Box = {
   x = 0,
   y = 0,
 
@@ -42,8 +42,8 @@ Box = {
 
 
   -- Static method
-  translated = function (o, position) 
-    if position ~= nil then
+  translated = function (o, position)
+    if position then
       x, y = position.x, position.y
     else
       x, y = 0, 0
@@ -62,14 +62,14 @@ Box = {
 
 
 -- Inherited classes
-ItemBox = Box:new{
+M.ItemBox = M.Box:new{
   width = 10,
   height = 10,
 
   effectAmount = 0,
 }
 
-GoalBox = Box:new{
+M.GoalBox = M.Box:new{
   nextLevel = nil,  -- constructor argument
 
   width = 100,
@@ -77,26 +77,28 @@ GoalBox = Box:new{
 
   -- Extended method
   translated = function (self, position)
-    return Box.translated(self, position)
+    return M.Box.translated(self, position)
   end,
 }
 
-CollisionBox = Box:new{
+M.CollisionBox = M.Box:new{
   slopeId = nil,
   reactingWithClouds = true
 }
 
-AttackBox = Box:new{
+M.AttackBox = M.Box:new{
   -- Extended method
   translated = function (self, position, animationClip)
     local currentAnimation = animationClip.animations[animationClip.nameOfCurrentAnimation]
     local currentFrame = currentAnimation.frames[animationClip:currentFrameNumber()]
     local frameAttackBox = currentFrame.attackBox
     local offsetX = (animationClip.facingRight and 1 or -1)* frameAttackBox.x
-    local box = Box.translated(self, position)
+    local box = M.Box.translated(self, position)
     box.x = box.x + offsetX
     box.y = box.y + frameAttackBox.y
 
     return box
   end,
 }
+
+return M

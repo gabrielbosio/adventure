@@ -1,10 +1,11 @@
-require("box")
-module("animation", package.seeall)
+local box = require "components.box"
+local M = {}
 dofile("resources/sprites.lua")
 
 
 -- Constants
-scale = 0.5
+local scale = 0.5
+M.scale = scale  -- export
 
 
 -- Animation Clip
@@ -47,7 +48,7 @@ local function createAnimationsTable(animations, spriteSheet)
   return animationsTable
 end
 
-function AnimationClip(animations, nameOfCurrentAnimation, spriteSheet)
+function M.AnimationClip(animations, nameOfCurrentAnimation, spriteSheet)
   local newComponent = {
     animations = createAnimationsTable(animations, spriteSheet),
     nameOfCurrentAnimation = nameOfCurrentAnimation,
@@ -70,7 +71,7 @@ function AnimationClip(animations, nameOfCurrentAnimation, spriteSheet)
   end
 
   function newComponent:setAnimation(animationName)
-    if self.animations[animationName] ~= nil
+    if self.animations[animationName]
         and self.nameOfCurrentAnimation ~= animationName then
       self.nameOfCurrentAnimation = animationName
       self.currentTime = 0
@@ -81,3 +82,5 @@ function AnimationClip(animations, nameOfCurrentAnimation, spriteSheet)
 
   return newComponent
 end
+
+return M

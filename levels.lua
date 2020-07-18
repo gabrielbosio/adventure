@@ -4,10 +4,10 @@
      You shouldn't edit this file.
      Any change you make here could be overwritten.
   ]]
-module("levels", package.seeall)
+local M = {}
 
 
-level = {
+M.level = {
   ["test level"] = {
     terrain = {
       boundaries = {
@@ -348,4 +348,6 @@ level = {
   },
 }
 
-first = "test level"
+M.first = "test level"
+
+return M
