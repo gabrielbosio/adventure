@@ -42,6 +42,9 @@ function love.load()
     cameraTargets = {  -- or maybe "target", there is just one...
       megasapi = true
     },
+    shake = {
+      vcam = 5
+    },
     positions = {
       megasapi = {
         x = currentLevel.entitiesData.player[1][1],
@@ -86,6 +89,9 @@ function love.load()
 end
 
 function love.update(dt)
+  -- TEST
+  componentsTable.shake.vcam = love.keyboard.isDown("h") and 10 or 0
+
   currentLevel = systems.update(componentsTable, currentLevel, dt)
 end
 

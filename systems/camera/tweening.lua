@@ -31,7 +31,7 @@ function M.linear(vcamPosition, targetPosition, dt, parameters)
     threshold = 10,
     multiplier = 500
   }
-  local parameters = parameters ~= nil or defaultParameters
+  local parameters = parameters or defaultParameters
 
   local diff = difference(vcamPosition, targetPosition)
   local slope = {
