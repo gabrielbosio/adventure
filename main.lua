@@ -90,7 +90,7 @@ end
 
 function love.update(dt)
   -- TEST
-  componentsTable.shake.vcam = love.keyboard.isDown("h") and 10 or 0
+  componentsTable.shake.vcam = love.keyboard.isDown("h") and 100 or 0
 
   currentLevel = systems.update(componentsTable, currentLevel, dt)
 end
