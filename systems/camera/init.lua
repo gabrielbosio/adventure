@@ -4,9 +4,6 @@ local tweening = require "systems.camera.tweening"
 
 local M = {}
 
-local shakeMoveTimeCount = 0
-local shakeMoveTimeMax = 5 / 1000  -- ten milliseconds
-
 --- Follow camera targets
 -- Called in systems.update()
 function M.update(componentsTable, dt)
@@ -27,17 +24,11 @@ function M.update(componentsTable, dt)
           local shake = componentsTable.shake[vcamEntity]
           components.assertExistence(vcamEntity, "camera",
                                      {shake, "shake"})
-          shakeMoveTimeCount = shakeMoveTimeCount + dt
-          if shakeMoveTimeCount > shakeMoveTimeMax then
-            --math.randomseed(os.time())
-            local angle = 2*math.pi*math.random()
-            targetPosition = {
-              x = targetPosition.x + shake*math.cos(angle),
-              y = targetPosition.y + shake*math.sin(angle)
-            }
-            shakeMoveTimeCount = 0
-          end
-
+          local angle = 2*math.pi*math.random()
+          targetPosition = {
+            x = targetPosition.x + shake*math.cos(angle),
+            y = targetPosition.y + shake*math.sin(angle)
+          }
           tweening.exp(vcamPosition, targetPosition, dt, 25)
           -- tweening.linear(vcamPosition, targetPosition, dt)
         end
