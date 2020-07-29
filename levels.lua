@@ -1,3 +1,9 @@
+--- Contains information about levels of the game.
+--
+-- This module was automatically generated.
+--
+-- **TODO: add automatic documentation to levels.jsfl**
+
 --[[
      This file was automatically generated
       (on Fri May 08 11:35:38 GMT-0300 2020).
@@ -5,7 +11,6 @@
      Any change you make here could be overwritten.
   ]]
 local M = {}
-
 
 M.level = {
   ["test level"] = {

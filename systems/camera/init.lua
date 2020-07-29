@@ -1,3 +1,4 @@
+--- Virtual camera.
 local components = require "components"
 local translate = require "systems.camera.translate"
 local tweening = require "systems.camera.tweening"
@@ -5,7 +6,12 @@ local tweening = require "systems.camera.tweening"
 local M = {}
 
 
---- Follow camera targets
+--[[--
+ Follow camera targets
+ @tparam table componentsTable a reference to the main component table
+ @tparam number dt time since last update, as stated in
+  [the <code>love.update</code> documentation](https://love2d.org/wiki/love.update).
+]]
 function M.update(componentsTable, dt)
   for vcamEntity, isVcam in pairs(componentsTable.cameras or {}) do
     if isVcam then
@@ -28,7 +34,12 @@ function M.update(componentsTable, dt)
 end
 
 
---- Return the results of applying coordinate translations
+--[[--
+ Return a table with the results of applying coordinate translations
+ @tparam table componentsTable a reference to the main component table
+ @tparam number dt time since last update, as stated in
+  [the <code>love.update</code> documentation](https://love2d.org/wiki/love.update).
+]]
 function M.positions(componentsTable, terrain)
   local translated = {
     terrain = {},

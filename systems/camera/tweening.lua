@@ -1,3 +1,4 @@
+--- Utilities for camera movement smoothing.
 local M = {}
 
 
@@ -25,7 +26,8 @@ end
 -- @param vcamPosition a table reference to the camera position
 -- @param targetPosition a table reference to the target position
 -- @param dt the time delta provided by love.update
--- @param parameters a table with two keys: multiplier and threshold
+-- @param[opt] parameters a table with two keys: multiplier and threshold.
+--  Default parameters are `{threshold = 10, multiplier = 500}`.
 function M.linear(vcamPosition, targetPosition, dt, parameters)
   local defaultParameters = {
     threshold = 10,
@@ -53,7 +55,7 @@ end
 -- @param vcamPosition a table reference to the camera position
 -- @param targetPosition a table reference to the target position
 -- @param dt the time delta provided by love.update
--- @param ratio a number greater than 1 (default: 50)
+-- @param[opt=50] ratio a number greater than 1
 function M.exp(vcamPosition, targetPosition, dt, ratio)
   if ratio == nil or ratio <= 1 then
     ratio = 50

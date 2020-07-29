@@ -1,5 +1,4 @@
---- Helper functions for placing objects on the screen
--- @module place
+--- Helper functions for placing any kind of objects on the screen.
 local M = {}
 
 local moveBy = {
@@ -14,21 +13,35 @@ local moveBy = {
   ["south east"] = function (x, y, w, h) return x - w, y - h end
 }
 
--- Check if the given anchor is defined in the moveBy table.
+-- Check if the given anchor is defined in the `moveBy` table.
 local function check(anchor)
   assert(moveBy[anchor], 'moveBy received an invalid anchor ("' ..
     tostring(anchor) .. '")\n\nCheck for typos!')
 end
 
 
---- Display text on screen.
--- Places center of text on x, y unless a different anchor (n, w, s) is given.
--- Anchors are defined in the moveBy table.
--- @param text
--- @param x horizontal coordinate
--- @param y vertical coordinate
--- @param anchor one of the moveBy table keys (default: "center")
--- @see moveBy
+--[[--
+ Display text on screen.
+
+ Places center of text on x, y unless a different anchor (n, w, s, e) is given.
+ Anchors are defined in the `moveBy` table.
+
+ @tparam string text text to place on screen
+ @tparam number x horizontal coordinate
+ @tparam number y vertical coordinate
+ @tparam[opt="center"] string anchor one of the `moveBy` table keys
+ @tparam[opt] Font font a Löve2D font.
+  Default is given by the `getFont()` function of the
+  [Löve2D graphics module](https://love2d.org/wiki/love.graphics).
+
+ @usage
+  textByAnchor("Centered", 320, 240)
+  textByAnchor("North west anchor", 320, 240, "north west")
+  textByAnchor("North west anchor", 320, 240, "nw") -- same as above
+  textByAnchor("Hello, world!", 100, 100, "e")
+
+ @see moveBy
+]]
 function M.textByAnchor(text, x, y, anchor, font)
   -- "center" anchor by default
   local anchor = anchor or "center"
@@ -48,18 +61,15 @@ end
 
 --[[--
  Places texture according to the given inputs.
-    Inputs:
-      @tparam Texture texture
-      @tparam Quad quad
-      @tparam Transform transform
-      @tparam string anchor
 
-  Possible anchor values = "north", "east", "south west", "n", "e", "sw", etc.
+ @tparam Texture texture
+ @tparam Quad quad
+ @tparam Transform transform
+ @tparam[opt="center"] string anchor May be `"north", "east", "south west", "n",`
+ `"e", "sw",` etc.
 
-  local __, __, width, height = quad:getViewport()
-
-  @see moveBy
---]]
+ @see moveBy
+]]
 function M.quadByAnchor(texture, quad, transform, anchor)
   -- "center" anchor by default
   local anchor = anchor or "center"
@@ -75,15 +85,21 @@ function M.quadByAnchor(texture, quad, transform, anchor)
   love.graphics.draw(texture, quad, transform)
 end
 
---- Table of coordinate transformations
--- Each one of its entries is a different translation.
--- A translation calculates and returns a position based on
---  * the chosen table entry
---  * position coordinates (x, y)
---  * dimensions (width, height)
--- @usage moveBy["south east"](20, 35, 250, 137)
--- @usage moveBy["center"](20, 35, 250, 137)
--- @usage moveBy["nw"](20, 35, 250, 137)
+--[[--
+ Table of coordinate transformations.
+
+ Each one of its entries is a different translation.
+ A translation calculates and returns a position based on
+
+  * the chosen table entry
+  * position coordinates (x, y)
+  * dimensions (width, height)
+
+ @usage
+  moveBy["south east"](20, 35, 250, 137)
+  moveBy["center"](20, 35, 250, 137)
+  moveBy["nw"](20, 35, 250, 137)
+]]
 M.moveBy = moveBy
 
 -- Declare aliases for each anchor

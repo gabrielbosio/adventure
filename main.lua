@@ -1,3 +1,11 @@
+--[[--
+ Game starter script.
+
+ Load modules, define game state variables and override the functions that will
+ be called in the [Löve2D engine](http://love2d.org/) main loop.
+ @script main.lua
+]]
+
 local box = require "components.box"
 local animation = require "components.animation"
 local renderer = require "systems.animation".animationRenderer

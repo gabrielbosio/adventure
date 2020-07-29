@@ -1,3 +1,4 @@
+--- Calculation of translated positions for display.
 local components = require "components"
 
 local M = {}

@@ -1,12 +1,28 @@
+--[[--
+ Debug module.
+
+ I could not name this module "debug" because there is already
+ [a library named <code>debug</code> in <code>lua</code>.](https://www.lua.org/manual/5.4/manual.html#6.10)
+
+ This module loads `outline.drawings` and `outline.display` for local use.
+]]
+
 local drawings = require "outline.drawings"
 local display = require "outline.display"
 
---- Debug module
--- I could not name this module "debug" because there is already a library
--- named "debug" in lua.
+
 local M = {}
 
 
+--[[--
+ Draw shapes that represent components and terrain properties on screen.
+
+ @tparam table componentsTable a reference to the components table
+ @tparam table positions it must have the `terrain` and `components` fields.
+
+  This table may be generated particularly by the `systems.camera.positions`
+  function.
+]]
 function M.draw(componentsTable, positions)
   local r, g, b = love.graphics.getColor()
 
@@ -28,7 +44,11 @@ function M.draw(componentsTable, positions)
   love.graphics.setColor(r, g, b)
 end
 
+--[[--
+ Display text with information for debugging on screen.
 
+ @tparam table componentsTable a reference to the components table
+]]
 function M.debug(componentsTable)
   local r, g, b = love.graphics.getColor()
 
